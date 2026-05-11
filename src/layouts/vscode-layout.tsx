@@ -172,7 +172,7 @@ function MacMenuBar() {
 type DockItem = {
   id: string
   label: string
-  icon: ComponentType<{ className?: string }>
+  icon?: ComponentType<{ className?: string }>
   iconSrc?: string
   className: string
   onClick?: () => void
@@ -187,6 +187,7 @@ const DOCK_SCROLL_STEP = 72
 
 function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number> }) {
   const ref = useRef<HTMLButtonElement | null>(null)
+  const Icon = item.icon
   const distance = useTransform(mouseX, (value) => {
     if (!ref.current) {
       return DOCK_FALLBACK_DISTANCE
@@ -228,8 +229,10 @@ function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number
           <span className={cn('absolute inset-0 rounded-[0.9rem]', item.className)} />
           {item.iconSrc ? (
             <img src={item.iconSrc} alt="" aria-hidden="true" className="relative size-8 drop-shadow-md" loading="lazy" />
+          ) : Icon ? (
+            <Icon className="relative size-6 text-white drop-shadow" />
           ) : (
-            <item.icon className="relative size-6 text-white drop-shadow" />
+            <span className="relative size-6 rounded-lg bg-white/80 shadow-sm" />
           )}
           {item.active ? <span className="absolute -bottom-2 size-1.5 rounded-full bg-white/90 dark:bg-white" /> : null}
         </motion.button>
@@ -579,14 +582,14 @@ export function VscodeLayout() {
   }, [])
 
   const dockItems: DockItem[] = [
-    { id: 'finder', label: 'Finder', icon: FileCode2, iconSrc: '/dock-icons/finder.svg', className: 'bg-gradient-to-br from-[#4da5ff] to-[#0077ff]' },
-    { id: 'safari', label: 'Safari', icon: FileCode2, iconSrc: '/dock-icons/safari.svg', className: 'bg-gradient-to-br from-[#5ac8ff] to-[#2563eb]' },
-    { id: 'mail', label: 'Mail', icon: FileCode2, iconSrc: '/dock-icons/mail.svg', className: 'bg-gradient-to-br from-[#67a8ff] to-[#2563eb]' },
-    { id: 'messages', label: 'Messages', icon: FileCode2, iconSrc: '/dock-icons/messages.svg', className: 'bg-gradient-to-br from-[#6de278] to-[#16a34a]' },
-    { id: 'calendar', label: 'Calendar', icon: FileCode2, iconSrc: '/dock-icons/calendar.svg', className: 'bg-gradient-to-br from-[#ff7b7b] to-[#ef4444]' },
-    { id: 'notes', label: 'Notes', icon: FileCode2, iconSrc: '/dock-icons/notes.svg', className: 'bg-gradient-to-br from-[#ffe582] to-[#f59e0b]' },
-    { id: 'settings', label: 'Settings', icon: FileCode2, iconSrc: '/dock-icons/settings.svg', className: 'bg-gradient-to-br from-[#9ea6b6] to-[#6b7280]' },
-    { id: 'terminal', label: 'Terminal', icon: FileCode2, iconSrc: '/dock-icons/terminal.svg', className: 'bg-gradient-to-br from-[#3b3b3b] to-[#111111]' },
+    { id: 'finder', label: 'Finder', iconSrc: '/dock-icons/finder.svg', className: 'bg-gradient-to-br from-[#4da5ff] to-[#0077ff]' },
+    { id: 'safari', label: 'Safari', iconSrc: '/dock-icons/safari.svg', className: 'bg-gradient-to-br from-[#5ac8ff] to-[#2563eb]' },
+    { id: 'mail', label: 'Mail', iconSrc: '/dock-icons/mail.svg', className: 'bg-gradient-to-br from-[#67a8ff] to-[#2563eb]' },
+    { id: 'messages', label: 'Messages', iconSrc: '/dock-icons/messages.svg', className: 'bg-gradient-to-br from-[#6de278] to-[#16a34a]' },
+    { id: 'calendar', label: 'Calendar', iconSrc: '/dock-icons/calendar.svg', className: 'bg-gradient-to-br from-[#ff7b7b] to-[#ef4444]' },
+    { id: 'notes', label: 'Notes', iconSrc: '/dock-icons/notes.svg', className: 'bg-gradient-to-br from-[#ffe582] to-[#f59e0b]' },
+    { id: 'settings', label: 'Settings', iconSrc: '/dock-icons/settings.svg', className: 'bg-gradient-to-br from-[#9ea6b6] to-[#6b7280]' },
+    { id: 'terminal', label: 'Terminal', iconSrc: '/dock-icons/terminal.svg', className: 'bg-gradient-to-br from-[#3b3b3b] to-[#111111]' },
     {
       id: 'vscode',
       label: 'VS Code',
