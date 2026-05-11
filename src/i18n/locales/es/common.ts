@@ -30,8 +30,8 @@ export const esCommon = {
   sections: {
     about: {
       title: 'Sobre mí',
-      role: 'Construyendo sistemas frontend escalables con enfoque de producto.',
-      summary:
+      focus: 'Fullstack Developer enfocado en migraciones, optimización de sistemas y soluciones web escalables.',
+      aboutMe:
         'Soy Fullstack Developer con más de 4 años de experiencia en modernización tecnológica y desarrollo web. Me especializo en liderar proyectos de migración, optimización de sistemas y creación de soluciones innovadoras bajo metodologías Scrum. Me caracterizo por un enfoque proactivo, colaborativo y orientado a la mejora continua.',
     },
     experience: {

@@ -6,150 +6,201 @@ interface EditorContentProps {
   section: SectionId
 }
 
+const codeColor = {
+  base: 'text-[#d4d4d4]',
+  keyword: 'text-[#c586c0]',
+  property: 'text-[#9cdcfe]',
+  string: 'text-[#ce9178]',
+  value: 'text-[#4ec9b0]',
+} as const
+
+function toCodeString(value: string) {
+  return JSON.stringify(value)
+}
+
+function CodeLine({ indent = 0, children }: { indent?: number; children: React.ReactNode }) {
+  return (
+    <p
+      className={codeColor.base + ' whitespace-pre-wrap break-words'}
+      style={{ paddingLeft: `${indent * 1.25}rem` }}
+    >
+      {children}
+    </p>
+  )
+}
+
+function CodeWrapper({ children }: { children: React.ReactNode }) {
+  return <div className="px-4 py-3 font-mono text-[12.5px] leading-6 md:px-5 md:py-4">{children}</div>
+}
+
 function AboutSection() {
   const { t } = useTranslation('common')
+  const role = t('sections.about.focus')
+  const summary = t('sections.about.aboutMe')
+
   return (
-    <div className="px-5 pb-8 space-y-5 bg-white dark:bg-[#0d0d0d]">
-      <div className="flex flex-col items-center gap-3 pt-4 pb-4">
-        <img
-          src="/profile.jpg"
-          alt="Profile"
-          className="size-[72px] rounded-[22px] object-cover shadow-lg"
-          loading="lazy"
-        />
-        <div className="text-center">
-          <h1 className="text-lg font-bold text-foreground dark:text-white">{t('sections.about.title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('sections.about.role')}</p>
-        </div>
-      </div>
-      <div className="h-px bg-border/50" />
-      <div className="space-y-3">
-        <p className="text-sm leading-relaxed text-muted-foreground">{t('sections.about.summary')}</p>
-      </div>
-    </div>
+    <CodeWrapper>
+      <CodeLine>
+        <span className={codeColor.keyword}>const</span> <span className={codeColor.value}>aboutMe</span> = {'{'}
+      </CodeLine>
+      <CodeLine indent={1}>
+        <span className={codeColor.property}>name</span>: <span className={codeColor.string}>{toCodeString('Juan Daniel González Alejandre')}</span>,
+      </CodeLine>
+      <CodeLine indent={1}>
+        <span className={codeColor.property}>focus</span>: <span className={codeColor.string}>{toCodeString(role)}</span>,
+      </CodeLine>
+      <CodeLine indent={1}>
+        <span className={codeColor.property}>about_me</span>: <span className={codeColor.string}>{toCodeString(summary)}</span>,
+      </CodeLine>
+      <CodeLine>{'};'}</CodeLine>
+    </CodeWrapper>
   )
 }
 
 function ExperienceSection() {
   const { t } = useTranslation('common')
   const items = t('sections.experience.items', { returnObjects: true }) as ExperienceItem[]
+
   return (
-    <div className="px-4 pb-8 space-y-4 bg-white dark:bg-[#0d0d0d]">
-      <h2 className="pt-4 text-base font-bold text-foreground dark:text-white">{t('sections.experience.title') || 'Experience'}</h2>
-      {items.map((item) => (
-        <div
-          key={`${item.role}-${item.company}`}
-          className="rounded-2xl border border-border/40 bg-muted/30 dark:bg-white/5 p-4 space-y-2"
-        >
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="text-sm font-semibold text-foreground dark:text-white">{item.role}</p>
-              <p className="text-xs text-muted-foreground">{item.company}</p>
-            </div>
-            <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">{item.period}</span>
-          </div>
-          <ul className="space-y-1 pl-3">
-            {item.bullets.slice(0, 2).map((bullet) => (
-              <li key={bullet} className="text-xs text-muted-foreground list-disc list-inside">{bullet}</li>
-            ))}
-          </ul>
+    <CodeWrapper>
+      <CodeLine>
+        <span className={codeColor.keyword}>const</span> <span className={codeColor.value}>experience</span> = [
+      </CodeLine>
+      {items.map((item, itemIndex) => (
+        <div key={`${item.role}-${item.company}`}>
+          <CodeLine indent={1}>{'{'}</CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>role</span>: <span className={codeColor.string}>{toCodeString(item.role)}</span>,
+          </CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>company</span>: <span className={codeColor.string}>{toCodeString(item.company)}</span>,
+          </CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>period</span>: <span className={codeColor.string}>{toCodeString(item.period)}</span>,
+          </CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>bullets</span>: [
+          </CodeLine>
+          {item.bullets.map((bullet, bulletIndex) => (
+            <CodeLine key={bullet} indent={3}>
+              <span className={codeColor.string}>{toCodeString(bullet)}</span>
+              {bulletIndex < item.bullets.length - 1 ? ',' : ''}
+            </CodeLine>
+          ))}
+          <CodeLine indent={2}>],</CodeLine>
+          <CodeLine indent={1}>
+            {'}'}
+            {itemIndex < items.length - 1 ? ',' : ''}
+          </CodeLine>
         </div>
       ))}
-    </div>
+      <CodeLine>];</CodeLine>
+    </CodeWrapper>
   )
 }
-
-const PROJECT_ICON_GRADIENTS = [
-  'linear-gradient(135deg,#667eea,#764ba2)',
-  'linear-gradient(135deg,#f093fb,#f5576c)',
-  'linear-gradient(135deg,#4facfe,#00f2fe)',
-  'linear-gradient(135deg,#43e97b,#38f9d7)',
-] as const
-
-const MAX_VISIBLE_STACK_ITEMS = 4
 
 function ProjectsSection() {
   const { t } = useTranslation('common')
   const items = t('sections.projects.items', { returnObjects: true }) as ProjectItem[]
+
   return (
-    <div className="px-4 pb-8 space-y-4 bg-white dark:bg-[#0d0d0d]">
-      <h2 className="pt-4 text-base font-bold text-foreground dark:text-white">{t('sections.projects.title') || 'Projects'}</h2>
-      {items.map((project, i) => (
-        <div
-          key={project.name}
-          className="rounded-2xl border border-border/40 bg-muted/30 dark:bg-white/5 p-4 space-y-3"
-        >
-          <div className="flex items-center gap-3">
-            <div
-              className="flex size-10 shrink-0 items-center justify-center rounded-xl text-white text-sm font-bold shadow"
-              style={{ background: PROJECT_ICON_GRADIENTS[i % PROJECT_ICON_GRADIENTS.length] }}
-            >
-              {project.name.charAt(0)}
-            </div>
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-foreground dark:text-white truncate">{project.name}</p>
-              <p className="text-xs text-muted-foreground line-clamp-2">{project.description}</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {project.stack.slice(0, MAX_VISIBLE_STACK_ITEMS).map((tech) => (
-              <span key={tech} className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                {tech}
-              </span>
-            ))}
-          </div>
+    <CodeWrapper>
+      <CodeLine>
+        <span className={codeColor.keyword}>const</span> <span className={codeColor.value}>projects</span> = [
+      </CodeLine>
+      {items.map((project, projectIndex) => (
+        <div key={project.name}>
+          <CodeLine indent={1}>{'{'}</CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>name</span>: <span className={codeColor.string}>{toCodeString(project.name)}</span>,
+          </CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>description</span>: <span className={codeColor.string}>{toCodeString(project.description)}</span>,
+          </CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>stack</span>: [
+          </CodeLine>
+          {project.stack.map((tech, techIndex) => (
+            <CodeLine key={tech} indent={3}>
+              <span className={codeColor.string}>{toCodeString(tech)}</span>
+              {techIndex < project.stack.length - 1 ? ',' : ''}
+            </CodeLine>
+          ))}
+          <CodeLine indent={2}>],</CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>href</span>: <span className={codeColor.string}>{toCodeString(project.href)}</span>,
+          </CodeLine>
+          <CodeLine indent={1}>
+            {'}'}
+            {projectIndex < items.length - 1 ? ',' : ''}
+          </CodeLine>
         </div>
       ))}
-    </div>
+      <CodeLine>];</CodeLine>
+    </CodeWrapper>
   )
 }
 
 function SkillsSection() {
   const { t } = useTranslation('common')
   const groups = t('sections.skills.groups', { returnObjects: true }) as Record<string, string[]>
+
   return (
-    <div className="px-4 pb-8 space-y-5 bg-white dark:bg-[#0d0d0d]">
-      <h2 className="pt-4 text-base font-bold text-foreground dark:text-white">{t('sections.skills.title') || 'Skills'}</h2>
-      {Object.entries(groups).map(([group, values]) => (
-        <div key={group} className="space-y-2">
-          <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">{group}</p>
-          <div className="flex flex-wrap gap-2">
-            {values.map((value) => (
-              <span
-                key={value}
-                className="rounded-full border border-border/60 bg-muted/40 dark:bg-white/5 px-3 py-1 text-xs font-medium text-foreground dark:text-white/80"
-              >
-                {value}
-              </span>
-            ))}
-          </div>
+    <CodeWrapper>
+      <CodeLine>
+        <span className={codeColor.keyword}>const</span> <span className={codeColor.value}>skills</span> = {'{'}
+      </CodeLine>
+      {Object.entries(groups).map(([group, values], groupIndex, arr) => (
+        <div key={group}>
+          <CodeLine indent={1}>
+            <span className={codeColor.property}>{group}</span>: [
+          </CodeLine>
+          {values.map((value, valueIndex) => (
+            <CodeLine key={value} indent={2}>
+              <span className={codeColor.string}>{toCodeString(value)}</span>
+              {valueIndex < values.length - 1 ? ',' : ''}
+            </CodeLine>
+          ))}
+          <CodeLine indent={1}>
+            ]
+            {groupIndex < arr.length - 1 ? ',' : ''}
+          </CodeLine>
         </div>
       ))}
-    </div>
+      <CodeLine>{'};'}</CodeLine>
+    </CodeWrapper>
   )
 }
 
 function ContactSection() {
   const { t } = useTranslation('common')
   const items = t('sections.contact.items', { returnObjects: true }) as ContactItem[]
+
   return (
-    <div className="px-4 pb-8 space-y-4 bg-white dark:bg-[#0d0d0d]">
-      <h2 className="pt-4 text-base font-bold text-foreground dark:text-white">{t('sections.contact.title')}</h2>
-      <div className="space-y-2">
-        {items.map((item) => (
-          <a
-            key={item.label}
-            href={item.href}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center justify-between rounded-2xl border border-border/40 bg-muted/30 dark:bg-white/5 px-4 py-3 transition-colors hover:bg-muted/50"
-          >
-            <span className="text-sm font-medium text-foreground dark:text-white">{item.label}</span>
-            <span className="text-xs text-muted-foreground truncate max-w-[140px] text-right">{item.value}</span>
-          </a>
-        ))}
-      </div>
-    </div>
+    <CodeWrapper>
+      <CodeLine>
+        <span className={codeColor.keyword}>const</span> <span className={codeColor.value}>contact</span> = [
+      </CodeLine>
+      {items.map((item, itemIndex) => (
+        <div key={item.label}>
+          <CodeLine indent={1}>{'{'}</CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>label</span>: <span className={codeColor.string}>{toCodeString(item.label)}</span>,
+          </CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>value</span>: <span className={codeColor.string}>{toCodeString(item.value)}</span>,
+          </CodeLine>
+          <CodeLine indent={2}>
+            <span className={codeColor.property}>href</span>: <span className={codeColor.string}>{toCodeString(item.href)}</span>,
+          </CodeLine>
+          <CodeLine indent={1}>
+            {'}'}
+            {itemIndex < items.length - 1 ? ',' : ''}
+          </CodeLine>
+        </div>
+      ))}
+      <CodeLine>];</CodeLine>
+    </CodeWrapper>
   )
 }
 

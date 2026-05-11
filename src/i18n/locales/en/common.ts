@@ -30,8 +30,8 @@ export const enCommon = {
   sections: {
     about: {
       title: 'About',
-      role: 'Building scalable frontend systems with product focus.',
-      summary:
+      focus: 'Fullstack Developer focused on migration, optimization, and scalable web solutions.',
+      aboutMe:
         "I'm a Fullstack Developer with over 4 years of experience in tech modernization and web development. I am specialized in leading migration projects, system optimization, and building innovative solutions under scrum methodologies. Known for a proactive, collaborative, and improvement-driven approach.",
     },
     experience: {
