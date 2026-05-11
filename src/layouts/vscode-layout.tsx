@@ -184,6 +184,7 @@ const DOCK_HOVER_DISTANCE = 140
 const DOCK_HOVER_LIFT = 12
 const DOCK_FALLBACK_DISTANCE = 180
 const DOCK_SCROLL_STEP = 72
+const EDITOR_LINE_COUNT = 120
 
 function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number> }) {
   const ref = useRef<HTMLButtonElement | null>(null)
@@ -228,7 +229,7 @@ function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number
         >
           <span className={cn('absolute inset-0 rounded-[0.9rem]', item.className)} />
           {item.iconSrc ? (
-            <img src={item.iconSrc} alt="" aria-hidden="true" className="relative size-8 drop-shadow-md" loading="lazy" />
+            <img src={item.iconSrc} alt={`${item.label} icon`} className="relative size-8 drop-shadow-md" />
           ) : Icon ? (
             <Icon className="relative size-6 text-white drop-shadow" />
           ) : (
@@ -487,7 +488,7 @@ function VscodeWindow({
                 <div className="flex min-h-full px-0 py-0 md:px-4 md:py-6">
                   <div className="grid w-full grid-cols-[3.25rem_1fr] bg-background/35 font-mono">
                     <div className="border-r border-border/60 bg-vscode-tabs/70 px-2 py-4 text-right text-xs leading-6 text-muted-foreground">
-                      {Array.from({ length: 80 }).map((_, index) => (
+                      {Array.from({ length: EDITOR_LINE_COUNT }).map((_, index) => (
                         <p key={index}>{index + 1}</p>
                       ))}
                     </div>
