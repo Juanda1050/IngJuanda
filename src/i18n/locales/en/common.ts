@@ -14,10 +14,10 @@ export const enCommon = {
   },
   files: {
     about: 'about.tsx',
-    experience: 'experience.tsx',
-    projects: 'projects.tsx',
-    skills: 'skills.tsx',
-    contact: 'contact.tsx',
+    experience: 'experience.ts',
+    projects: 'projects.json',
+    skills: 'skills.tailwind.ts',
+    contact: 'README.md',
   },
   actions: {
     close: 'Close',
