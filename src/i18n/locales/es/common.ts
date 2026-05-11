@@ -1,7 +1,7 @@
 export const esCommon = {
   app: {
     title: 'Portafolio',
-    subtitle: 'Senior Frontend Architect',
+    subtitle: 'Senior Frontend Developer',
     status: 'Listo',
     branch: 'main',
     language: 'Idioma',
@@ -32,13 +32,13 @@ export const esCommon = {
       title: 'Sobre mí',
       role: 'Construyendo sistemas frontend escalables con enfoque de producto.',
       summary:
-        'Arquitecto frontend con experiencia creando design systems, interfaces de alto rendimiento y bases de código mantenibles para productos enterprise.',
+        'Soy Fullstack Developer con más de 4 años de experiencia en modernización tecnológica y desarrollo web. Me especializo en liderar proyectos de migración, optimización de sistemas y creación de soluciones innovadoras bajo metodologías Scrum. Me caracterizo por un enfoque proactivo, colaborativo y orientado a la mejora continua.',
     },
     experience: {
       title: 'Experiencia',
       items: [
         {
-          role: 'Senior Frontend Architect',
+          role: 'Senior Frontend Developer',
           company: 'Tech Studio',
           period: '2022 - Actualidad',
           bullets: [

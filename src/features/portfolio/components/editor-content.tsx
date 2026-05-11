@@ -10,22 +10,19 @@ function AboutSection() {
   const { t } = useTranslation('common')
   return (
     <div className="px-5 pb-8 space-y-5 bg-white dark:bg-[#0d0d0d]">
-      {/* Profile card */}
       <div className="flex flex-col items-center gap-3 pt-4 pb-4">
-        <div
-          className="flex size-[72px] items-center justify-center rounded-[22px] text-white text-2xl font-bold shadow-lg"
-          style={{ background: 'linear-gradient(135deg, #4facfe 0%, #0077cc 100%)' }}
-        >
-          JF
-        </div>
+        <img
+          src="/profile.jpg"
+          alt="Profile"
+          className="size-[72px] rounded-[22px] object-cover shadow-lg"
+          loading="lazy"
+        />
         <div className="text-center">
           <h1 className="text-lg font-bold text-foreground dark:text-white">{t('sections.about.title')}</h1>
           <p className="text-sm text-muted-foreground">{t('sections.about.role')}</p>
         </div>
       </div>
-      {/* Divider */}
       <div className="h-px bg-border/50" />
-      {/* Bio */}
       <div className="space-y-3">
         <p className="text-sm leading-relaxed text-muted-foreground">{t('sections.about.summary')}</p>
       </div>

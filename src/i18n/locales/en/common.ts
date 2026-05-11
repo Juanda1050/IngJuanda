@@ -1,7 +1,7 @@
 export const enCommon = {
   app: {
     title: 'Portfolio',
-    subtitle: 'Senior Frontend Architect',
+    subtitle: 'Senior Frontend Developer',
     status: 'Ready',
     branch: 'main',
     language: 'Language',
@@ -32,13 +32,13 @@ export const enCommon = {
       title: 'About',
       role: 'Building scalable frontend systems with product focus.',
       summary:
-        'Frontend architect with experience creating design systems, high-performance interfaces, and maintainable codebases for enterprise products.',
+        "I'm a Fullstack Developer with over 4 years of experience in tech modernization and web development. I am specialized in leading migration projects, system optimization, and building innovative solutions under scrum methodologies. Known for a proactive, collaborative, and improvement-driven approach.",
     },
     experience: {
       title: 'Experience',
       items: [
         {
-          role: 'Senior Frontend Architect',
+          role: 'Senior Frontend Developer',
           company: 'Tech Studio',
           period: '2022 - Present',
           bullets: [

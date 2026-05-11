@@ -2,7 +2,6 @@ import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, type 
 import {
   BatteryFull,
   Command,
-  FileCode2,
   Folder,
   GitBranch,
   Menu,
@@ -25,6 +24,7 @@ import { portfolioFiles } from '@/features/portfolio/data/portfolio-data'
 import { useDevice } from '@/hooks/use-device'
 import {
   Avatar,
+  AvatarImage,
   AvatarFallback,
   Badge,
   Button,
@@ -51,9 +51,9 @@ function SidebarContent({ onPick, compact = false }: { onPick?: () => void; comp
 
   return (
     <Card className="h-full rounded-none border-0 border-r border-border/70 bg-vscode-sidebar/90 shadow-none backdrop-blur-xl">
-      <CardContent className={cn('h-full p-3', compact && 'p-2')}>
+      <CardContent className={cn('flex h-full min-h-0 flex-col p-3', compact && 'p-2')}>
         <p className="mb-2 px-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">{t('app.explorer')}</p>
-        <ScrollArea className="h-[calc(100vh-12rem)] md:h-[calc(100vh-14rem)]">
+        <ScrollArea className="h-full min-h-0 flex-1">
           <div className="space-y-1">
             {portfolioFiles.map((file) => {
               const Icon = file.icon
@@ -161,6 +161,7 @@ function MacMenuBar() {
             {now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
           </p>
           <Avatar className="size-6">
+            <AvatarImage src="/profile.jpg" alt="Profile" />
             <AvatarFallback className="bg-primary/30 text-[10px] font-semibold text-primary">JF</AvatarFallback>
           </Avatar>
         </div>
@@ -184,7 +185,6 @@ const DOCK_HOVER_DISTANCE = 140
 const DOCK_HOVER_LIFT = 12
 const DOCK_FALLBACK_DISTANCE = 180
 const DOCK_SCROLL_STEP = 72
-const EDITOR_LINE_COUNT = 120
 
 function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number> }) {
   const ref = useRef<HTMLButtonElement | null>(null)
@@ -329,17 +329,18 @@ function VscodeWindow({
   )
 
   const sizeClass = cn(
-    'h-[calc(100%-2.5rem)]',
+    'h-[70vh] min-h-[520px] max-h-[760px]',
     isMobile
       ? 'h-full w-full max-w-none'
       : isMaximized
-        ? 'h-[calc(100dvh-5.75rem)] w-[calc(100vw-1.5rem)] max-w-none'
+        ? 'h-[72vh] min-h-[560px] max-h-[820px] w-[calc(100vw-3rem)] max-w-none'
         : isTablet
-          ? 'h-[calc(100dvh-6.5rem)] w-[min(96vw,1200px)]'
-          : 'h-[calc(100dvh-6rem)] w-[min(92vw,1520px)]',
+          ? 'h-[68vh] min-h-[480px] max-h-[700px] w-[min(93vw,1120px)]'
+          : 'h-[70vh] min-h-[520px] max-h-[760px] w-[min(88vw,1360px)]',
   )
 
   const panelGridClass = cn('grid h-[calc(100%-3rem)] overflow-hidden', isMobile ? 'grid-cols-1' : 'grid-cols-[3.25rem_1fr]')
+  const editorLineCount = 24
 
   return (
     <motion.div layout className={cn('relative', sizeClass)}>
@@ -372,6 +373,7 @@ function VscodeWindow({
             )}
             <Separator orientation="vertical" className="h-4" />
             <Avatar className="size-7">
+              <AvatarImage src="/profile.jpg" alt="Profile" />
               <AvatarFallback className="bg-primary/20 text-[10px] font-bold text-primary">JF</AvatarFallback>
             </Avatar>
             <p className="truncate text-sm text-muted-foreground">{t('app.subtitle')}</p>
@@ -449,7 +451,7 @@ function VscodeWindow({
               ) : null}
             </AnimatePresence>
 
-            <div className="flex h-full min-w-0 flex-col overflow-hidden bg-vscode-editor/45">
+            <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-vscode-editor/45">
               <ScrollArea className="w-full border-b border-border/60 bg-vscode-tabs/85">
                 <div className="flex min-h-10 min-w-full items-stretch">
                   {tabs.map((tab) => {
@@ -484,11 +486,11 @@ function VscodeWindow({
                 </div>
               </ScrollArea>
 
-              <ScrollArea className="flex-1">
+              <ScrollArea className="min-h-0 flex-1">
                 <div className="flex min-h-full px-0 py-0 md:px-4 md:py-6">
                   <div className="grid w-full grid-cols-[3.25rem_1fr] bg-background/35 font-mono">
                     <div className="border-r border-border/60 bg-vscode-tabs/70 px-2 py-4 text-right text-xs leading-6 text-muted-foreground">
-                      {Array.from({ length: EDITOR_LINE_COUNT }).map((_, index) => (
+                      {Array.from({ length: editorLineCount }).map((_, index) => (
                         <p key={index + 1}>{index + 1}</p>
                       ))}
                     </div>
@@ -536,7 +538,6 @@ function VscodeWindow({
 }
 
 export function VscodeLayout() {
-  const { t } = useTranslation('common')
   const { isMobile, isTablet, isDesktop } = useDevice()
   const windowState = useUiStore((state) => state.windowState)
   const isWindowMaximized = useUiStore((state) => state.isWindowMaximized)
@@ -594,8 +595,8 @@ export function VscodeLayout() {
     {
       id: 'vscode',
       label: 'VS Code',
-      icon: FileCode2,
-      className: 'bg-gradient-to-br from-[#30b5ff] to-[#0f75ff]',
+      iconSrc: '/vscode.png',
+      className: 'bg-transparent',
       active: windowState === 'open',
       onClick: () => {
         setOpenFromDock(true)
@@ -619,8 +620,8 @@ export function VscodeLayout() {
 
         <div
           className={cn(
-            'fixed inset-x-0 bottom-[5rem] flex items-center justify-center px-0 sm:px-4',
-            isMobile ? 'top-[2.75rem]' : 'top-[3.4rem]',
+            'fixed inset-x-0 flex items-start justify-center px-0 sm:px-4',
+            isMobile ? 'top-[2.75rem] bottom-[5.75rem]' : 'top-[3.6rem] bottom-[8.5rem]',
           )}
         >
           <AnimatePresence mode="wait">
@@ -661,17 +662,6 @@ export function VscodeLayout() {
               </motion.div>
             ) : null}
           </AnimatePresence>
-        </div>
-
-        <div className="fixed bottom-20 right-3 z-40 hidden lg:flex">
-          <Button
-            variant="secondary"
-            className="rounded-full bg-black/35 text-white hover:bg-black/45"
-            onClick={() => setCommandOpen(true)}
-            aria-keyshortcuts="Meta+K Control+K"
-          >
-            <Command className="mr-2 size-4" /> {t('app.openCommand')}
-          </Button>
         </div>
 
         <MacDock items={dockItems} isMobile={isMobile} />
