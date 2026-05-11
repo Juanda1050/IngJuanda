@@ -48,7 +48,7 @@ function SidebarContent({ onPick, compact = false }: { onPick?: () => void; comp
   return (
     <Card className="h-full rounded-none border-0 border-r border-border/70 bg-vscode-sidebar/90 shadow-none backdrop-blur-xl">
       <CardContent className={cn('h-full p-3', compact && 'p-2')}>
-        <p className="mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t('app.explorer')}</p>
+        <p className="mb-2 px-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">{t('app.explorer')}</p>
         <ScrollArea className="h-[calc(100vh-12rem)] md:h-[calc(100vh-14rem)]">
           <div className="space-y-1">
             {portfolioFiles.map((file) => {
@@ -96,10 +96,10 @@ function MacDock({ onOpenCommand }: { onOpenCommand: () => void }) {
       className="pointer-events-none fixed bottom-4 left-1/2 z-40 hidden -translate-x-1/2 lg:flex"
     >
       <div className="pointer-events-auto flex items-end gap-2 rounded-2xl border border-border/60 bg-card/60 p-2 shadow-[0_20px_40px_-24px_hsl(var(--foreground)/0.7)] backdrop-blur-2xl">
-        {items.map((item, index) => {
+        {items.map((item) => {
           const Icon = item.icon
           return (
-            <Tooltip key={`${item.label}-${index}`}>
+            <Tooltip key={item.label}>
               <TooltipTrigger asChild>
                 <motion.button
                   whileHover={{ y: -6, scale: 1.08 }}
@@ -314,7 +314,7 @@ export function VscodeLayout() {
                 </ScrollArea>
 
                 {!isMobile ? (
-                  <div className="flex h-8 items-center justify-between border-t border-border/60 bg-vscode-status/90 px-3 text-[11px] text-muted-foreground backdrop-blur">
+                  <div className="flex h-8 items-center justify-between border-t border-border/60 bg-vscode-status/90 px-3 text-xs text-muted-foreground backdrop-blur">
                     <div className="flex items-center gap-3">
                       <Badge variant="secondary" className="gap-1 rounded-sm px-2 py-0.5">
                         <GitBranch className="size-3" />
