@@ -21,6 +21,8 @@ export const enCommon = {
   },
   actions: {
     close: 'Close',
+    minimize: 'Minimize',
+    maximize: 'Maximize',
     light: 'Light',
     dark: 'Dark',
     system: 'System',

@@ -7,10 +7,16 @@ interface UiState {
   openFiles: SectionId[]
   isSidebarOpen: boolean
   isCommandOpen: boolean
+  windowState: 'open' | 'minimized' | 'closed'
+  isWindowMaximized: boolean
   setActiveFile: (file: SectionId) => void
   closeFile: (file: SectionId) => void
   toggleSidebar: () => void
   setCommandOpen: (open: boolean) => void
+  closeWindow: () => void
+  minimizeWindow: () => void
+  restoreWindow: () => void
+  toggleWindowMaximize: () => void
 }
 
 const fallbackFile: SectionId = portfolioFiles[0]?.id ?? 'about'
@@ -20,6 +26,8 @@ export const useUiStore = create<UiState>((set) => ({
   openFiles: [fallbackFile],
   isSidebarOpen: true,
   isCommandOpen: false,
+  windowState: 'open',
+  isWindowMaximized: false,
   setActiveFile: (file) =>
     set((state) => ({
       activeFile: file,
@@ -37,4 +45,12 @@ export const useUiStore = create<UiState>((set) => ({
     }),
   toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   setCommandOpen: (open) => set({ isCommandOpen: open }),
+  closeWindow: () => set({ windowState: 'closed', isWindowMaximized: false }),
+  minimizeWindow: () => set({ windowState: 'minimized', isWindowMaximized: false }),
+  restoreWindow: () => set({ windowState: 'open' }),
+  toggleWindowMaximize: () =>
+    set((state) => ({
+      windowState: 'open',
+      isWindowMaximized: !state.isWindowMaximized,
+    })),
 }))
