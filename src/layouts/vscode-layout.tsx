@@ -22,6 +22,7 @@ import {
   Wifi,
   X,
 } from 'lucide-react'
+import { SiApple } from 'react-icons/si'
 import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CommandPalette } from '@/components/command-palette'
@@ -113,10 +114,22 @@ function MobileSidebarSheet() {
 
 function MacMenuBar() {
   const [now, setNow] = useState(() => new Date())
+  const clockIntervalRef = useRef<number | null>(null)
 
   useEffect(() => {
-    const id = window.setInterval(() => setNow(new Date()), 30000)
-    return () => window.clearInterval(id)
+    const tick = () => setNow(new Date())
+    const msUntilNextMinute = (60 - new Date().getSeconds()) * 1000
+    const timeoutId = window.setTimeout(() => {
+      tick()
+      clockIntervalRef.current = window.setInterval(tick, 60000)
+    }, msUntilNextMinute)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+      if (clockIntervalRef.current) {
+        window.clearInterval(clockIntervalRef.current)
+      }
+    }
   }, [])
 
   return (
@@ -128,19 +141,24 @@ function MacMenuBar() {
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 text-sm">
         <div className="flex min-w-0 items-center gap-3 text-[13px]">
-          <span className="font-semibold">􀣺</span>
+          <SiApple className="size-3.5" />
           <div className="hidden items-center gap-3 sm:flex">
             <span className="font-semibold">Finder</span>
             {['File', 'Edit', 'View', 'Window', 'Help'].map((item) => (
-              <span key={item} className="text-foreground/80">
+              <button
+                key={item}
+                type="button"
+                className="rounded-md px-1.5 text-foreground/80 transition-colors hover:bg-white/15 dark:hover:bg-white/10"
+                aria-label={item}
+              >
                 {item}
-              </span>
+              </button>
             ))}
           </div>
         </div>
         <div className="flex items-center gap-1.5 text-foreground/85">
-          {[Wifi, BatteryFull, Search, SlidersHorizontal].map((Icon, index) => (
-            <span key={index} className="flex size-7 items-center justify-center rounded-md hover:bg-white/20 dark:hover:bg-white/10">
+          {[Wifi, BatteryFull, Search, SlidersHorizontal].map((Icon) => (
+            <span key={Icon.displayName ?? Icon.name} className="flex size-7 items-center justify-center rounded-md hover:bg-white/20 dark:hover:bg-white/10">
               <Icon className="size-3.5" />
             </span>
           ))}
@@ -167,25 +185,36 @@ type DockItem = {
   dockRef?: (node: HTMLButtonElement | null) => void
 }
 
+const DOCK_HOVER_DISTANCE = 140
+const DOCK_HOVER_LIFT = 12
+const DOCK_FALLBACK_DISTANCE = 180
+const DOCK_SCROLL_STEP = 72
+
 function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number> }) {
   const ref = useRef<HTMLButtonElement | null>(null)
   const distance = useTransform(mouseX, (value) => {
     if (!ref.current) {
-      return 180
+      return DOCK_FALLBACK_DISTANCE
     }
     const rect = ref.current.getBoundingClientRect()
     return value - (rect.left + rect.width / 2)
   })
-  const scale = useSpring(useTransform(distance, [-140, 0, 140], [1, 1.55, 1]), {
-    damping: 18,
-    stiffness: 230,
-    mass: 0.14,
-  })
-  const y = useSpring(useTransform(distance, [-140, 0, 140], [0, -12, 0]), {
-    damping: 20,
-    stiffness: 230,
-    mass: 0.2,
-  })
+  const scale = useSpring(
+    useTransform(distance, [-DOCK_HOVER_DISTANCE, 0, DOCK_HOVER_DISTANCE], [1, 1.55, 1]),
+    {
+      damping: 18,
+      stiffness: 230,
+      mass: 0.14,
+    },
+  )
+  const y = useSpring(
+    useTransform(distance, [-DOCK_HOVER_DISTANCE, 0, DOCK_HOVER_DISTANCE], [0, -DOCK_HOVER_LIFT, 0]),
+    {
+      damping: 20,
+      stiffness: 230,
+      mass: 0.2,
+    },
+  )
 
   return (
     <Tooltip>
@@ -219,6 +248,7 @@ function MacDock({
   isMobile: boolean
 }) {
   const mouseX = useMotionValue<number>(Number.POSITIVE_INFINITY)
+  const dockRef = useRef<HTMLDivElement | null>(null)
 
   return (
     <motion.div
@@ -228,12 +258,27 @@ function MacDock({
       className="fixed inset-x-0 bottom-2 z-50 flex justify-center px-2 pb-[max(0.3rem,env(safe-area-inset-bottom))]"
     >
       <div
+        ref={dockRef}
+        role="toolbar"
+        aria-label="macOS dock"
+        tabIndex={0}
         className={cn(
           'flex items-end gap-2 rounded-[1.35rem] border border-white/35 bg-white/22 px-3 py-2 backdrop-blur-2xl dark:border-white/15 dark:bg-black/28',
-          isMobile && 'w-full max-w-full overflow-x-auto justify-start',
+          isMobile && 'w-full overflow-x-auto justify-start',
         )}
         onMouseMove={(event) => mouseX.set(event.clientX)}
         onMouseLeave={() => mouseX.set(Number.POSITIVE_INFINITY)}
+        onKeyDown={(event) => {
+          if (!isMobile || !dockRef.current) {
+            return
+          }
+          if (event.key === 'ArrowRight') {
+            dockRef.current.scrollBy({ left: DOCK_SCROLL_STEP, behavior: 'smooth' })
+          }
+          if (event.key === 'ArrowLeft') {
+            dockRef.current.scrollBy({ left: -DOCK_SCROLL_STEP, behavior: 'smooth' })
+          }
+        }}
       >
         {items.map((item) => (
           <DockIcon key={item.id} item={item} mouseX={mouseX} />
@@ -479,6 +524,7 @@ function VscodeWindow({
 }
 
 export function VscodeLayout() {
+  const { t } = useTranslation('common')
   const { isMobile, isTablet, isDesktop } = useDevice()
   const windowState = useUiStore((state) => state.windowState)
   const isWindowMaximized = useUiStore((state) => state.isWindowMaximized)
@@ -492,6 +538,17 @@ export function VscodeLayout() {
   const [openFromDock, setOpenFromDock] = useState(false)
   const [dockOffset, setDockOffset] = useState({ x: 0, y: 260 })
   const [exitMode, setExitMode] = useState<'minimized' | 'closed'>('closed')
+
+  useEffect(() => {
+    const onCommandShortcut = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setCommandOpen(true)
+      }
+    }
+    window.addEventListener('keydown', onCommandShortcut)
+    return () => window.removeEventListener('keydown', onCommandShortcut)
+  }, [setCommandOpen])
 
   useEffect(() => {
     const updateOffset = () => {
@@ -591,8 +648,13 @@ export function VscodeLayout() {
         </div>
 
         <div className="fixed bottom-20 right-3 z-40 hidden lg:flex">
-          <Button variant="secondary" className="rounded-full bg-black/35 text-white hover:bg-black/45" onClick={() => setCommandOpen(true)}>
-            <Command className="mr-2 size-4" /> Command Palette
+          <Button
+            variant="secondary"
+            className="rounded-full bg-black/35 text-white hover:bg-black/45"
+            onClick={() => setCommandOpen(true)}
+            aria-keyshortcuts="Meta+K Control+K"
+          >
+            <Command className="mr-2 size-4" /> {t('app.openCommand')}
           </Button>
         </div>
 
