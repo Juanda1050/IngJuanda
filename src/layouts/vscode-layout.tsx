@@ -229,7 +229,7 @@ function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number
         >
           <span className={cn('absolute inset-0 rounded-[0.9rem]', item.className)} />
           {item.iconSrc ? (
-            <img src={item.iconSrc} alt={`${item.label} icon`} className="relative size-8 drop-shadow-md" />
+            <img src={item.iconSrc} alt={item.label} className="relative size-8 drop-shadow-md" />
           ) : Icon ? (
             <Icon className="relative size-6 text-white drop-shadow" />
           ) : (
@@ -489,7 +489,7 @@ function VscodeWindow({
                   <div className="grid w-full grid-cols-[3.25rem_1fr] bg-background/35 font-mono">
                     <div className="border-r border-border/60 bg-vscode-tabs/70 px-2 py-4 text-right text-xs leading-6 text-muted-foreground">
                       {Array.from({ length: EDITOR_LINE_COUNT }).map((_, index) => (
-                        <p key={index}>{index + 1}</p>
+                        <p key={index + 1}>{index + 1}</p>
                       ))}
                     </div>
                     <div className="min-w-0 py-2">
