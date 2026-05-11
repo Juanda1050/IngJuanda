@@ -1,4 +1,4 @@
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, type MotionValue } from 'framer-motion'
 import {
   BatteryFull,
   CalendarDays,
@@ -167,7 +167,7 @@ type DockItem = {
   dockRef?: (node: HTMLButtonElement | null) => void
 }
 
-function DockIcon({ item, mouseX }: { item: DockItem; mouseX: ReturnType<typeof useMotionValue> }) {
+function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number> }) {
   const ref = useRef<HTMLButtonElement | null>(null)
   const distance = useTransform(mouseX, (value) => {
     if (!ref.current) {
@@ -218,7 +218,7 @@ function MacDock({
   items: DockItem[]
   isMobile: boolean
 }) {
-  const mouseX = useMotionValue(Number.POSITIVE_INFINITY)
+  const mouseX = useMotionValue<number>(Number.POSITIVE_INFINITY)
 
   return (
     <motion.div
@@ -489,7 +489,7 @@ export function VscodeLayout() {
   const setCommandOpen = useUiStore((state) => state.setCommandOpen)
 
   const dockVscodeRef = useRef<HTMLButtonElement | null>(null)
-  const previousWindowState = useRef(windowState)
+  const [openFromDock, setOpenFromDock] = useState(false)
   const [dockOffset, setDockOffset] = useState({ x: 0, y: 260 })
   const [exitMode, setExitMode] = useState<'minimized' | 'closed'>('closed')
 
@@ -513,10 +513,6 @@ export function VscodeLayout() {
     return () => window.removeEventListener('resize', updateOffset)
   }, [])
 
-  useEffect(() => {
-    previousWindowState.current = windowState
-  }, [windowState])
-
   const dockItems: DockItem[] = [
     { id: 'finder', label: 'Finder', icon: Smile, className: 'bg-gradient-to-br from-[#4da5ff] to-[#0077ff]' },
     { id: 'safari', label: 'Safari', icon: Compass, className: 'bg-gradient-to-br from-[#5ac8ff] to-[#2563eb]' },
@@ -532,7 +528,10 @@ export function VscodeLayout() {
       icon: FileCode2,
       className: 'bg-gradient-to-br from-[#30b5ff] to-[#0f75ff]',
       active: windowState === 'open',
-      onClick: () => restoreWindow(),
+      onClick: () => {
+        setOpenFromDock(true)
+        restoreWindow()
+      },
       dockRef: (node) => {
         dockVscodeRef.current = node
       },
@@ -540,7 +539,7 @@ export function VscodeLayout() {
   ]
 
   const shouldRenderWindow = windowState === 'open'
-  const enteringFromDock = shouldRenderWindow && previousWindowState.current !== 'open'
+  const enteringFromDock = shouldRenderWindow && openFromDock
 
   return (
     <TooltipProvider>
@@ -566,6 +565,7 @@ export function VscodeLayout() {
                     ? { opacity: 0, scale: 0.2, x: dockOffset.x, y: dockOffset.y }
                     : { opacity: 0, scale: 0.9, y: 30 }
                 }
+                onAnimationComplete={() => setOpenFromDock(false)}
                 transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
               >
                 <VscodeWindow
@@ -575,11 +575,13 @@ export function VscodeLayout() {
                   isMaximized={isWindowMaximized}
                   onMinimize={() => {
                     setExitMode('minimized')
+                    setOpenFromDock(false)
                     minimizeWindow()
                   }}
                   onMaximize={toggleWindowMaximize}
                   onClose={() => {
                     setExitMode('closed')
+                    setOpenFromDock(false)
                     closeWindow()
                   }}
                 />
