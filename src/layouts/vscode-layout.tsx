@@ -221,7 +221,7 @@ export function VscodeLayout() {
                   {[
                     {
                       icon: isSidebarOpen ? PanelLeftClose : PanelLeftOpen,
-                      label: t('app.explorer'),
+                      label: isSidebarOpen ? `${t('actions.close')} ${t('app.explorer')}` : t('app.explorer'),
                       action: toggleSidebar,
                     },
                     { icon: Search, label: t('app.openCommand'), action: () => setCommandOpen(true) },
@@ -233,6 +233,7 @@ export function VscodeLayout() {
                           variant="ghost"
                           size="icon"
                           className="text-muted-foreground hover:bg-primary/10 hover:text-foreground"
+                          aria-label={item.label}
                           onClick={item.action}
                         >
                           <item.icon className="size-4" />
@@ -275,7 +276,6 @@ export function VscodeLayout() {
                       return (
                         <motion.div
                           key={tab.id}
-                          layout
                           initial={{ opacity: 0.75 }}
                           animate={{ opacity: 1 }}
                           className="group flex items-center border-r border-border/40"
