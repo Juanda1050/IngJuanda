@@ -16,7 +16,7 @@ export const enCommon = {
     about: 'about.tsx',
     experience: 'experience.ts',
     projects: 'projects.json',
-    skills: 'skills.tailwind.ts',
+    skills: 'skills.ts',
     contact: 'README.md',
   },
   actions: {
