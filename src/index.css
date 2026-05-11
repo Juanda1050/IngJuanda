@@ -70,8 +70,22 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply text-foreground antialiased;
     font-family: 'Inter', 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+    background:
+      radial-gradient(ellipse at 15% 30%, rgba(100, 180, 255, 0.55) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 15%, rgba(255, 165, 90, 0.45) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 95%, rgba(20, 80, 140, 0.65) 0%, transparent 50%),
+      linear-gradient(185deg, #90D4F7 0%, #52B8E0 30%, #2E86B5 60%, #1B5C8A 100%);
+    min-height: 100vh;
+  }
+
+  .dark body {
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(30, 60, 120, 0.8) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 10%, rgba(80, 20, 100, 0.5) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 100%, rgba(10, 30, 70, 0.9) 0%, transparent 50%),
+      linear-gradient(185deg, #0D1B35 0%, #152340 35%, #0E1A30 65%, #070E1E 100%);
   }
 
   #root {

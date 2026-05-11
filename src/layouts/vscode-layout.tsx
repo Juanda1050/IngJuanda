@@ -23,7 +23,7 @@ import {
   X,
 } from 'lucide-react'
 import { SiApple } from 'react-icons/si'
-import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react'
+import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CommandPalette } from '@/components/command-palette'
 import { LanguageToggle } from '@/components/language-toggle'
@@ -137,13 +137,13 @@ function MacMenuBar() {
       initial={{ y: -12, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.35, ease: 'easeOut' }}
-      className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/20 px-3 py-2 backdrop-blur-2xl dark:border-black/20 dark:bg-black/25"
+      className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/20 px-4 py-1.5 backdrop-blur-2xl dark:border-black/20 dark:bg-black/25"
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 text-sm">
         <div className="flex min-w-0 items-center gap-3 text-[13px]">
           <SiApple className="size-3.5" />
           <div className="hidden items-center gap-3 sm:flex">
-            <span className="font-semibold">Finder</span>
+            <span className="font-medium">Finder</span>
             {['File', 'Edit', 'View', 'Window', 'Help'].map((item) => (
               <button
                 key={item}
@@ -156,13 +156,15 @@ function MacMenuBar() {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-1.5 text-foreground/85">
-          {[Wifi, BatteryFull, Search, SlidersHorizontal].map((Icon) => (
-            <span key={Icon.displayName ?? Icon.name} className="flex size-7 items-center justify-center rounded-md hover:bg-white/20 dark:hover:bg-white/10">
-              <Icon className="size-3.5" />
-            </span>
-          ))}
-          <p className="hidden px-1 text-[12px] md:block">
+        <div className="flex items-center gap-0.5 text-foreground/85">
+          <div className="flex items-center gap-0.5 rounded-lg bg-white/10 px-1 dark:bg-white/5">
+            {[Wifi, BatteryFull, Search, SlidersHorizontal].map((Icon) => (
+              <span key={Icon.displayName ?? Icon.name} className="flex size-7 items-center justify-center rounded-md hover:bg-white/20 dark:hover:bg-white/10">
+                <Icon className="size-3.5" />
+              </span>
+            ))}
+          </div>
+          <p className="hidden px-2 text-[12px] font-medium md:block">
             {now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}{' '}
             {now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
           </p>
@@ -226,7 +228,7 @@ function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number
           }}
           style={{ scale, y }}
           whileTap={{ scale: 0.94 }}
-          className="relative flex size-12 items-center justify-center rounded-[0.95rem] border border-white/30 shadow-[0_12px_24px_-15px_rgba(0,0,0,0.8)] backdrop-blur"
+  className="relative flex size-13 items-center justify-center rounded-[1rem] border border-white/20 shadow-[0_8px_20px_-6px_rgba(0,0,0,0.6),0_16px_32px_-10px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur"
           onClick={item.onClick}
           aria-label={item.label}
         >
@@ -263,7 +265,7 @@ function MacDock({
         aria-label="macOS dock"
         tabIndex={0}
         className={cn(
-          'flex items-end gap-2 rounded-[1.35rem] border border-white/35 bg-white/22 px-3 py-2 backdrop-blur-2xl dark:border-white/15 dark:bg-black/28',
+          'flex items-end gap-2.5 rounded-[1.35rem] border border-white/35 bg-white/22 px-4 py-3 backdrop-blur-2xl dark:border-white/15 dark:bg-black/28',
           isMobile && 'w-full overflow-x-auto justify-start',
         )}
         onMouseMove={(event) => mouseX.set(event.clientX)}
@@ -285,6 +287,59 @@ function MacDock({
         ))}
       </div>
     </motion.div>
+  )
+}
+
+function PhonePreview({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative mx-auto select-none" style={{ width: 'clamp(260px, 28vw, 340px)' }}>
+      {/* Outer phone body */}
+      <div
+        className="relative rounded-[3.2rem] p-[10px]"
+        style={{
+          background: 'linear-gradient(145deg, #3a3a3c 0%, #1c1c1e 50%, #2a2a2c 100%)',
+          boxShadow:
+            '0 0 0 0.5px rgba(255,255,255,0.08), 0 2px 4px rgba(0,0,0,0.3), 0 20px 60px -10px rgba(0,0,0,0.7), 0 40px 80px -20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
+        }}
+      >
+        {/* Side buttons */}
+        <div className="absolute -left-[3.5px] top-[90px] h-8 w-[3.5px] rounded-l-full" style={{ background: 'linear-gradient(to right, #2a2a2c, #3a3a3c)' }} />
+        <div className="absolute -left-[3.5px] top-[136px] h-[42px] w-[3.5px] rounded-l-full" style={{ background: 'linear-gradient(to right, #2a2a2c, #3a3a3c)' }} />
+        <div className="absolute -left-[3.5px] top-[186px] h-[42px] w-[3.5px] rounded-l-full" style={{ background: 'linear-gradient(to right, #2a2a2c, #3a3a3c)' }} />
+        <div className="absolute -right-[3.5px] top-[130px] h-[56px] w-[3.5px] rounded-r-full" style={{ background: 'linear-gradient(to left, #2a2a2c, #3a3a3c)' }} />
+
+        {/* Screen bezel */}
+        <div
+          className="relative overflow-hidden rounded-[2.6rem] bg-black"
+          style={{ boxShadow: 'inset 0 0 0 0.5px rgba(255,255,255,0.04)' }}
+        >
+          {/* Dynamic Island */}
+          <div
+            className="absolute left-1/2 top-[10px] z-20 -translate-x-1/2 rounded-full bg-black"
+            style={{ width: '110px', height: '32px', boxShadow: 'inset 0 0 0 0.5px rgba(255,255,255,0.06)' }}
+          />
+
+          {/* Status bar */}
+          <div className="flex items-center justify-between px-7 pt-4 pb-1">
+            <span className="text-[11px] font-semibold text-foreground/90 dark:text-white/90">9:41</span>
+            <div className="flex items-center gap-1 text-foreground/80 dark:text-white/80">
+              <Wifi className="size-3" />
+              <BatteryFull className="size-3.5" />
+            </div>
+          </div>
+
+          {/* Scrollable content */}
+          <div className="h-[520px] overflow-y-auto scrollbar-none" style={{ WebkitOverflowScrolling: 'touch' }}>
+            {children}
+          </div>
+
+          {/* Home indicator */}
+          <div aria-hidden="true" className="flex justify-center py-2 bg-white dark:bg-[#0d0d0d]">
+            <div className="h-1 w-28 rounded-full bg-black/20 dark:bg-white/20" />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -320,20 +375,20 @@ function VscodeWindow({
   ) as { id: SectionId; key: string; icon: (typeof portfolioFiles)[number]['icon'] }[]
 
   const frameClass = cn(
-    'overflow-hidden border border-white/30 bg-vscode-surface/88 shadow-[0_45px_130px_-55px_rgba(0,0,0,0.95)] backdrop-blur-2xl',
+    'overflow-hidden border border-white/25 bg-vscode-surface/90 shadow-[0_30px_80px_-10px_rgba(0,0,0,0.55),0_60px_120px_-30px_rgba(0,0,0,0.4),0_0_0_0.5px_rgba(255,255,255,0.12)] backdrop-blur-2xl',
     isMobile ? 'rounded-2xl' : 'rounded-[1.6rem]',
     isMaximized && !isMobile && 'rounded-[1.05rem]',
   )
 
   const sizeClass = cn(
-    'h-[calc(100%-3rem)]',
+    'h-[calc(100%-2.5rem)]',
     isMobile
       ? 'w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)]'
       : isMaximized
-        ? 'h-[calc(100dvh-6.5rem)] w-[calc(100vw-1.5rem)] max-w-none'
+        ? 'h-[calc(100dvh-5.75rem)] w-[calc(100vw-1.5rem)] max-w-none'
         : isTablet
-          ? 'h-[calc(100dvh-7.2rem)] w-[min(94vw,1180px)]'
-          : 'h-[calc(100dvh-7rem)] w-[min(90vw,1480px)]',
+          ? 'h-[calc(100dvh-6.5rem)] w-[min(96vw,1200px)]'
+          : 'h-[calc(100dvh-6rem)] w-[min(92vw,1520px)]',
   )
 
   const panelGridClass = cn('grid h-[calc(100%-3rem)] overflow-hidden', isMobile ? 'grid-cols-1' : 'grid-cols-[3.25rem_1fr]')
@@ -482,8 +537,16 @@ function VscodeWindow({
               </ScrollArea>
 
               <ScrollArea className="flex-1">
-                <div className="mx-auto w-full max-w-5xl p-4 pb-20 sm:p-5 md:p-6 md:pb-8 lg:p-7">
-                  <EditorContent section={activeFile} />
+                <div className="flex min-h-full items-center justify-center py-6 px-4">
+                  {isMobile ? (
+                    <div className="w-full max-w-lg">
+                      <EditorContent section={activeFile} />
+                    </div>
+                  ) : (
+                    <PhonePreview>
+                      <EditorContent section={activeFile} />
+                    </PhonePreview>
+                  )}
                 </div>
               </ScrollArea>
 
@@ -601,12 +664,11 @@ export function VscodeLayout() {
   return (
     <TooltipProvider>
       <div className="relative min-h-screen overflow-hidden">
-        <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(125,211,252,0.45),transparent_42%),radial-gradient(circle_at_80%_25%,rgba(251,146,60,0.35),transparent_40%),radial-gradient(circle_at_50%_85%,rgba(59,130,246,0.35),transparent_52%)] dark:bg-[radial-gradient(circle_at_18%_20%,rgba(56,189,248,0.28),transparent_38%),radial-gradient(circle_at_80%_20%,rgba(236,72,153,0.22),transparent_38%),radial-gradient(circle_at_50%_90%,rgba(79,70,229,0.35),transparent_55%)]" />
-        <div className="pointer-events-none fixed inset-0 bg-gradient-to-br from-white/35 via-transparent to-black/20 dark:from-white/5 dark:to-black/55" />
+        <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/15 dark:from-black/20 dark:via-transparent dark:to-black/40" />
 
         <MacMenuBar />
 
-        <div className="fixed inset-x-0 top-10 bottom-20 flex items-center justify-center px-2 sm:px-4">
+        <div className="fixed inset-x-0 top-[2.75rem] bottom-[5rem] flex items-center justify-center px-2 sm:px-4">
           <AnimatePresence mode="wait">
             {shouldRenderWindow ? (
               <motion.div
