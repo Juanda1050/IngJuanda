@@ -1,19 +1,13 @@
-import {
-  Briefcase,
-  CircleUser,
-  Code2,
-  FolderGit2,
-  Mail,
-  type LucideIcon,
-} from 'lucide-react'
 import { type PortfolioFile, type SectionId } from '@/types/portfolio'
+import { FaReact } from 'react-icons/fa6'
+import { SiJson, SiMarkdown, SiTailwindcss, SiTypescript } from 'react-icons/si'
 
-const iconMap: Record<SectionId, LucideIcon> = {
-  about: CircleUser,
-  experience: Briefcase,
-  projects: FolderGit2,
-  skills: Code2,
-  contact: Mail,
+const iconMap: Record<SectionId, PortfolioFile['icon']> = {
+  about: FaReact,
+  experience: SiTypescript,
+  projects: SiJson,
+  skills: SiTailwindcss,
+  contact: SiMarkdown,
 }
 
 export const portfolioFiles: PortfolioFile[] = [

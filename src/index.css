@@ -4,64 +4,69 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 224 71% 4%;
+    --background: 210 31% 97%;
+    --foreground: 222 47% 11%;
     --card: 0 0% 100%;
-    --card-foreground: 224 71% 4%;
+    --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71% 4%;
-    --primary: 221 83% 53%;
+    --popover-foreground: 222 47% 11%;
+    --primary: 220 91% 56%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 216 28% 92%;
+    --secondary: 214 29% 92%;
     --secondary-foreground: 222 47% 11%;
-    --muted: 210 24% 94%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 24% 92%;
+    --muted: 214 32% 94%;
+    --muted-foreground: 215 16% 42%;
+    --accent: 214 30% 91%;
     --accent-foreground: 222 47% 11%;
-    --border: 214 25% 84%;
-    --input: 214 25% 84%;
-    --ring: 221 83% 53%;
-    --radius: 0.65rem;
+    --border: 214 24% 84%;
+    --input: 214 24% 84%;
+    --ring: 220 91% 56%;
+    --radius: 0.9rem;
 
-    --vscode-surface: 210 24% 97%;
-    --vscode-titlebar: 210 22% 95%;
-    --vscode-activity: 215 30% 91%;
-    --vscode-sidebar: 213 30% 94%;
-    --vscode-tabs: 213 26% 92%;
+    --vscode-surface: 214 42% 97%;
+    --vscode-titlebar: 215 41% 95%;
+    --vscode-activity: 216 36% 91%;
+    --vscode-sidebar: 214 32% 93%;
+    --vscode-tabs: 214 28% 90%;
     --vscode-editor: 0 0% 100%;
-    --vscode-status: 213 35% 90%;
+    --vscode-status: 214 34% 89%;
   }
 
   .dark {
-    --background: 222 47% 7%;
-    --foreground: 210 40% 96%;
-    --card: 222 40% 10%;
-    --card-foreground: 210 40% 96%;
-    --popover: 222 40% 10%;
-    --popover-foreground: 210 40% 96%;
-    --primary: 213 93% 67%;
-    --primary-foreground: 222 47% 7%;
-    --secondary: 220 27% 20%;
-    --secondary-foreground: 210 40% 96%;
-    --muted: 220 27% 16%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 220 27% 20%;
-    --accent-foreground: 210 40% 96%;
-    --border: 220 21% 25%;
-    --input: 220 21% 25%;
-    --ring: 213 93% 67%;
+    --background: 233 36% 12%;
+    --foreground: 220 31% 91%;
+    --card: 231 30% 15%;
+    --card-foreground: 220 31% 91%;
+    --popover: 231 30% 15%;
+    --popover-foreground: 220 31% 91%;
+    --primary: 225 100% 73%;
+    --primary-foreground: 233 36% 12%;
+    --secondary: 233 24% 21%;
+    --secondary-foreground: 220 31% 91%;
+    --muted: 232 24% 18%;
+    --muted-foreground: 220 18% 71%;
+    --accent: 232 24% 21%;
+    --accent-foreground: 220 31% 91%;
+    --border: 232 19% 27%;
+    --input: 232 19% 27%;
+    --ring: 225 100% 73%;
 
-    --vscode-surface: 221 26% 12%;
-    --vscode-titlebar: 222 22% 15%;
-    --vscode-activity: 223 23% 10%;
-    --vscode-sidebar: 222 18% 16%;
-    --vscode-tabs: 222 20% 14%;
-    --vscode-editor: 223 24% 13%;
-    --vscode-status: 220 50% 16%;
+    --vscode-surface: 233 31% 13%;
+    --vscode-titlebar: 233 30% 16%;
+    --vscode-activity: 233 35% 10%;
+    --vscode-sidebar: 233 27% 16%;
+    --vscode-tabs: 233 25% 14%;
+    --vscode-editor: 233 28% 12%;
+    --vscode-status: 224 44% 18%;
   }
 
   * {
     @apply border-border;
+  }
+
+  html,
+  body {
+    @apply overflow-x-hidden;
   }
 
   body {

@@ -1,8 +1,10 @@
-import { type LucideIcon } from 'lucide-react'
+import { type IconType } from 'react-icons'
+
+export type PortfolioFileIcon = IconType
 
 export interface PortfolioFile {
   id: SectionId
-  icon: LucideIcon
+  icon: PortfolioFileIcon
   key: string
 }
 
