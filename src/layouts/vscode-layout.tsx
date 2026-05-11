@@ -37,6 +37,7 @@ import {
 } from '@/shared/ui'
 import { useUiStore } from '@/store/ui-store'
 import { type SectionId } from '@/types/portfolio'
+import { cn } from '@/lib/utils'
 
 function SidebarContent({ onPick }: { onPick?: () => void }) {
   const { t } = useTranslation('common')
@@ -187,7 +188,10 @@ export function VscodeLayout() {
                         >
                           <Button
                             variant="ghost"
-                            className={`h-10 rounded-none gap-2 px-3 font-mono text-xs ${isActive ? 'bg-background/70 text-foreground' : 'text-muted-foreground'}`}
+                            className={cn(
+                              'h-10 rounded-none gap-2 px-3 font-mono text-xs',
+                              isActive ? 'bg-background/70 text-foreground' : 'text-muted-foreground',
+                            )}
                             onClick={() => setActiveFile(tab.id)}
                           >
                             <Icon className="size-3.5" />
