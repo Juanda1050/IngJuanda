@@ -10,7 +10,7 @@ import {
   Terminal,
   X,
 } from 'lucide-react'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CommandPalette } from '@/components/command-palette'
 import { LanguageToggle } from '@/components/language-toggle'
@@ -77,6 +77,7 @@ function SidebarContent({ onPick }: { onPick?: () => void }) {
 export function VscodeLayout() {
   const { t } = useTranslation('common')
   const isMobile = useMobile()
+  const [isMobileSheetOpen, setIsMobileSheetOpen] = useState(false)
 
   const openFiles = useUiStore((state) => state.openFiles)
   const activeFile = useUiStore((state) => state.activeFile)
@@ -145,14 +146,14 @@ export function VscodeLayout() {
 
             <div className="grid h-full grid-cols-1 lg:grid-cols-[18rem_1fr]">
               {isMobile ? (
-                <Sheet>
+                <Sheet open={isMobileSheetOpen} onOpenChange={setIsMobileSheetOpen}>
                   <SheetTrigger asChild>
                     <Button variant="outline" size="icon" className="absolute left-16 top-14 z-20 lg:hidden">
                       <Menu className="size-4" />
                     </Button>
                   </SheetTrigger>
                   <SheetContent side="left" className="w-72 border-r border-border/60 p-0">
-                    <SidebarContent />
+                    <SidebarContent onPick={() => setIsMobileSheetOpen(false)} />
                   </SheetContent>
                 </Sheet>
               ) : null}

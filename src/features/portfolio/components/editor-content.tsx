@@ -34,10 +34,12 @@ function ExperienceSection() {
             <CardTitle className="text-base">{item.role}</CardTitle>
             <div className="text-xs text-muted-foreground">{item.company} • {item.period}</div>
           </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">
-            {item.bullets.map((bullet) => (
-              <p key={bullet}>• {bullet}</p>
-            ))}
+          <CardContent className="text-sm text-muted-foreground">
+            <ul className="space-y-2 pl-5 list-disc">
+              {item.bullets.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
           </CardContent>
         </Card>
       ))}
