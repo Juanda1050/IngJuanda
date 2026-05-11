@@ -1,29 +1,21 @@
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, type MotionValue } from 'framer-motion'
 import {
   BatteryFull,
-  CalendarDays,
   Command,
-  Compass,
   FileCode2,
   Folder,
   GitBranch,
-  Mail,
   Menu,
-  MessageCircle,
-  NotebookText,
   PanelLeftClose,
   PanelLeftOpen,
   Search,
-  Settings,
   SlidersHorizontal,
-  Smile,
   Terminal,
-  TerminalSquare,
   Wifi,
   X,
 } from 'lucide-react'
 import { SiApple } from 'react-icons/si'
-import { useEffect, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ComponentType } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CommandPalette } from '@/components/command-palette'
 import { LanguageToggle } from '@/components/language-toggle'
@@ -104,7 +96,7 @@ function MobileSidebarSheet() {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="w-[86vw] max-w-[22rem] border-r border-border/70 p-0 pt-[max(0.75rem,env(safe-area-inset-top))]"
+        className="w-[92vw] max-w-[24rem] border-r border-border/70 p-0 pt-[max(0.75rem,env(safe-area-inset-top))] duration-300 ease-out"
       >
         <SidebarContent onPick={() => setOpen(false)} compact />
       </SheetContent>
@@ -180,7 +172,8 @@ function MacMenuBar() {
 type DockItem = {
   id: string
   label: string
-  icon: ComponentType<{ className?: string }>
+  icon?: ComponentType<{ className?: string }>
+  iconSrc?: string
   className: string
   onClick?: () => void
   active?: boolean
@@ -191,9 +184,11 @@ const DOCK_HOVER_DISTANCE = 140
 const DOCK_HOVER_LIFT = 12
 const DOCK_FALLBACK_DISTANCE = 180
 const DOCK_SCROLL_STEP = 72
+const EDITOR_LINE_COUNT = 120
 
 function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number> }) {
   const ref = useRef<HTMLButtonElement | null>(null)
+  const Icon = item.icon
   const distance = useTransform(mouseX, (value) => {
     if (!ref.current) {
       return DOCK_FALLBACK_DISTANCE
@@ -233,7 +228,13 @@ function DockIcon({ item, mouseX }: { item: DockItem; mouseX: MotionValue<number
           aria-label={item.label}
         >
           <span className={cn('absolute inset-0 rounded-[0.9rem]', item.className)} />
-          <item.icon className="relative size-6 text-white drop-shadow" />
+          {item.iconSrc ? (
+            <img src={item.iconSrc} alt={item.label} className="relative size-8 drop-shadow-md" />
+          ) : Icon ? (
+            <Icon className="relative size-6 text-white drop-shadow" />
+          ) : (
+            <span className="relative size-6 rounded-lg bg-white/80 shadow-sm" />
+          )}
           {item.active ? <span className="absolute -bottom-2 size-1.5 rounded-full bg-white/90 dark:bg-white" /> : null}
         </motion.button>
       </TooltipTrigger>
@@ -290,59 +291,6 @@ function MacDock({
   )
 }
 
-function PhonePreview({ children }: { children: ReactNode }) {
-  return (
-    <div className="relative mx-auto select-none" style={{ width: 'clamp(260px, 28vw, 340px)' }}>
-      {/* Outer phone body */}
-      <div
-        className="relative rounded-[3.2rem] p-[10px]"
-        style={{
-          background: 'linear-gradient(145deg, #3a3a3c 0%, #1c1c1e 50%, #2a2a2c 100%)',
-          boxShadow:
-            '0 0 0 0.5px rgba(255,255,255,0.08), 0 2px 4px rgba(0,0,0,0.3), 0 20px 60px -10px rgba(0,0,0,0.7), 0 40px 80px -20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
-        }}
-      >
-        {/* Side buttons */}
-        <div className="absolute -left-[3.5px] top-[90px] h-8 w-[3.5px] rounded-l-full" style={{ background: 'linear-gradient(to right, #2a2a2c, #3a3a3c)' }} />
-        <div className="absolute -left-[3.5px] top-[136px] h-[42px] w-[3.5px] rounded-l-full" style={{ background: 'linear-gradient(to right, #2a2a2c, #3a3a3c)' }} />
-        <div className="absolute -left-[3.5px] top-[186px] h-[42px] w-[3.5px] rounded-l-full" style={{ background: 'linear-gradient(to right, #2a2a2c, #3a3a3c)' }} />
-        <div className="absolute -right-[3.5px] top-[130px] h-[56px] w-[3.5px] rounded-r-full" style={{ background: 'linear-gradient(to left, #2a2a2c, #3a3a3c)' }} />
-
-        {/* Screen bezel */}
-        <div
-          className="relative overflow-hidden rounded-[2.6rem] bg-black"
-          style={{ boxShadow: 'inset 0 0 0 0.5px rgba(255,255,255,0.04)' }}
-        >
-          {/* Dynamic Island */}
-          <div
-            className="absolute left-1/2 top-[10px] z-20 -translate-x-1/2 rounded-full bg-black"
-            style={{ width: '110px', height: '32px', boxShadow: 'inset 0 0 0 0.5px rgba(255,255,255,0.06)' }}
-          />
-
-          {/* Status bar */}
-          <div className="flex items-center justify-between px-7 pt-4 pb-1">
-            <span className="text-[11px] font-semibold text-foreground/90 dark:text-white/90">9:41</span>
-            <div className="flex items-center gap-1 text-foreground/80 dark:text-white/80">
-              <Wifi className="size-3" />
-              <BatteryFull className="size-3.5" />
-            </div>
-          </div>
-
-          {/* Scrollable content */}
-          <div className="h-[520px] overflow-y-auto scrollbar-none" style={{ WebkitOverflowScrolling: 'touch' }}>
-            {children}
-          </div>
-
-          {/* Home indicator */}
-          <div aria-hidden="true" className="flex justify-center py-2 bg-white dark:bg-[#0d0d0d]">
-            <div className="h-1 w-28 rounded-full bg-black/20 dark:bg-white/20" />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function VscodeWindow({
   isMobile,
   isTablet,
@@ -376,14 +324,14 @@ function VscodeWindow({
 
   const frameClass = cn(
     'overflow-hidden border border-white/25 bg-vscode-surface/90 shadow-[0_30px_80px_-10px_rgba(0,0,0,0.55),0_60px_120px_-30px_rgba(0,0,0,0.4),0_0_0_0.5px_rgba(255,255,255,0.12)] backdrop-blur-2xl',
-    isMobile ? 'rounded-2xl' : 'rounded-[1.6rem]',
+    isMobile ? 'rounded-none border-x-0 border-b-0' : 'rounded-[1.6rem]',
     isMaximized && !isMobile && 'rounded-[1.05rem]',
   )
 
   const sizeClass = cn(
     'h-[calc(100%-2.5rem)]',
     isMobile
-      ? 'w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)]'
+      ? 'h-full w-full max-w-none'
       : isMaximized
         ? 'h-[calc(100dvh-5.75rem)] w-[calc(100vw-1.5rem)] max-w-none'
         : isTablet
@@ -537,16 +485,17 @@ function VscodeWindow({
               </ScrollArea>
 
               <ScrollArea className="flex-1">
-                <div className="flex min-h-full items-center justify-center py-6 px-4">
-                  {isMobile ? (
-                    <div className="w-full max-w-lg">
+                <div className="flex min-h-full px-0 py-0 md:px-4 md:py-6">
+                  <div className="grid w-full grid-cols-[3.25rem_1fr] bg-background/35 font-mono">
+                    <div className="border-r border-border/60 bg-vscode-tabs/70 px-2 py-4 text-right text-xs leading-6 text-muted-foreground">
+                      {Array.from({ length: EDITOR_LINE_COUNT }).map((_, index) => (
+                        <p key={index + 1}>{index + 1}</p>
+                      ))}
+                    </div>
+                    <div className="min-w-0 py-2">
                       <EditorContent section={activeFile} />
                     </div>
-                  ) : (
-                    <PhonePreview>
-                      <EditorContent section={activeFile} />
-                    </PhonePreview>
-                  )}
+                  </div>
                 </div>
               </ScrollArea>
 
@@ -634,14 +583,14 @@ export function VscodeLayout() {
   }, [])
 
   const dockItems: DockItem[] = [
-    { id: 'finder', label: 'Finder', icon: Smile, className: 'bg-gradient-to-br from-[#4da5ff] to-[#0077ff]' },
-    { id: 'safari', label: 'Safari', icon: Compass, className: 'bg-gradient-to-br from-[#5ac8ff] to-[#2563eb]' },
-    { id: 'mail', label: 'Mail', icon: Mail, className: 'bg-gradient-to-br from-[#67a8ff] to-[#2563eb]' },
-    { id: 'messages', label: 'Messages', icon: MessageCircle, className: 'bg-gradient-to-br from-[#6de278] to-[#16a34a]' },
-    { id: 'calendar', label: 'Calendar', icon: CalendarDays, className: 'bg-gradient-to-br from-[#ff7b7b] to-[#ef4444]' },
-    { id: 'notes', label: 'Notes', icon: NotebookText, className: 'bg-gradient-to-br from-[#ffe582] to-[#f59e0b]' },
-    { id: 'settings', label: 'Settings', icon: Settings, className: 'bg-gradient-to-br from-[#9ea6b6] to-[#6b7280]' },
-    { id: 'terminal', label: 'Terminal', icon: TerminalSquare, className: 'bg-gradient-to-br from-[#3b3b3b] to-[#111111]' },
+    { id: 'finder', label: 'Finder', iconSrc: '/dock-icons/finder.svg', className: 'bg-gradient-to-br from-[#4da5ff] to-[#0077ff]' },
+    { id: 'safari', label: 'Safari', iconSrc: '/dock-icons/safari.svg', className: 'bg-gradient-to-br from-[#5ac8ff] to-[#2563eb]' },
+    { id: 'mail', label: 'Mail', iconSrc: '/dock-icons/mail.svg', className: 'bg-gradient-to-br from-[#67a8ff] to-[#2563eb]' },
+    { id: 'messages', label: 'Messages', iconSrc: '/dock-icons/messages.svg', className: 'bg-gradient-to-br from-[#6de278] to-[#16a34a]' },
+    { id: 'calendar', label: 'Calendar', iconSrc: '/dock-icons/calendar.svg', className: 'bg-gradient-to-br from-[#ff7b7b] to-[#ef4444]' },
+    { id: 'notes', label: 'Notes', iconSrc: '/dock-icons/notes.svg', className: 'bg-gradient-to-br from-[#ffe582] to-[#f59e0b]' },
+    { id: 'settings', label: 'Settings', iconSrc: '/dock-icons/settings.svg', className: 'bg-gradient-to-br from-[#9ea6b6] to-[#6b7280]' },
+    { id: 'terminal', label: 'Terminal', iconSrc: '/dock-icons/terminal.svg', className: 'bg-gradient-to-br from-[#3b3b3b] to-[#111111]' },
     {
       id: 'vscode',
       label: 'VS Code',
@@ -668,7 +617,12 @@ export function VscodeLayout() {
 
         <MacMenuBar />
 
-        <div className="fixed inset-x-0 top-[2.75rem] bottom-[5rem] flex items-center justify-center px-2 sm:px-4">
+        <div
+          className={cn(
+            'fixed inset-x-0 bottom-[5rem] flex items-center justify-center px-0 sm:px-4',
+            isMobile ? 'top-[2.75rem]' : 'top-[3.4rem]',
+          )}
+        >
           <AnimatePresence mode="wait">
             {shouldRenderWindow ? (
               <motion.div
