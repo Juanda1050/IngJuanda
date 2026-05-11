@@ -21,6 +21,8 @@ export const esCommon = {
   },
   actions: {
     close: 'Cerrar',
+    minimize: 'Minimizar',
+    maximize: 'Maximizar',
     light: 'Claro',
     dark: 'Oscuro',
     system: 'Sistema',
