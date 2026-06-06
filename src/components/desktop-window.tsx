@@ -1,6 +1,6 @@
-import { motion, useDragControls } from 'framer-motion'
+import { motion, useDragControls, AnimatePresence } from 'framer-motion'
 import { useUiStore, type AppId } from '@/store/ui-store'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 import { useDevice } from '@/hooks/use-device'
 
@@ -22,7 +22,7 @@ export function DesktopWindow({
   appId,
   title,
   defaultSizeClass,
-  maximizedSizeClass = 'h-[75vh] w-[calc(100vw-3rem)] max-w-none rounded-[1.05rem]',
+  maximizedSizeClass = 'h-full w-full max-w-none rounded-xl',
   children,
   icon,
   customHeaderLeft,
@@ -34,6 +34,7 @@ export function DesktopWindow({
   const ref = useRef<HTMLDivElement>(null)
   const dragControls = useDragControls()
   const { isMobile } = useDevice()
+  const [isHoveringTrafficLights, setIsHoveringTrafficLights] = useState(false)
 
   const app = useUiStore((state) => state.apps[appId])
   const activeApp = useUiStore((state) => state.activeApp)
@@ -63,12 +64,19 @@ export function DesktopWindow({
     'relative flex flex-col h-full w-full overflow-hidden border bg-background/92 text-foreground transition-shadow duration-200 select-none',
     isMobile 
       ? 'rounded-none border-x-0 border-b-0' 
-      : cn(
-          'rounded-[1.4rem]',
-          isFocused 
-            ? 'shadow-[0_30px_80px_-15px_rgba(0,0,0,0.55),0_0_0_0.5px_rgba(255,255,255,0.15)] border-white/25 dark:border-white/12' 
-            : 'shadow-[0_15px_40px_-10px_rgba(0,0,0,0.4),0_0_0_0.5px_rgba(255,255,255,0.15)] border-white/15 dark:border-white/8',
-        ),
+      : isMaximized
+        ? cn(
+            'rounded-xl',
+            isFocused 
+              ? 'shadow-[0_30px_80px_-15px_rgba(0,0,0,0.55),0_0_0_0.5px_rgba(255,255,255,0.15)] border-white/25 dark:border-white/12' 
+              : 'shadow-[0_15px_40px_-10px_rgba(0,0,0,0.4),0_0_0_0.5px_rgba(255,255,255,0.15)] border-white/15 dark:border-white/8',
+          )
+        : cn(
+            'rounded-[1.4rem]',
+            isFocused 
+              ? 'shadow-[0_30px_80px_-15px_rgba(0,0,0,0.55),0_0_0_0.5px_rgba(255,255,255,0.15)] border-white/25 dark:border-white/12' 
+              : 'shadow-[0_15px_40px_-10px_rgba(0,0,0,0.4),0_0_0_0.5px_rgba(255,255,255,0.15)] border-white/15 dark:border-white/8',
+          ),
   )
 
   return (
@@ -90,7 +98,13 @@ export function DesktopWindow({
       transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
       style={{ zIndex }}
       onPointerDown={() => focusApp(appId)}
-      className={cn('relative max-h-full max-w-full', sizeClass)}
+      className={cn(
+        isMaximized
+          ? isMobile
+            ? 'fixed inset-x-0 top-[2.75rem] bottom-[5.75rem]'
+            : 'fixed inset-x-2 top-[3.8rem] bottom-[8.75rem]'
+          : cn('relative max-h-full max-w-full', sizeClass)
+      )}
     >
       <div className={frameClass}>
         {/* macOS Titlebar */}
@@ -105,29 +119,100 @@ export function DesktopWindow({
               dragControls.start(event)
             }
           }}
+          onDoubleClick={() => {
+            if (!isMobile) {
+              toggleAppMaximize(appId)
+            }
+          }}
         >
           {/* Traffic Lights & Custom Left items */}
           <div className="flex items-center gap-3" onPointerDown={(e) => e.stopPropagation()}>
             {isMobile ? null : (
-              <div className="group flex items-center gap-1.5 mr-1">
+              <div
+                className="group flex items-center gap-1.5 mr-1"
+                onMouseEnter={() => setIsHoveringTrafficLights(true)}
+                onMouseLeave={() => setIsHoveringTrafficLights(false)}
+              >
+                {/* Red – Close */}
                 <button
                   type="button"
-                  className="size-3 rounded-full bg-[#ff5f57] border border-[#e0443e]/30 transition-transform hover:scale-105 active:opacity-70"
+                  className={cn(
+                    "size-3 rounded-full bg-[#ff5f57] border border-[#e0443e]/40 transition-all hover:brightness-90 active:brightness-75 flex items-center justify-center",
+                    !isFocused && "bg-[#ff5f57]/40 border-[#e0443e]/20"
+                  )}
                   onClick={() => closeApp(appId)}
                   aria-label="Close"
-                />
+                  title="Close"
+                >
+                  <AnimatePresence>
+                    {isHoveringTrafficLights && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="text-[8px] font-black text-[#4d0000]/70 leading-none pointer-events-none"
+                        style={{ fontFamily: 'system-ui' }}
+                      >
+                        ✕
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </button>
+
+                {/* Yellow – Minimize */}
                 <button
                   type="button"
-                  className="size-3 rounded-full bg-[#febc2e] border border-[#dfa024]/30 transition-transform hover:scale-105 active:opacity-70"
+                  className={cn(
+                    "size-3 rounded-full bg-[#febc2e] border border-[#dfa024]/40 transition-all hover:brightness-90 active:brightness-75 flex items-center justify-center",
+                    !isFocused && "bg-[#febc2e]/40 border-[#dfa024]/20"
+                  )}
                   onClick={() => minimizeApp(appId)}
                   aria-label="Minimize"
-                />
+                  title="Minimize"
+                >
+                  <AnimatePresence>
+                    {isHoveringTrafficLights && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="text-[8px] font-black text-[#5c3d00]/70 leading-none pointer-events-none"
+                        style={{ fontFamily: 'system-ui' }}
+                      >
+                        −
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </button>
+
+                {/* Green – Full Screen / Zoom */}
                 <button
                   type="button"
-                  className="size-3 rounded-full bg-[#28c840] border border-[#1aab2f]/30 transition-transform hover:scale-105 active:opacity-70"
+                  className={cn(
+                    "size-3 rounded-full bg-[#28c840] border border-[#1aab2f]/40 transition-all hover:brightness-90 active:brightness-75 flex items-center justify-center",
+                    !isFocused && "bg-[#28c840]/40 border-[#1aab2f]/20"
+                  )}
                   onClick={() => toggleAppMaximize(appId)}
-                  aria-label="Maximize"
-                />
+                  aria-label={isMaximized ? "Exit Full Screen" : "Enter Full Screen"}
+                  title={isMaximized ? "Exit Full Screen" : "Enter Full Screen"}
+                >
+                  <AnimatePresence>
+                    {isHoveringTrafficLights && (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.12 }}
+                        className="text-[8px] font-black text-[#004d12]/70 leading-none pointer-events-none"
+                        style={{ fontFamily: 'system-ui' }}
+                      >
+                        {isMaximized ? '⊙' : '⤢'}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </button>
               </div>
             )}
             {customHeaderLeft}

@@ -41,6 +41,7 @@ import { PreviewWindow } from "@/features/preview/components/preview-window";
 import { CalendarWindow } from "@/features/calendar/components/calendar-window";
 import { NotesWindow } from "@/features/notes/components/notes-window";
 import { MessagesWindow } from "@/features/messages/components/messages-window";
+import { MusicWindow } from "@/features/music/components/music-window";
 import { useDevice } from "@/hooks/use-device";
 import {
   Avatar,
@@ -613,20 +614,20 @@ export function VscodeLayout() {
   }, []);
 
   const dockItems: DockItem[] = [
-    { id: "finder", label: "Finder", iconSrc: "/juanda.svg", active: apps.finder.state === "open", onClick: () => openApp("finder") },
-    { id: "safari", label: "Safari", iconSrc: "/dock-icons/safari.svg", active: apps.safari.state === "open", onClick: () => openApp("safari") },
-    { id: "mail", label: "Mail", iconSrc: "/dock-icons/mail.svg", active: apps.mail.state === "open", onClick: () => openApp("mail") },
-    { id: "messages", label: "Messages", iconSrc: "/dock-icons/messages.svg", active: apps.messages.state === "open", onClick: () => openApp("messages") },
-    { id: "calendar", label: "Calendar", iconSrc: "/dock-icons/calendar.svg", active: apps.calendar.state === "open", onClick: () => openApp("calendar") },
-    { id: "notes", label: "Notes", iconSrc: "/dock-icons/notes.svg", active: apps.notes.state === "open", onClick: () => openApp("notes") },
-    { id: "files", label: "Files", iconSrc: "/dock-icons/files.svg", active: apps.finder.state === "open", onClick: () => openApp("finder") },
-    { id: "music", label: "Music", iconSrc: "/dock-icons/music.svg", active: apps.music.state === "open", onClick: () => openApp("music") },
-    { id: "settings", label: "Settings", iconSrc: "/dock-icons/settings.svg", active: apps.settings.state === "open", onClick: () => openApp("settings") },
+    { id: "finder", label: "Finder", iconSrc: "/juanda.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
+    { id: "safari", label: "Safari", iconSrc: "/dock-icons/safari.svg", active: apps.safari.state !== "closed", onClick: () => openApp("safari") },
+    { id: "mail", label: "Mail", iconSrc: "/dock-icons/mail.svg", active: apps.mail.state !== "closed", onClick: () => openApp("mail") },
+    { id: "messages", label: "Messages", iconSrc: "/dock-icons/messages.svg", active: apps.messages.state !== "closed", onClick: () => openApp("messages") },
+    { id: "calendar", label: "Calendar", iconSrc: "/dock-icons/calendar.svg", active: apps.calendar.state !== "closed", onClick: () => openApp("calendar") },
+    { id: "notes", label: "Notes", iconSrc: "/dock-icons/notes.svg", active: apps.notes.state !== "closed", onClick: () => openApp("notes") },
+    { id: "files", label: "Files", iconSrc: "/dock-icons/files.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
+    { id: "music", label: "Music", iconSrc: "/dock-icons/music.svg", active: apps.music.state !== "closed", onClick: () => openApp("music") },
+    { id: "settings", label: "Settings", iconSrc: "/dock-icons/settings.svg", active: apps.settings.state !== "closed", onClick: () => openApp("settings") },
     {
       id: "vscode",
       label: "VS Code",
       iconSrc: "/dock-icons/vscode.svg",
-      active: apps.vscode.state === "open",
+      active: apps.vscode.state !== "closed",
       onClick: () => {
         setOpenFromDock(true);
         openApp("vscode");
@@ -813,6 +814,19 @@ export function VscodeLayout() {
                     defaultSizeClass="w-[min(85vw,750px)] h-[65vh] min-h-[480px]"
                   >
                     <MessagesWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Music Window */}
+              {apps.music.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="music"
+                    title="Music"
+                    defaultSizeClass="w-[min(90vw,1000px)] h-[70vh] min-h-[480px]"
+                  >
+                    <MusicWindow />
                   </DesktopWindow>
                 </div>
               )}
