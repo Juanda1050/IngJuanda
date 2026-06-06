@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { useUiStore } from '@/store/ui-store'
 import { cn } from '@/lib/utils'
+import { formatWithAppleEmojis } from '@/components/apple-emoji'
 import SPOTIFY_CACHE from '../data/spotify-cache.json'
 
 interface Track {
@@ -118,7 +119,8 @@ async function fetchSpotifyPlaylist(playlistId: string): Promise<Playlist> {
     album: entity.name || '',
     duration: Math.round(t.duration / 1000),
     audioUrl: t.audioPreview ? t.audioPreview.url : '',
-    coverGradient: getDeterministicGradient(t.uri)
+    coverGradient: getDeterministicGradient(t.uri),
+    coverUrl: coverUrl
   }))
   
   return {
@@ -131,7 +133,7 @@ async function fetchSpotifyPlaylist(playlistId: string): Promise<Playlist> {
 }
 
 export function MusicWindow() {
-  const { i18n } = useTranslation('common')
+  const { t, i18n } = useTranslation('common')
   const isEn = i18n.language === 'en'
 
   // Global window state listener to pause audio if music app minimized/closed
@@ -166,8 +168,12 @@ export function MusicWindow() {
   const [currentTrack, setCurrentTrack] = useState<Track | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
-  const [volume, setVolume] = useState(0.5) // default 50%
-  const [isMuted, setIsMuted] = useState(false)
+  const volumeRaw = useUiStore((state) => state.volume)
+  const setVolumeRaw = useUiStore((state) => state.setVolume)
+  const isMuted = useUiStore((state) => state.muted)
+  const setIsMuted = useUiStore((state) => state.setMuted)
+  const volume = volumeRaw / 100
+  const setVolume = (val: number) => setVolumeRaw(val * 100)
 
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const progressBarRef = useRef<HTMLInputElement>(null)
@@ -186,7 +192,8 @@ export function MusicWindow() {
         album: t.album,
         duration: t.duration,
         audioUrl: t.audioUrl,
-        coverGradient: getDeterministicGradient(t.id)
+        coverGradient: getDeterministicGradient(t.id),
+        coverUrl: pl.coverUrl
       }))
     }))
 
@@ -195,7 +202,10 @@ export function MusicWindow() {
       name: pl.name,
       coverUrl: pl.coverUrl,
       description: pl.description,
-      tracks: pl.tracks
+      tracks: pl.tracks.map((t: any) => ({
+        ...t,
+        coverUrl: pl.coverUrl
+      }))
     }))
 
     return [...custom, ...cached]
@@ -268,7 +278,7 @@ export function MusicWindow() {
     }
 
     const handleEnded = () => {
-      handleNextTrack()
+      handleNextTrackRef.current()
     }
 
     audioRef.current.addEventListener('timeupdate', handleTimeUpdate)
@@ -281,7 +291,7 @@ export function MusicWindow() {
         audioRef.current.pause()
       }
     }
-  }, [activePlaylist]) // Re-run if playlist changes context
+  }, []) // Mount-only initialization!
 
   // Sync volume state to audio element
   useEffect(() => {
@@ -364,10 +374,10 @@ export function MusicWindow() {
       
       setSelectedPlaylistId(playlist.id)
       setImportUrl('')
-      setWarningMessage(isEn ? 'Playlist imported successfully!' : '¡Playlist importada con éxito!')
+      setWarningMessage(t('music.sidebar.loadSuccess'))
     } catch (err: any) {
       console.error("Importer failed:", err)
-      setImportError(isEn ? 'Failed to fetch playlist' : 'Error al cargar la playlist')
+      setImportError(t('music.sidebar.invalidUrl'))
     } finally {
       setImportLoading(false)
     }
@@ -382,10 +392,7 @@ export function MusicWindow() {
         setCurrentTrack(firstPlayable)
         setIsPlaying(true)
       } else {
-        setWarningMessage(isEn 
-          ? "No playable audio previews found in this playlist." 
-          : "No se encontraron adelantos de audio reproducibles en esta lista."
-        )
+        setWarningMessage(t('music.player.noPlayable', isEn ? "No playable audio previews found in this playlist." : "No se encontraron adelantos de audio reproducibles en esta lista."))
       }
     } else {
       setIsPlaying(prev => !prev)
@@ -394,10 +401,7 @@ export function MusicWindow() {
 
   const handleTrackSelect = (track: Track) => {
     if (!track.audioUrl) {
-      setWarningMessage(isEn 
-        ? "Spotify does not provide a 30-second audio preview for this track." 
-        : "Spotify no proporciona un adelanto de audio de 30 segundos para esta canción."
-      )
+      setWarningMessage(t('music.player.noPreview', isEn ? "Spotify does not provide a 30-second audio preview for this track." : "Spotify no proporciona un adelanto de audio de 30 segundos para esta canción."))
       return
     }
 
@@ -456,6 +460,11 @@ export function MusicWindow() {
     }
   }
 
+  const handleNextTrackRef = useRef(handleNextTrack)
+  useEffect(() => {
+    handleNextTrackRef.current = handleNextTrack
+  }, [handleNextTrack])
+
   const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value)
     setCurrentTime(val)
@@ -511,7 +520,7 @@ export function MusicWindow() {
       {warningMessage && (
         <div className="absolute bottom-4 right-4 z-50 bg-[#1db954] text-white border border-[#1db954]/20 rounded-lg px-4 py-2.5 text-xs font-semibold shadow-xl backdrop-blur flex items-center gap-2 animate-in fade-in slide-in-from-bottom-2 duration-300">
           <Music className="size-4 shrink-0 animate-pulse" />
-          <span>{warningMessage}</span>
+          <span>{formatWithAppleEmojis(warningMessage)}</span>
         </div>
       )}
 
@@ -525,7 +534,7 @@ export function MusicWindow() {
             <Search className="absolute left-2 size-3.5 text-muted-foreground/60" />
             <input
               type="text"
-              placeholder={isEn ? "Search..." : "Buscar..."}
+              placeholder={t('music.sidebar.search', isEn ? "Search..." : "Buscar...")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full rounded-md border-0 bg-background/50 dark:bg-black/20 py-1 pl-7 pr-3 text-xs outline-none placeholder:text-muted-foreground/60 focus:bg-background/80 text-foreground transition-all"
@@ -536,9 +545,9 @@ export function MusicWindow() {
           <div className="space-y-1">
             <h4 className="text-[10px] font-bold text-muted-foreground/75 uppercase tracking-wider px-2">Apple Music</h4>
             {[
-              { id: 'listen', label: isEn ? 'Listen Now' : 'Escuchar', icon: <Disc className="size-4 text-red-500" /> },
-              { id: 'browse', label: isEn ? 'Browse' : 'Explorar', icon: <Sparkles className="size-4 text-red-500" /> },
-              { id: 'radio', label: isEn ? 'Radio' : 'Radio', icon: <Radio className="size-4 text-red-500" /> }
+              { id: 'listen', label: t('music.sidebar.listenNow', isEn ? 'Listen Now' : 'Escuchar'), icon: <Disc className="size-4 text-red-500" /> },
+              { id: 'browse', label: t('music.sidebar.browse', isEn ? 'Browse' : 'Explorar'), icon: <Sparkles className="size-4 text-red-500" /> },
+              { id: 'radio', label: t('music.sidebar.radio', isEn ? 'Radio' : 'Radio'), icon: <Radio className="size-4 text-red-500" /> }
             ].map(item => (
               <button
                 key={item.id}
@@ -552,11 +561,11 @@ export function MusicWindow() {
 
           {/* Library Category */}
           <div className="space-y-1">
-            <h4 className="text-[10px] font-bold text-muted-foreground/75 uppercase tracking-wider px-2">{isEn ? 'Library' : 'Biblioteca'}</h4>
+            <h4 className="text-[10px] font-bold text-muted-foreground/75 uppercase tracking-wider px-2">{t('music.sidebar.library')}</h4>
             {[
-              { id: 'recent', label: isEn ? 'Recently Added' : 'Añadido recientemente', icon: <Clock className="size-4 text-red-500" /> },
-              { id: 'artists', label: isEn ? 'Artists' : 'Artistas', icon: <Heart className="size-4 text-red-500" /> },
-              { id: 'albums', label: isEn ? 'Albums' : 'Álbumes', icon: <Disc className="size-4 text-red-500" /> }
+              { id: 'recent', label: t('music.sidebar.recentlyAdded'), icon: <Clock className="size-4 text-red-500" /> },
+              { id: 'artists', label: t('music.sidebar.artists'), icon: <Heart className="size-4 text-red-500" /> },
+              { id: 'albums', label: t('music.sidebar.albums'), icon: <Disc className="size-4 text-red-500" /> }
             ].map(item => (
               <button
                 key={item.id}
@@ -571,7 +580,7 @@ export function MusicWindow() {
           {/* Playlists Category */}
           <div className="space-y-1">
             <div className="flex items-center justify-between px-2">
-              <h4 className="text-[10px] font-bold text-muted-foreground/75 uppercase tracking-wider">{isEn ? 'Playlists' : 'Listas'}</h4>
+              <h4 className="text-[10px] font-bold text-muted-foreground/75 uppercase tracking-wider">{t('music.sidebar.playlists')}</h4>
               {isLoadingLive && (
                 <span className="size-2 bg-green-500 rounded-full animate-ping" title="Syncing Spotify..." />
               )}
@@ -603,12 +612,12 @@ export function MusicWindow() {
           {/* Import Playlist Form */}
           <form onSubmit={handleImportPlaylist} className="space-y-1">
             <span className="text-[9px] font-bold text-muted-foreground/75 uppercase tracking-wider px-1">
-              {isEn ? 'Import Playlist' : 'Importar Lista'}
+              {t('music.sidebar.importPlaylist')}
             </span>
             <div className="relative flex items-center">
               <input
                 type="text"
-                placeholder={isEn ? "Spotify URL..." : "Enlace Spotify..."}
+                placeholder={t('music.sidebar.inputPlaceholder')}
                 value={importUrl}
                 onChange={(e) => {
                   setImportUrl(e.target.value)
@@ -646,7 +655,7 @@ export function MusicWindow() {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-bold text-foreground/90 truncate leading-tight group-hover:text-[#1db954] transition-colors">Juanda</p>
-              <p className="text-[9px] text-muted-foreground/80 font-bold truncate mt-0.5">{isEn ? 'Spotify Profile' : 'Perfil Spotify'}</p>
+              <p className="text-[9px] text-muted-foreground/80 font-bold truncate mt-0.5">{t('music.sidebar.spotifyProfile')}</p>
             </div>
           </a>
 
@@ -693,14 +702,14 @@ export function MusicWindow() {
                 {/* Small rotating Cover */}
                 <div className={cn(
                   "size-10 rounded-md bg-gradient-to-br shrink-0 shadow flex items-center justify-center transition-transform border border-white/10 overflow-hidden relative",
-                  !activePlaylist?.coverUrl && currentTrack.coverGradient,
+                  !currentTrack.coverUrl && currentTrack.coverGradient,
                   isPlaying ? "animate-spin" : ""
                 )}
                 style={{ animationDuration: '24s' }}
                 >
-                  {activePlaylist?.coverUrl ? (
+                  {currentTrack.coverUrl ? (
                     <img 
-                      src={activePlaylist.coverUrl} 
+                      src={currentTrack.coverUrl} 
                       alt={currentTrack.title}
                       className="absolute inset-0 size-full object-cover"
                     />
@@ -750,7 +759,7 @@ export function MusicWindow() {
           {/* Volume controls */}
           <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={() => setIsMuted(prev => !prev)}
+              onClick={() => setIsMuted(!isMuted)}
               className="flex size-7 items-center justify-center rounded hover:bg-black/5 dark:hover:bg-white/5 text-muted-foreground hover:text-foreground"
               aria-label="Mute toggle"
             >
@@ -795,7 +804,7 @@ export function MusicWindow() {
             </div>
             
             <div className="space-y-1 md:space-y-2 select-none min-w-0">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-red-500">Playlist</span>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-red-500">{t('music.sidebar.playlists').slice(0, -1)}</span>
               <h2 className="text-xl md:text-2xl font-extrabold tracking-tight text-foreground/90 truncate leading-none">
                 {getPlaylistName(activePlaylist, isEn)}
               </h2>
@@ -803,7 +812,7 @@ export function MusicWindow() {
                 {activePlaylist?.description || (isEn ? 'Featuring tracks from Bad Bunny, Drake, Kendrick, and Tyler.' : 'Incluye pistas de Bad Bunny, Drake, Kendrick y Tyler.')}
               </p>
               <p className="text-[10px] text-muted-foreground/60 font-bold">
-                {filteredTracks.length} {isEn ? 'songs' : 'canciones'} • {formatTime(filteredTracks.reduce((acc, t) => acc + t.duration, 0))}
+                {filteredTracks.length} {t('music.sidebar.songs').toLowerCase()} • {formatTime(filteredTracks.reduce((acc, t) => acc + t.duration, 0))}
               </p>
             </div>
           </div>
@@ -824,8 +833,8 @@ export function MusicWindow() {
             {/* Header row labels */}
             <div className="grid grid-cols-[30px_1fr_1fr_50px] gap-2 px-3 py-1 text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider select-none">
               <span>#</span>
-              <span>{isEn ? 'Title' : 'Título'}</span>
-              <span>{isEn ? 'Album' : 'Álbum'}</span>
+              <span>{t('music.headers.title')}</span>
+              <span>{t('music.headers.album')}</span>
               <span className="flex justify-end"><Clock className="size-3.5" /></span>
             </div>
 

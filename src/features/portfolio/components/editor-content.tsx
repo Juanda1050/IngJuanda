@@ -7,11 +7,11 @@ interface EditorContentProps {
 }
 
 const codeColor = {
-  base: 'text-[#d4d4d4]',
-  keyword: 'text-[#c586c0]',
-  property: 'text-[#9cdcfe]',
-  string: 'text-[#ce9178]',
-  value: 'text-[#4ec9b0]',
+  base: 'text-zinc-700 dark:text-[#d4d4d4]',
+  keyword: 'text-purple-600 dark:text-[#c586c0]',
+  property: 'text-blue-600 dark:text-[#9cdcfe]',
+  string: 'text-amber-700 dark:text-[#ce9178]',
+  value: 'text-teal-600 dark:text-[#4ec9b0]',
 } as const
 
 function toCodeString(value: string) {

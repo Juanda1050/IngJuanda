@@ -9,12 +9,13 @@ void i18n.use(LanguageDetector).use(initReactI18next).init({
     en: { common: enCommon },
     es: { common: esCommon },
   },
+  lng: typeof window !== 'undefined' ? (localStorage.getItem('i18nextLng') || 'en') : 'en',
   fallbackLng: 'en',
   defaultNS: 'common',
   ns: ['common'],
   interpolation: { escapeValue: false },
   detection: {
-    order: ['localStorage', 'navigator'],
+    order: ['localStorage'],
     caches: ['localStorage'],
   },
 })

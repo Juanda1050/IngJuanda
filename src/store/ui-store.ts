@@ -46,6 +46,20 @@ interface UiState {
   terminalLines: string[]
   setTerminalOpen: (open: boolean) => void
   runDevServer: () => void
+
+  // Volume state
+  volume: number
+  muted: boolean
+  setVolume: (vol: number) => void
+  setMuted: (muted: boolean) => void
+
+  // System Settings states
+  wallpaper: string
+  brightness: number
+  nightShift: boolean
+  setWallpaper: (wp: string) => void
+  setBrightness: (brightness: number) => void
+  setNightShift: (active: boolean) => void
 }
 
 const fallbackFile: SectionId = portfolioFiles[0]?.id ?? 'about'
@@ -250,6 +264,20 @@ export const useUiStore = create<UiState>((set, get) => ({
     }
     printNextLine()
   },
+
+  // Volume initial state and actions
+  volume: 70,
+  muted: false,
+  setVolume: (vol) => set({ volume: vol }),
+  setMuted: (muted) => set({ muted }),
+
+  // System Settings initial state and actions
+  wallpaper: 'default',
+  brightness: 100,
+  nightShift: false,
+  setWallpaper: (wp) => set({ wallpaper: wp }),
+  setBrightness: (brightness) => set({ brightness }),
+  setNightShift: (nightShift) => set({ nightShift }),
 
   // Legacy window actions wrappers
   closeWindow: () => get().closeApp('vscode'),

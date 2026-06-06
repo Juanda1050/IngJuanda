@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Folder, FileText, Download, Clock, HardDrive } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useUiStore } from '@/store/ui-store'
 import { cn } from '@/lib/utils'
+import { formatWithAppleEmojis } from '@/components/apple-emoji'
 
 interface FileItem {
   name: string
@@ -11,37 +13,38 @@ interface FileItem {
 }
 
 export function FinderWindow() {
+  const { t } = useTranslation('common')
   const [activeTab, setActiveTab] = useState<'documents' | 'desktop' | 'downloads'>('documents')
   const openApp = useUiStore((state) => state.openApp)
   const setPreviewPdfUrl = useUiStore((state) => state.setPreviewPdfUrl)
 
-  const documentFiles: FileItem[] = [
+  const documentFiles: FileItem[] = useMemo(() => [
     {
-      name: 'Resume Juan Daniel González Alejandre.pdf',
+      name: t('finder.files.cvEn.name'),
       path: '/profile/Resume Juan Daniel González Alejandre.pdf',
-      size: '93 KB',
+      size: t('finder.files.cvEn.size'),
       type: 'pdf',
     },
     {
-      name: 'CV Juan Daniel González Alejandre.pdf',
+      name: t('finder.files.cvEs.name'),
       path: '/profile/CV Juan Daniel González Alejandre.pdf',
-      size: '97 KB',
+      size: t('finder.files.cvEs.size'),
       type: 'pdf',
     },
-  ]
+  ], [t])
 
-  const filesByTab: Record<'documents' | 'desktop' | 'downloads', FileItem[]> = {
+  const filesByTab: Record<'documents' | 'desktop' | 'downloads', FileItem[]> = useMemo(() => ({
     documents: documentFiles,
     desktop: [],
     downloads: [
       {
-        name: 'Resume Juan Daniel González Alejandre.pdf',
+        name: t('finder.files.cvEn.name'),
         path: '/profile/Resume Juan Daniel González Alejandre.pdf',
-        size: '93 KB',
+        size: t('finder.files.cvEn.size'),
         type: 'pdf',
       },
     ],
-  }
+  }), [documentFiles, t])
 
   const handleFileDoubleClick = (file: FileItem) => {
     if (file.type === 'pdf') {
@@ -56,11 +59,13 @@ export function FinderWindow() {
       <div className="w-44 shrink-0 border-r border-border/50 bg-vscode-sidebar/95 px-2 py-3 space-y-4">
         {/* Favorites */}
         <div className="space-y-1">
-          <p className="px-2 text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider">Favorites</p>
+          <p className="px-2 text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider">
+            {t('finder.sidebar.favorites')}
+          </p>
           {[
-            { id: 'desktop', label: 'Desktop', icon: <Clock className="size-4 text-blue-500" /> },
-            { id: 'documents', label: 'Documents', icon: <Folder className="size-4 text-blue-500" /> },
-            { id: 'downloads', label: 'Downloads', icon: <Download className="size-4 text-blue-500" /> },
+            { id: 'desktop', label: t('finder.sidebar.desktop'), icon: <Clock className="size-4 text-blue-500" /> },
+            { id: 'documents', label: t('finder.sidebar.documents'), icon: <Folder className="size-4 text-blue-500" /> },
+            { id: 'downloads', label: t('finder.sidebar.downloads'), icon: <Download className="size-4 text-blue-500" /> },
           ].map((tab) => (
             <button
               key={tab.id}
@@ -73,14 +78,16 @@ export function FinderWindow() {
               )}
             >
               {tab.icon}
-              <span>{tab.label}</span>
+              <span>{formatWithAppleEmojis(tab.label)}</span>
             </button>
           ))}
         </div>
 
         {/* Locations */}
         <div className="space-y-1">
-          <p className="px-2 text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider">Locations</p>
+          <p className="px-2 text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider">
+            {t('finder.sidebar.locations')}
+          </p>
           <div className="flex items-center gap-2 px-2.5 py-1.5 text-xs text-muted-foreground font-medium">
             <HardDrive className="size-4 text-muted-foreground/80" />
             <span>Macintosh HD</span>
@@ -91,13 +98,13 @@ export function FinderWindow() {
       {/* File Grid Area */}
       <div className="flex-1 p-4 overflow-y-auto bg-background dark:bg-[#1a1a1a]">
         <div className="flex items-center justify-between border-b border-border/40 pb-2 mb-4 text-xs text-muted-foreground">
-          <span>Name</span>
-          <span>Size</span>
+          <span>{t('finder.table.name')}</span>
+          <span>{t('finder.table.size')}</span>
         </div>
 
         {filesByTab[activeTab].length === 0 ? (
           <div className="flex h-44 items-center justify-center text-xs text-muted-foreground italic">
-            This folder is empty
+            {t('finder.table.emptyFolder')}
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
@@ -116,7 +123,7 @@ export function FinderWindow() {
                 
                 {/* Filename */}
                 <span className="text-[11.5px] leading-tight font-medium break-all line-clamp-2 px-1 text-muted-foreground group-hover:text-foreground">
-                  {file.name}
+                  {formatWithAppleEmojis(file.name)}
                 </span>
                 
                 {/* Size */}

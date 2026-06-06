@@ -8,19 +8,17 @@ import {
 } from "framer-motion";
 import { DesktopWindow } from "@/components/desktop-window";
 import {
-  BatteryFull,
   Command,
   Folder,
   GitBranch,
   PanelLeftClose,
   PanelLeftOpen,
   Search,
-  SlidersHorizontal,
   Terminal,
-  Wifi,
   X,
   Play,
 } from "lucide-react";
+import { WifiStatus, BatteryStatus, SearchButton, ControlCenter } from "@/components/status-bar";
 import { SiApple } from "react-icons/si";
 import {
   useEffect,
@@ -42,6 +40,8 @@ import { CalendarWindow } from "@/features/calendar/components/calendar-window";
 import { NotesWindow } from "@/features/notes/components/notes-window";
 import { MessagesWindow } from "@/features/messages/components/messages-window";
 import { MusicWindow } from "@/features/music/components/music-window";
+import { MailWindow } from "@/features/mail/components/mail-window";
+import { SettingsWindow } from "@/features/settings/components/settings-window";
 import { useDevice } from "@/hooks/use-device";
 import {
   Avatar,
@@ -61,6 +61,7 @@ import {
 import { useUiStore } from "@/store/ui-store";
 import { cn } from "@/lib/utils";
 import { type SectionId } from "@/types/portfolio";
+import { formatWithAppleEmojis } from "@/components/apple-emoji";
 
 function SidebarContent({
   onPick,
@@ -115,8 +116,16 @@ function SidebarContent({
 
 
 function MacMenuBar() {
+  const { t, i18n } = useTranslation("common");
   const [now, setNow] = useState(() => new Date());
   const clockIntervalRef = useRef<number | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const menuBarRef = useRef<HTMLDivElement>(null);
+
+  const openApp = useUiStore((state) => state.openApp);
+  const setCommandOpen = useUiStore((state) => state.setCommandOpen);
+  const setPreviewPdfUrl = useUiStore((state) => state.setPreviewPdfUrl);
 
   useEffect(() => {
     const tick = () => setNow(new Date());
@@ -134,6 +143,98 @@ function MacMenuBar() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuBarRef.current && !menuBarRef.current.contains(e.target as Node)) {
+        setOpenMenu(null);
+        setShowProfile(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  type MenuItem = { label: string; shortcut?: string; action?: () => void; divider?: boolean; disabled?: boolean };
+  const menuDefinitions: Record<string, MenuItem[]> = {
+    Finder: [
+      { label: t('toolbar.menus.finder.about'), action: () => openApp('safari') },
+      { divider: true, label: '' },
+      { label: t('toolbar.menus.finder.settings'), shortcut: '⌘,', action: () => openApp('settings') },
+      { divider: true, label: '' },
+      { label: t('toolbar.menus.finder.forceQuit'), shortcut: '⌥⌘⎋', disabled: true },
+      { label: t('toolbar.menus.finder.sleep'), action: () => {} },
+      { label: t('toolbar.menus.finder.restart'), action: () => {} },
+      { label: t('toolbar.menus.finder.shutDown'), action: () => {} },
+      { divider: true, label: '' },
+      { label: t('toolbar.menus.finder.lockScreen'), shortcut: '⌃⌘Q', action: () => {} },
+      { label: t('toolbar.menus.finder.logOut'), shortcut: '⇧⌘Q', action: () => {} },
+    ],
+    File: [
+      { label: t('toolbar.menus.file.newWindow'), shortcut: '⌘N', action: () => openApp('finder') },
+      { divider: true, label: '' },
+      { label: t('toolbar.profile.viewResume') + ' (Spanish)', action: () => {
+          setPreviewPdfUrl('/profile/CV Juan Daniel González Alejandre.pdf');
+          openApp('preview');
+        } 
+      },
+      { label: t('toolbar.profile.viewResume') + ' (English)', action: () => {
+          setPreviewPdfUrl('/profile/Resume Juan Daniel González Alejandre.pdf');
+          openApp('preview');
+        } 
+      },
+      { divider: true, label: '' },
+      { label: t('toolbar.menus.file.closeWindow'), shortcut: '⌘W', disabled: true },
+    ],
+    Edit: [
+      { label: t('toolbar.menus.edit.undo'), shortcut: '⌘Z', disabled: true },
+      { label: t('toolbar.menus.edit.redo'), shortcut: '⇧⌘Z', disabled: true },
+      { divider: true, label: '' },
+      { label: t('toolbar.menus.edit.cut'), shortcut: '⌘X', disabled: true },
+      { label: t('toolbar.menus.edit.copy'), shortcut: '⌘C', disabled: true },
+      { label: t('toolbar.menus.edit.paste'), shortcut: '⌘V', disabled: true },
+      { divider: true, label: '' },
+      { label: 'Find…', shortcut: '⌘F', action: () => setCommandOpen(true) },
+    ],
+    View: [
+      { label: 'Open Safari', action: () => openApp('safari') },
+      { label: 'Open Calendar', action: () => openApp('calendar') },
+      { label: 'Open Notes', action: () => openApp('notes') },
+      { label: 'Open Music', action: () => openApp('music') },
+      { divider: true, label: '' },
+      { label: t('toolbar.menus.view.enterFullScreen'), shortcut: '⌃⌘F', disabled: true },
+    ],
+    Window: [
+      { label: t('toolbar.menus.window.minimize'), shortcut: '⌘M', disabled: true },
+      { label: t('toolbar.menus.window.zoom'), disabled: true },
+      { divider: true, label: '' },
+      { label: 'Finder', action: () => openApp('finder') },
+      { label: 'Safari', action: () => openApp('safari') },
+      { label: 'Mail', action: () => openApp('mail') },
+      { label: 'Messages', action: () => openApp('messages') },
+      { label: 'Calendar', action: () => openApp('calendar') },
+      { label: 'Notes', action: () => openApp('notes') },
+      { label: 'Music', action: () => openApp('music') },
+      { label: t('toolbar.controlCenter.shortcuts.settings'), action: () => openApp('settings') },
+    ],
+    Help: [
+      { label: t('toolbar.menus.help.portfolioHelp'), action: () => openApp('safari') },
+      { divider: true, label: '' },
+      { label: 'danielalejandre1050@gmail.com', disabled: true },
+    ],
+  };
+
+  const getMenuLabel = (key: string) => {
+    switch (key) {
+      case 'Finder': return t('toolbar.menus.finder.title');
+      case 'File': return t('toolbar.menus.file.title');
+      case 'Edit': return t('toolbar.menus.edit.title');
+      case 'View': return t('toolbar.menus.view.title');
+      case 'Window': return t('toolbar.menus.window.title');
+      case 'Help': return t('toolbar.menus.help.title');
+      default: return key;
+    }
+  };
+
   return (
     <motion.header
       initial={{ y: -12, opacity: 0 }}
@@ -141,51 +242,135 @@ function MacMenuBar() {
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/20 px-4 py-1.5 backdrop-blur-2xl dark:border-black/20 dark:bg-black/25"
     >
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 text-sm">
-        <div className="flex min-w-0 items-center gap-3 text-[13px]">
-          <SiApple className="size-3.5" />
-          <div className="hidden items-center gap-3 sm:flex">
-            <span className="font-medium">Finder</span>
-            {["File", "Edit", "View", "Window", "Help"].map((item) => (
-              <button
-                key={item}
-                type="button"
-                className="rounded-md px-1.5 text-foreground/80 transition-colors hover:bg-white/15 dark:hover:bg-white/10"
-                aria-label={item}
-              >
-                {item}
-              </button>
+      <div ref={menuBarRef} className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 text-sm">
+        <div className="flex min-w-0 items-center gap-0 text-[13px]">
+          <button
+            className="flex size-7 items-center justify-center rounded-md hover:bg-white/15 dark:hover:bg-white/10 transition-colors"
+            onClick={() => setOpenMenu(openMenu === 'Finder' ? null : 'Finder')}
+            aria-label="Apple Menu"
+          >
+            <SiApple className="size-3.5" />
+          </button>
+          <div className="hidden items-center gap-0 sm:flex">
+            {Object.keys(menuDefinitions).map((menu) => (
+              <div key={menu} className="relative">
+                <button
+                  type="button"
+                  onMouseEnter={() => openMenu !== null && setOpenMenu(menu)}
+                  onClick={() => setOpenMenu(openMenu === menu ? null : menu)}
+                  className={cn(
+                    "rounded-md px-2 py-0.5 text-[13px] transition-colors",
+                    openMenu === menu ? "bg-white/30 dark:bg-white/15 text-foreground" : "text-foreground/80 hover:bg-white/15 dark:hover:bg-white/10",
+                    menu === 'Finder' && "font-semibold"
+                  )}
+                >
+                  {getMenuLabel(menu)}
+                </button>
+                <AnimatePresence>
+                  {openMenu === menu && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -4, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.97 }}
+                      transition={{ duration: 0.12, ease: 'easeOut' }}
+                      className="absolute left-0 top-full mt-1.5 w-56 rounded-xl border border-black/10 dark:border-white/10 bg-[#f0f0f0]/95 dark:bg-[#1f1f1f]/95 backdrop-blur-2xl shadow-2xl shadow-black/30 py-1 z-[9999]"
+                    >
+                      {(menuDefinitions[menu] ?? []).map((item, idx) =>
+                        item.divider ? (
+                          <div key={idx} className="my-1 h-px bg-black/10 dark:bg-white/10 mx-2" />
+                        ) : (
+                          <button
+                            key={idx}
+                            onClick={() => { if (!item.disabled && item.action) { item.action(); setOpenMenu(null); } }}
+                            disabled={item.disabled}
+                            className={cn(
+                              "flex items-center justify-between px-3 py-1 text-[13px] text-left rounded-md transition-colors mx-1",
+                              item.disabled ? "text-foreground/30 cursor-default" : "text-foreground/90 hover:bg-blue-500 hover:text-white cursor-default"
+                            )}
+                            style={{ width: 'calc(100% - 8px)' }}
+                          >
+                            <span>{item.label}</span>
+                            {item.shortcut && <span className="text-[11px] text-foreground/40 ml-4 shrink-0">{item.shortcut}</span>}
+                          </button>
+                        )
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-0.5 text-foreground/85">
+        <div className="flex items-center gap-1.5 text-foreground/85">
           <div className="flex items-center gap-0.5 rounded-lg bg-white/10 px-1 dark:bg-white/5">
-            {[Wifi, BatteryFull, Search, SlidersHorizontal].map((Icon) => (
-              <span
-                key={Icon.displayName ?? Icon.name}
-                className="flex size-7 items-center justify-center rounded-md hover:bg-white/20 dark:hover:bg-white/10"
-              >
-                <Icon className="size-3.5" />
-              </span>
-            ))}
+            <WifiStatus />
+            <BatteryStatus />
+            <SearchButton />
+            <ControlCenter />
           </div>
-          <p className="hidden px-2 text-[12px] font-medium md:block">
-            {now.toLocaleDateString(undefined, {
+          <p className="hidden px-2 text-[12px] font-medium md:block select-none">
+            {now.toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'es-ES', {
               weekday: "short",
               month: "short",
               day: "numeric",
             })}{" "}
-            {now.toLocaleTimeString(undefined, {
+            {now.toLocaleTimeString(i18n.language === 'en' ? 'en-US' : 'es-ES', {
               hour: "2-digit",
               minute: "2-digit",
             })}
           </p>
-          <Avatar className="size-6">
-            <AvatarImage src="/profile.jpg" alt="Profile" />
-            <AvatarFallback className="bg-primary/30 text-[10px] font-semibold text-primary">
-              JF
-            </AvatarFallback>
-          </Avatar>
+          <div className="relative">
+            <button
+              className="rounded-full ring-2 ring-transparent hover:ring-white/50 transition-all active:scale-95"
+              onClick={() => setShowProfile(!showProfile)}
+              onMouseEnter={() => setShowProfile(true)}
+              aria-label="Profile"
+            >
+              <Avatar className="size-6 cursor-pointer">
+                <AvatarImage src="/profile.jpg" alt="Profile" />
+                <AvatarFallback className="bg-primary/30 text-[10px] font-semibold text-primary">JG</AvatarFallback>
+              </Avatar>
+            </button>
+
+            <AnimatePresence>
+              {showProfile && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.95 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  onMouseLeave={() => setShowProfile(false)}
+                  className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-black/10 dark:border-white/10 bg-[#f0f0f0]/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl shadow-2xl shadow-black/30 overflow-hidden z-[9999]"
+                >
+                  <div className="h-16 relative overflow-hidden">
+                    <div className="absolute inset-0 scale-110" style={{ backgroundImage: 'url(/profile.jpg)', backgroundSize: 'cover', backgroundPosition: 'center top', filter: 'blur(10px) brightness(0.7)' }} />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30" />
+                  </div>
+                  <div className="px-4 pb-4">
+                    <div className="-mt-8 mb-2">
+                      <Avatar className="size-16 ring-4 ring-[#f0f0f0] dark:ring-[#1c1c1e] shadow-xl">
+                        <AvatarImage src="/profile.jpg" alt="Profile" />
+                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-2xl font-bold text-white">JG</AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <p className="text-[15px] font-bold text-foreground leading-tight">{t('toolbar.profile.name')}</p>
+                    <p className="text-[12px] text-muted-foreground mt-0.5">{t('toolbar.profile.email')}</p>
+                    <div className="mt-3 pt-3 border-t border-black/10 dark:border-white/10 space-y-0.5">
+                      {[
+                        { emoji: '✉️', label: t('toolbar.profile.sendMessage'), app: 'messages' as const },
+                        { emoji: '📅', label: t('toolbar.profile.scheduleMeeting'), app: 'calendar' as const },
+                        { emoji: '📄', label: t('toolbar.profile.viewResume'), app: 'finder' as const },
+                      ].map(({ emoji, label, app }) => (
+                        <button key={app} onClick={() => { openApp(app); setShowProfile(false); }} className="w-full text-left px-3 py-1.5 text-[13px] rounded-lg hover:bg-blue-500 hover:text-white text-foreground/80 transition-colors">
+                          {formatWithAppleEmojis(emoji)} {formatWithAppleEmojis(label)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </motion.header>
@@ -569,12 +754,25 @@ function VscodeWindow({
     );
 }
 
+const WALLPAPER_CLASSES: Record<string, string> = {
+  default: "",
+  monterey: "bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-700 dark:from-purple-900 dark:via-indigo-950 dark:to-zinc-950",
+  sonoma: "bg-gradient-to-br from-amber-400 via-orange-500 to-emerald-600 dark:from-amber-950 dark:via-orange-950 dark:to-emerald-950",
+  aurora: "bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 dark:from-teal-950 dark:via-cyan-950 dark:to-blue-950",
+  midnight: "bg-zinc-100 dark:bg-zinc-950"
+};
+
 export function VscodeLayout() {
   const { isMobile, isTablet, isDesktop } = useDevice();
   const apps = useUiStore((state) => state.apps);
   const openApp = useUiStore((state) => state.openApp);
   const runDevServer = useUiStore((state) => state.runDevServer);
   const setCommandOpen = useUiStore((state) => state.setCommandOpen);
+  
+  const wallpaper = useUiStore((state) => state.wallpaper);
+  const brightness = useUiStore((state) => state.brightness);
+  const nightShift = useUiStore((state) => state.nightShift);
+
   const { t } = useTranslation("common");
 
   const dockVscodeRef = useRef<HTMLButtonElement | null>(null);
@@ -614,15 +812,15 @@ export function VscodeLayout() {
   }, []);
 
   const dockItems: DockItem[] = [
-    { id: "finder", label: "Finder", iconSrc: "/juanda.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
-    { id: "safari", label: "Safari", iconSrc: "/dock-icons/safari.svg", active: apps.safari.state !== "closed", onClick: () => openApp("safari") },
+    { id: "finder", label: t('finder.title'), iconSrc: "/juanda.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
+    { id: "safari", label: t('safari.title'), iconSrc: "/dock-icons/safari.svg", active: apps.safari.state !== "closed", onClick: () => openApp("safari") },
     { id: "mail", label: "Mail", iconSrc: "/dock-icons/mail.svg", active: apps.mail.state !== "closed", onClick: () => openApp("mail") },
-    { id: "messages", label: "Messages", iconSrc: "/dock-icons/messages.svg", active: apps.messages.state !== "closed", onClick: () => openApp("messages") },
-    { id: "calendar", label: "Calendar", iconSrc: "/dock-icons/calendar.svg", active: apps.calendar.state !== "closed", onClick: () => openApp("calendar") },
-    { id: "notes", label: "Notes", iconSrc: "/dock-icons/notes.svg", active: apps.notes.state !== "closed", onClick: () => openApp("notes") },
-    { id: "files", label: "Files", iconSrc: "/dock-icons/files.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
-    { id: "music", label: "Music", iconSrc: "/dock-icons/music.svg", active: apps.music.state !== "closed", onClick: () => openApp("music") },
-    { id: "settings", label: "Settings", iconSrc: "/dock-icons/settings.svg", active: apps.settings.state !== "closed", onClick: () => openApp("settings") },
+    { id: "messages", label: t('messages.title'), iconSrc: "/dock-icons/messages.svg", active: apps.messages.state !== "closed", onClick: () => openApp("messages") },
+    { id: "calendar", label: t('calendar.title'), iconSrc: "/dock-icons/calendar.svg", active: apps.calendar.state !== "closed", onClick: () => openApp("calendar") },
+    { id: "notes", label: t('notes.title'), iconSrc: "/dock-icons/notes.svg", active: apps.notes.state !== "closed", onClick: () => openApp("notes") },
+    { id: "files", label: t('finder.title'), iconSrc: "/dock-icons/files.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
+    { id: "music", label: t('music.title'), iconSrc: "/dock-icons/music.svg", active: apps.music.state !== "closed", onClick: () => openApp("music") },
+    { id: "settings", label: t('toolbar.controlCenter.shortcuts.settings'), iconSrc: "/dock-icons/settings.svg", active: apps.settings.state !== "closed", onClick: () => openApp("settings") },
     {
       id: "vscode",
       label: "VS Code",
@@ -641,9 +839,29 @@ export function VscodeLayout() {
   const shouldRenderWindow = apps.vscode.state === "open";
   const enteringFromDock = shouldRenderWindow && openFromDock;
 
+  const customWallpaperClass = WALLPAPER_CLASSES[wallpaper] || "";
+
   return (
     <TooltipProvider>
       <div className="relative min-h-screen overflow-hidden">
+        {/* Custom Wallpaper Backdrop */}
+        {customWallpaperClass && (
+          <div className={cn("fixed inset-0 transition-all duration-500 z-[-10]", customWallpaperClass)} />
+        )}
+        
+        {/* Screen Brightness Dimmer Overlay */}
+        {brightness < 100 && (
+          <div 
+            className="fixed inset-0 bg-black pointer-events-none transition-all duration-300 z-[99999]" 
+            style={{ opacity: (100 - brightness) / 100 }}
+          />
+        )}
+
+        {/* Night Shift Warm Overlay */}
+        {nightShift && (
+          <div className="fixed inset-0 bg-amber-500/10 pointer-events-none mix-blend-multiply transition-all duration-500 z-[99998]" />
+        )}
+
         <div className="pointer-events-none fixed inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/15 dark:from-black/20 dark:via-transparent dark:to-black/40" />
 
         <MacMenuBar />
@@ -704,7 +922,7 @@ export function VscodeLayout() {
                           onClick={() => runDevServer()}
                         >
                           <Play className="size-3.5 shrink-0 fill-current" />
-                          <span>Live Preview</span>
+                          <span>{t('app.livePreview')}</span>
                         </Button>
                         <Button
                           variant="ghost"
@@ -745,7 +963,7 @@ export function VscodeLayout() {
                 <div className="absolute pointer-events-auto">
                   <DesktopWindow
                     appId="safari"
-                    title="Safari"
+                    title={t('safari.title')}
                     defaultSizeClass="w-[min(90vw,1100px)] h-[75vh] min-h-[550px]"
                   >
                     <SafariWindow />
@@ -758,7 +976,7 @@ export function VscodeLayout() {
                 <div className="absolute pointer-events-auto">
                   <DesktopWindow
                     appId="finder"
-                    title="Finder"
+                    title={t('finder.title')}
                     defaultSizeClass="w-[min(85vw,800px)] h-[55vh] min-h-[400px]"
                   >
                     <FinderWindow />
@@ -771,7 +989,7 @@ export function VscodeLayout() {
                 <div className="absolute pointer-events-auto">
                   <DesktopWindow
                     appId="preview"
-                    title="Preview"
+                    title={t('finder.preview.title')}
                     defaultSizeClass="w-[min(85vw,750px)] h-[75vh] min-h-[500px]"
                   >
                     <PreviewWindow />
@@ -784,7 +1002,7 @@ export function VscodeLayout() {
                 <div className="absolute pointer-events-auto">
                   <DesktopWindow
                     appId="calendar"
-                    title="Calendar"
+                    title={t('calendar.title')}
                     defaultSizeClass="w-[min(90vw,950px)] h-[65vh] min-h-[480px]"
                   >
                     <CalendarWindow />
@@ -797,7 +1015,7 @@ export function VscodeLayout() {
                 <div className="absolute pointer-events-auto">
                   <DesktopWindow
                     appId="notes"
-                    title="Notes"
+                    title={t('notes.title')}
                     defaultSizeClass="w-[min(85vw,850px)] h-[60vh] min-h-[420px]"
                   >
                     <NotesWindow />
@@ -810,7 +1028,7 @@ export function VscodeLayout() {
                 <div className="absolute pointer-events-auto">
                   <DesktopWindow
                     appId="messages"
-                    title="Messages"
+                    title={t('messages.title')}
                     defaultSizeClass="w-[min(85vw,750px)] h-[65vh] min-h-[480px]"
                   >
                     <MessagesWindow />
@@ -823,10 +1041,36 @@ export function VscodeLayout() {
                 <div className="absolute pointer-events-auto">
                   <DesktopWindow
                     appId="music"
-                    title="Music"
+                    title={t('music.title')}
                     defaultSizeClass="w-[min(90vw,1000px)] h-[70vh] min-h-[480px]"
                   >
                     <MusicWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Mail Window */}
+              {apps.mail.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="mail"
+                    title="Mail"
+                    defaultSizeClass="w-[min(90vw,1000px)] h-[70vh] min-h-[480px]"
+                  >
+                    <MailWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Settings Window */}
+              {apps.settings.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="settings"
+                    title={t('toolbar.controlCenter.shortcuts.settings')}
+                    defaultSizeClass="w-[min(85vw,850px)] h-[65vh] min-h-[450px]"
+                  >
+                    <SettingsWindow />
                   </DesktopWindow>
                 </div>
               )}

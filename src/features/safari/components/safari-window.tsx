@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, RotateCw, Globe, ArrowUpRight, Mail } from '
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
 import { Badge } from '@/shared/ui'
 import { type ExperienceItem, type ProjectItem, type ContactItem } from '@/types/portfolio'
+import { formatWithAppleEmojis } from '@/components/apple-emoji'
 
 export function SafariWindow() {
   const { t } = useTranslation('common')
@@ -67,10 +68,10 @@ export function SafariWindow() {
                 Juan Daniel González Alejandre
               </h1>
               <p className="text-lg font-medium text-blue-100">
-                {t('app.subtitle')}
+                {formatWithAppleEmojis(t('app.subtitle'))}
               </p>
               <p className="text-sm max-w-xl text-blue-50/90 leading-relaxed pt-2">
-                {role}
+                {formatWithAppleEmojis(role)}
               </p>
             </div>
             <div className="shrink-0 flex items-center justify-center">
@@ -93,7 +94,7 @@ export function SafariWindow() {
                 {t('sections.about.title')}
               </h2>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                {summary}
+                {formatWithAppleEmojis(summary)}
               </p>
             </section>
 
@@ -109,14 +110,14 @@ export function SafariWindow() {
                     <div className="absolute -left-[21px] top-1.5 size-3 rounded-full border-2 border-blue-500 bg-background" />
                     
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <h3 className="font-bold text-sm">{item.role}</h3>
+                      <h3 className="font-bold text-sm">{formatWithAppleEmojis(item.role)}</h3>
                       <Badge variant="secondary" className="w-fit text-[10px] font-semibold">
-                        {item.company} | {item.period}
+                        {formatWithAppleEmojis(item.company)} | {formatWithAppleEmojis(item.period)}
                       </Badge>
                     </div>
                     <ul className="list-disc list-inside space-y-1 text-xs text-muted-foreground pl-1">
                       {item.bullets.map((bullet) => (
-                        <li key={bullet} className="leading-relaxed">{bullet}</li>
+                        <li key={bullet} className="leading-relaxed">{formatWithAppleEmojis(bullet)}</li>
                       ))}
                     </ul>
                   </div>
@@ -134,7 +135,7 @@ export function SafariWindow() {
                   <div key={project.name} className="flex flex-col rounded-xl border border-black/5 bg-white p-4 shadow-sm hover:shadow-md transition-shadow dark:border-white/5 dark:bg-black/20 justify-between">
                     <div className="space-y-1.5">
                       <h3 className="font-bold text-sm flex items-center justify-between gap-2">
-                        {project.name}
+                        {formatWithAppleEmojis(project.name)}
                         {project.href && (
                           <a href={project.href} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600 dark:hover:text-blue-400">
                             <ArrowUpRight className="size-4" />
@@ -142,13 +143,13 @@ export function SafariWindow() {
                         )}
                       </h3>
                       <p className="text-xs text-muted-foreground leading-relaxed">
-                        {project.description}
+                        {formatWithAppleEmojis(project.description)}
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-1 mt-3">
                       {project.stack.map((tech) => (
                         <Badge key={tech} variant="outline" className="text-[9px] px-1 py-0 border-black/10 dark:border-white/10">
-                          {tech}
+                          {formatWithAppleEmojis(tech)}
                         </Badge>
                       ))}
                     </div>
@@ -169,12 +170,12 @@ export function SafariWindow() {
                 {Object.entries(skillsGroups).map(([group, values]) => (
                   <div key={group} className="space-y-1.5">
                     <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      {group}
+                      {formatWithAppleEmojis(group)}
                     </h3>
                     <div className="flex flex-wrap gap-1">
                       {values.map((skill) => (
                         <Badge key={skill} className="text-xs bg-blue-600/10 text-blue-700 dark:bg-blue-400/10 dark:text-blue-300 hover:bg-blue-600/15">
-                          {skill}
+                          {formatWithAppleEmojis(skill)}
                         </Badge>
                       ))}
                     </div>
@@ -202,7 +203,7 @@ export function SafariWindow() {
                     </span>
                     <div className="min-w-0">
                       <p className="text-[10px] text-muted-foreground uppercase">{item.label}</p>
-                      <p className="font-semibold truncate">{item.value}</p>
+                      <p className="font-semibold truncate">{formatWithAppleEmojis(item.value)}</p>
                     </div>
                   </a>
                 ))}

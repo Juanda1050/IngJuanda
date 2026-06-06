@@ -4,197 +4,46 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info, MapPin, Cloc
 import { cn } from '@/lib/utils'
 import { Badge } from '@/shared/ui'
 import { motion, AnimatePresence } from 'framer-motion'
+import { formatWithAppleEmojis } from '@/components/apple-emoji'
 
 interface MilestoneEvent {
   id: string
   date: string // YYYY-MM-DD
-  title: { en: string; es: string }
+  title: string
   type: 'work' | 'education' | 'project'
-  location: { en: string; es: string }
+  location: string
   company: string
-  description: { en: string; es: string }
-  bullets: { en: string[]; es: string[] }
-  color: {
-    bg: string
-    dot: string
-    text: string
-    badge: string
-  }
+  description: string
+  bullets: string[]
 }
 
-const MILESTONES: MilestoneEvent[] = [
-  {
-    id: 'graduation',
-    date: '2018-12-10',
-    title: { en: 'University Graduation', es: 'Graduación Universitaria' },
-    type: 'education',
-    location: { en: 'Colima, Mexico', es: 'Colima, México' },
-    company: 'Universidad de Colima',
-    description: {
-      en: "Graduated with a Bachelor's Degree in Computer Systems Engineering.",
-      es: 'Graduado como Ingeniero en Sistemas Computacionales.'
-    },
-    bullets: {
-      en: [
-        'Specialized in software engineering and web technologies.',
-        'Academic excellence award in final year projects.'
-      ],
-      es: [
-        'Especializado en ingeniería de software y desarrollo web.',
-        'Reconocimiento a la excelencia académica en proyectos terminales.'
-      ]
-    },
-    color: {
+const getColorForType = (type: 'work' | 'education' | 'project') => {
+  if (type === 'education') {
+    return {
       bg: 'bg-blue-500/10 hover:bg-blue-500/20 border-blue-500/30',
       dot: 'bg-blue-500',
       text: 'text-blue-600 dark:text-blue-400',
       badge: 'bg-blue-500/10 text-blue-600 dark:text-blue-400'
     }
-  },
-  {
-    id: 'digital_labs_join',
-    date: '2019-01-15',
-    title: { en: 'Joined Digital Labs', es: 'Ingreso a Digital Labs' },
-    type: 'work',
-    location: { en: 'Guadalajara, Mexico', es: 'Guadalajara, México' },
-    company: 'Digital Labs',
-    description: {
-      en: 'Started working as a Frontend Engineer building scalable web products.',
-      es: 'Inicio de labores como Frontend Engineer en desarrollo de productos web.'
-    },
-    bullets: {
-      en: [
-        'Built dynamic React applications with TypeScript.',
-        'Collaborated with design and backend teams in agile Scrum cycles.'
-      ],
-      es: [
-        'Construcción de aplicaciones dinámicas en React y TypeScript.',
-        'Colaboración con equipos de diseño y backend en ciclos Scrum.'
-      ]
-    },
-    color: {
+  }
+  if (type === 'work') {
+    return {
       bg: 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30',
       dot: 'bg-emerald-500',
       text: 'text-emerald-600 dark:text-emerald-400',
       badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-    }
-  },
-  {
-    id: 'legacy_migration_lead',
-    date: '2021-10-20',
-    title: { en: 'Legacy Migration Lead', es: 'Líder de Migración Legacy' },
-    type: 'work',
-    location: { en: 'Guadalajara, Mexico', es: 'Guadalajara, México' },
-    company: 'Digital Labs',
-    description: {
-      en: 'Led the refactoring and migration of core legacy portal systems to modern React SPA architecture.',
-      es: 'Dirección del refactoring y migración de sistemas legacy críticos a arquitectura React SPA.'
-    },
-    bullets: {
-      en: [
-        'Improved load times and performance indicators by 35%.',
-        'Introduced testing suites using Jest/React Testing Library.'
-      ],
-      es: [
-        'Mejora de tiempos de carga e indicadores clave de rendimiento en un 35%.',
-        'Implementación de suites de prueba usando Jest y React Testing Library.'
-      ]
-    },
-    color: {
-      bg: 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30',
-      dot: 'bg-emerald-500',
-      text: 'text-emerald-600 dark:text-emerald-400',
-      badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-    }
-  },
-  {
-    id: 'tech_studio_join',
-    date: '2022-03-01',
-    title: { en: 'Joined Tech Studio', es: 'Ingreso a Tech Studio' },
-    type: 'work',
-    location: { en: 'Remote, Mexico', es: 'Remoto, México' },
-    company: 'Tech Studio',
-    description: {
-      en: 'Senior Frontend Developer. Multi-product platform architecture development.',
-      es: 'Contratado como Senior Frontend Developer, especializándome en plataformas multi-producto.'
-    },
-    bullets: {
-      en: [
-        'Landed architecture definitions for front-end portals.',
-        'Configured quality gates, ESLint rulesets, and automated CI pipelines.'
-      ],
-      es: [
-        'Definición e implementación de arquitectura frontend empresarial.',
-        'Configuración de linters, calidad de código y pipelines de CI automatizados.'
-      ]
-    },
-    color: {
-      bg: 'bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/30',
-      dot: 'bg-emerald-500',
-      text: 'text-emerald-600 dark:text-emerald-400',
-      badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-    }
-  },
-  {
-    id: 'design_system_launch',
-    date: '2023-06-15',
-    title: { en: 'Design System Enterprise', es: 'Sistema de Diseño Enterprise' },
-    type: 'project',
-    location: { en: 'Remote, Mexico', es: 'Remoto, México' },
-    company: 'Tech Studio',
-    description: {
-      en: 'Designed and implemented an Enterprise-grade UI component library with TailwindCSS & Storybook.',
-      es: 'Diseño e implementación de biblioteca de componentes UI empresarial con TailwindCSS y Storybook.'
-    },
-    bullets: {
-      en: [
-        'Used by multiple engineering teams, cutting time-to-market by 40%.',
-        'Full WCAG accessibility compliance and interactive visual tests.'
-      ],
-      es: [
-        'Utilizado por múltiples equipos de desarrollo, reduciendo time-to-market en 40%.',
-        'Cumplimiento de estándares de accesibilidad WCAG y pruebas visuales interactivas.'
-      ]
-    },
-    color: {
-      bg: 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/30',
-      dot: 'bg-purple-500',
-      text: 'text-purple-600 dark:text-purple-400',
-      badge: 'bg-purple-500/10 text-purple-600 dark:text-purple-400'
-    }
-  },
-  {
-    id: 'portfolio_launch',
-    date: '2026-06-06',
-    title: { en: 'MacOS Portfolio Launch', es: 'Lanzamiento de Portafolio macOS' },
-    type: 'project',
-    location: { en: 'Colima, Mexico', es: 'Colima, México' },
-    company: 'IngJuanda Corp',
-    description: {
-      en: 'Published this fully interactive macOS desktop site experience.',
-      es: 'Publicación de esta experiencia interactiva simulando un escritorio de macOS.'
-    },
-    bullets: {
-      en: [
-        'Simulates draggable windows, stacking z-indices, dev terminal triggers, and multi-app sync.',
-        'Fully responsive and localized in English and Spanish.'
-      ],
-      es: [
-        'Simulación de ventanas arrastrables, apilamiento de z-indices, compilación de terminal y sincronización multi-idioma.',
-        'Totalmente responsivo y localizado en inglés y español.'
-      ]
-    },
-    color: {
-      bg: 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/30',
-      dot: 'bg-purple-500',
-      text: 'text-purple-600 dark:text-purple-400',
-      badge: 'bg-purple-500/10 text-purple-600 dark:text-purple-400'
     }
   }
-]
+  return {
+    bg: 'bg-purple-500/10 hover:bg-purple-500/20 border-purple-500/30',
+    dot: 'bg-purple-500',
+    text: 'text-purple-600 dark:text-purple-400',
+    badge: 'bg-purple-500/10 text-purple-600 dark:text-purple-400'
+  }
+}
 
 export function CalendarWindow() {
-  const { i18n } = useTranslation('common')
+  const { t, i18n } = useTranslation('common')
   const isEn = i18n.language === 'en'
 
   // Map filters
@@ -210,10 +59,16 @@ export function CalendarWindow() {
   
   const popoverRef = useRef<HTMLDivElement>(null)
 
+  const milestonesData = useMemo(() => {
+    const raw = t('calendar.milestones', { returnObjects: true })
+    if (!Array.isArray(raw)) return []
+    return raw as MilestoneEvent[]
+  }, [t])
+
   // Filter events based on selections
   const filteredEvents = useMemo(() => {
-    return MILESTONES.filter(evt => filters[evt.type])
-  }, [filters])
+    return milestonesData.filter(evt => filters[evt.type])
+  }, [filters, milestonesData])
 
   // Map events to date strings for quick grid lookup
   const eventsByDate = useMemo(() => {
@@ -352,13 +207,13 @@ export function CalendarWindow() {
           {/* Calendar Selectors */}
           <div className="space-y-2.5">
             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">
-              {isEn ? 'Calendars' : 'Calendarios'}
+              {t('calendar.sidebar.title')}
             </h3>
             <div className="space-y-1.5">
               {[
-                { type: 'work', label: isEn ? 'Work Experiences' : 'Experiencia Laboral', color: 'bg-emerald-500' },
-                { type: 'education', label: isEn ? 'Education' : 'Educación', color: 'bg-blue-500' },
-                { type: 'project', label: isEn ? 'Projects' : 'Proyectos', color: 'bg-purple-500' }
+                { type: 'work', label: t('calendar.sidebar.work'), color: 'bg-emerald-500' },
+                { type: 'education', label: t('calendar.sidebar.education'), color: 'bg-blue-500' },
+                { type: 'project', label: t('calendar.sidebar.projects'), color: 'bg-purple-500' }
               ].map(item => (
                 <button
                   key={item.type}
@@ -383,10 +238,10 @@ export function CalendarWindow() {
           {/* Milestone list (Chronological shortcut) */}
           <div className="space-y-2.5">
             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">
-              {isEn ? 'All Milestones' : 'Todos los Hitos'}
+              {t('calendar.sidebar.listTitle')}
             </h3>
             <div className="space-y-1.5 max-h-44 md:max-h-none overflow-y-auto pr-1">
-              {MILESTONES.map(evt => (
+              {milestonesData.map(evt => (
                 <button
                   key={evt.id}
                   onClick={() => selectMilestone(evt)}
@@ -397,10 +252,10 @@ export function CalendarWindow() {
                       : "hover:bg-black/5 dark:hover:bg-white/5 text-muted-foreground hover:text-foreground"
                   )}
                 >
-                  <span className={cn("size-2 rounded-full shrink-0 mt-1.5", evt.color.dot)} />
+                  <span className={cn("size-2 rounded-full shrink-0 mt-1.5", getColorForType(evt.type).dot)} />
                   <div className="min-w-0">
-                    <p className="font-semibold truncate">{isEn ? evt.title.en : evt.title.es}</p>
-                    <p className="text-[10px] text-muted-foreground/70">{evt.company} • {evt.date.split('-')[0]}</p>
+                    <p className="font-semibold truncate">{formatWithAppleEmojis(evt.title)}</p>
+                    <p className="text-[10px] text-muted-foreground/70">{formatWithAppleEmojis(evt.company)} • {evt.date.split('-')[0]}</p>
                   </div>
                 </button>
               ))}
@@ -411,7 +266,7 @@ export function CalendarWindow() {
         {/* Small legend block */}
         <div className="hidden md:flex items-center gap-2.5 border-t border-border/40 pt-4 text-[11px] text-muted-foreground">
           <CalendarIcon className="size-4 shrink-0 text-primary/70 animate-pulse" />
-          <span>{isEn ? 'Click any event for details' : 'Clic en un evento para ver detalles'}</span>
+          <span>{t('calendar.sidebar.infoText')}</span>
         </div>
       </div>
 
@@ -431,7 +286,7 @@ export function CalendarWindow() {
               onClick={jumpToToday}
               className="px-3 py-1 text-xs font-semibold rounded-md border border-border/80 hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all text-foreground"
             >
-              {isEn ? 'Today' : 'Hoy'}
+              {t('calendar.header.today')}
             </button>
             <div className="flex items-center rounded-md border border-border/80 bg-background dark:bg-transparent overflow-hidden">
               <button
@@ -492,7 +347,7 @@ export function CalendarWindow() {
                 {cell.events.length > 0 && (
                   <span className="flex gap-0.5 md:hidden">
                     {cell.events.map(evt => (
-                      <span key={evt.id} className={cn("size-1 rounded-full", evt.color.dot)} />
+                      <span key={evt.id} className={cn("size-1 rounded-full", getColorForType(evt.type).dot)} />
                     ))}
                   </span>
                 )}
@@ -509,11 +364,11 @@ export function CalendarWindow() {
                     }}
                     className={cn(
                       "w-full rounded border px-1.5 py-0.5 text-[10px] font-semibold tracking-wide leading-normal text-left truncate transition-all active:scale-95 shadow-sm border-l-[3px] border-l-solid",
-                      evt.color.bg,
+                      getColorForType(evt.type).bg,
                       selectedEvent?.id === evt.id ? "ring-2 ring-primary/45 scale-[1.01]" : ""
                     )}
                   >
-                    {isEn ? evt.title.en : evt.title.es}
+                    {formatWithAppleEmojis(evt.title)}
                   </button>
                 ))}
               </div>
@@ -545,13 +400,13 @@ export function CalendarWindow() {
               {/* Event Category Color Accent Dot */}
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className={cn("size-3 rounded-full shrink-0", selectedEvent.color.dot)} />
+                  <span className={cn("size-3 rounded-full shrink-0", getColorForType(selectedEvent.type).dot)} />
                   <h4 className="font-bold text-sm tracking-tight truncate">
-                    {isEn ? selectedEvent.title.en : selectedEvent.title.es}
+                    {formatWithAppleEmojis(selectedEvent.title)}
                   </h4>
                 </div>
-                <Badge className={cn("shrink-0 text-[10px] uppercase font-bold px-2 py-0.5 border-none", selectedEvent.color.badge)}>
-                  {selectedEvent.type}
+                <Badge className={cn("shrink-0 text-[10px] uppercase font-bold px-2 py-0.5 border-none", getColorForType(selectedEvent.type).badge)}>
+                  {t('calendar.sidebar.' + selectedEvent.type)}
                 </Badge>
               </div>
 
@@ -563,26 +418,26 @@ export function CalendarWindow() {
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin className="size-3.5 text-primary shrink-0" />
-                  <span className="truncate">{selectedEvent.company} • {isEn ? selectedEvent.location.en : selectedEvent.location.es}</span>
+                  <span className="truncate">{formatWithAppleEmojis(selectedEvent.company)} • {formatWithAppleEmojis(selectedEvent.location)}</span>
                 </div>
               </div>
 
               {/* Description */}
               <div className="space-y-3">
                 <p className="text-xs leading-relaxed text-muted-foreground/90 bg-muted/20 p-2.5 rounded-lg border border-border/20">
-                  {isEn ? selectedEvent.description.en : selectedEvent.description.es}
+                  {formatWithAppleEmojis(selectedEvent.description)}
                 </p>
 
                 {/* Achievments bullet points */}
                 <div className="space-y-1.5 pl-1.5">
                   <p className="text-[10px] font-bold text-muted-foreground/75 uppercase tracking-wider flex items-center gap-1.5">
                     <Info className="size-3 text-primary" />
-                    <span>{isEn ? 'Highlights' : 'Aspectos Destacados'}</span>
+                    <span>{t('calendar.detailCard.highlights')}</span>
                   </p>
                   <ul className="list-disc list-inside space-y-1 text-xs text-muted-foreground">
-                    {(isEn ? selectedEvent.bullets.en : selectedEvent.bullets.es).map((bullet, idx) => (
+                    {selectedEvent.bullets.map((bullet, idx) => (
                       <li key={idx} className="leading-relaxed pl-1 text-[11px] list-none relative before:content-['•'] before:absolute before:left-[-10px] before:text-primary">
-                        {bullet}
+                        {formatWithAppleEmojis(bullet)}
                       </li>
                     ))}
                   </ul>
@@ -595,7 +450,7 @@ export function CalendarWindow() {
                   onClick={() => setSelectedEvent(null)}
                   className="px-3 py-1.5 bg-primary text-primary-foreground font-semibold rounded-lg text-xs hover:opacity-90 active:scale-95 transition-all shadow-md"
                 >
-                  {isEn ? 'Dismiss' : 'Aceptar'}
+                  {t('calendar.detailCard.dismiss')}
                 </button>
               </div>
             </motion.div>
