@@ -4,7 +4,9 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
+  useDragControls,
   type MotionValue,
+  type DragControls,
 } from "framer-motion";
 import {
   BatteryFull,
@@ -359,6 +361,7 @@ function VscodeWindow({
   isTablet,
   isDesktop,
   isMaximized,
+  dragControls,
   onMinimize,
   onMaximize,
   onClose,
@@ -367,6 +370,7 @@ function VscodeWindow({
   isTablet: boolean;
   isDesktop: boolean;
   isMaximized: boolean;
+  dragControls: DragControls;
   onMinimize: () => void;
   onMaximize: () => void;
   onClose: () => void;
@@ -418,12 +422,20 @@ function VscodeWindow({
   return (
     <motion.div layout className={cn("relative", sizeClass)}>
       <div className={frameClass}>
-        <div className="flex h-12 items-center justify-between border-b border-border/60 bg-vscode-titlebar/85 px-3 backdrop-blur-xl md:px-4">
+        <div 
+          className="flex h-12 items-center justify-between border-b border-border/60 bg-vscode-titlebar/85 px-3 backdrop-blur-xl md:px-4 select-none"
+          style={{ cursor: isMaximized || isMobile ? "default" : "grab" }}
+          onPointerDown={(event) => {
+            if (!isMobile && !isMaximized) {
+              dragControls.start(event);
+            }
+          }}
+        >
           <div className="flex min-w-0 items-center gap-2 md:gap-3">
             {isMobile ? (
               <MobileSidebarSheet />
             ) : (
-              <div className="group flex items-center gap-1.5">
+              <div className="group flex items-center gap-1.5" onPointerDown={(e) => e.stopPropagation()}>
                 <button
                   type="button"
                   className="size-3 rounded-full bg-[#ff5f57] transition-transform hover:scale-110"
@@ -445,7 +457,7 @@ function VscodeWindow({
               </div>
             )}
             <Separator orientation="vertical" className="h-4" />
-            <Avatar className="size-7">
+            <Avatar className="size-7" onPointerDown={(e) => e.stopPropagation()}>
               <AvatarImage src="/profile.jpg" alt="Profile" />
               <AvatarFallback className="bg-primary/20 text-[10px] font-bold text-primary">
                 JF
@@ -456,7 +468,7 @@ function VscodeWindow({
             </p>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1" onPointerDown={(e) => e.stopPropagation()}>
             <Button
               variant="ghost"
               size="sm"
@@ -670,6 +682,7 @@ export function VscodeLayout() {
   const [openFromDock, setOpenFromDock] = useState(false);
   const [dockOffset, setDockOffset] = useState({ x: 0, y: 260 });
   const [exitMode, setExitMode] = useState<"minimized" | "closed">("closed");
+  const dragControls = useDragControls();
 
   useEffect(() => {
     const onCommandShortcut = (event: KeyboardEvent) => {
@@ -739,7 +752,7 @@ export function VscodeLayout() {
 
         <div
           className={cn(
-            "fixed inset-x-0 flex items-start justify-center px-0 sm:px-4",
+            "fixed inset-x-0 flex items-center justify-center px-0 sm:px-4",
             isMobile
               ? "top-[2.75rem] bottom-[5.75rem]"
               : "top-[3.6rem] bottom-[8.5rem]",
@@ -749,6 +762,11 @@ export function VscodeLayout() {
             {shouldRenderWindow ? (
               <motion.div
                 key="vscode-window"
+                drag={!isMobile && !isWindowMaximized}
+                dragControls={dragControls}
+                dragListener={false}
+                dragMomentum={false}
+                dragElastic={0}
                 initial={
                   enteringFromDock
                     ? {
@@ -759,7 +777,12 @@ export function VscodeLayout() {
                       }
                     : { opacity: 0, scale: 0.96, y: 16 }
                 }
-                animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  x: isWindowMaximized ? 0 : undefined,
+                  y: isWindowMaximized ? 0 : undefined,
+                }}
                 exit={
                   exitMode === "minimized"
                     ? {
@@ -778,6 +801,7 @@ export function VscodeLayout() {
                   isTablet={isTablet}
                   isDesktop={isDesktop}
                   isMaximized={isWindowMaximized}
+                  dragControls={dragControls}
                   onMinimize={() => {
                     setExitMode("minimized");
                     setOpenFromDock(false);
