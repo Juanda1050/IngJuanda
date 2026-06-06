@@ -4,16 +4,14 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
-  useDragControls,
   type MotionValue,
-  type DragControls,
 } from "framer-motion";
+import { DesktopWindow } from "@/components/desktop-window";
 import {
   BatteryFull,
   Command,
   Folder,
   GitBranch,
-  Menu,
   PanelLeftClose,
   PanelLeftOpen,
   Search,
@@ -21,6 +19,7 @@ import {
   Terminal,
   Wifi,
   X,
+  Play,
 } from "lucide-react";
 import { SiApple } from "react-icons/si";
 import {
@@ -36,6 +35,12 @@ import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EditorContent } from "@/features/portfolio/components/editor-content";
 import { portfolioFiles } from "@/features/portfolio/data/portfolio-data";
+import { SafariWindow } from "@/features/safari/components/safari-window";
+import { FinderWindow } from "@/features/finder/components/finder-window";
+import { PreviewWindow } from "@/features/preview/components/preview-window";
+import { CalendarWindow } from "@/features/calendar/components/calendar-window";
+import { NotesWindow } from "@/features/notes/components/notes-window";
+import { MessagesWindow } from "@/features/messages/components/messages-window";
 import { useDevice } from "@/hooks/use-device";
 import {
   Avatar,
@@ -47,9 +52,6 @@ import {
   CardContent,
   ScrollArea,
   Separator,
-  Sheet,
-  SheetContent,
-  SheetTrigger,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -109,31 +111,7 @@ function SidebarContent({
   );
 }
 
-function MobileSidebarSheet() {
-  const { t } = useTranslation("common");
-  const [open, setOpen] = useState(false);
 
-  return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="shrink-0"
-          aria-label={t("app.explorer")}
-        >
-          <Menu className="size-4" />
-        </Button>
-      </SheetTrigger>
-      <SheetContent
-        side="left"
-        className="w-[92vw] max-w-[24rem] border-r border-border/70 p-0 pt-[max(0.75rem,env(safe-area-inset-top))] duration-300 ease-out"
-      >
-        <SidebarContent onPick={() => setOpen(false)} compact />
-      </SheetContent>
-    </Sheet>
-  );
-}
 
 function MacMenuBar() {
   const [now, setNow] = useState(() => new Date());
@@ -359,21 +337,9 @@ function MacDock({
 function VscodeWindow({
   isMobile,
   isTablet,
-  isDesktop,
-  isMaximized,
-  dragControls,
-  onMinimize,
-  onMaximize,
-  onClose,
 }: {
   isMobile: boolean;
   isTablet: boolean;
-  isDesktop: boolean;
-  isMaximized: boolean;
-  dragControls: DragControls;
-  onMinimize: () => void;
-  onMaximize: () => void;
-  onClose: () => void;
 }) {
   const { t } = useTranslation("common");
   const openFiles = useUiStore((state) => state.openFiles);
@@ -383,6 +349,10 @@ function VscodeWindow({
   const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
   const toggleSidebar = useUiStore((state) => state.toggleSidebar);
   const setCommandOpen = useUiStore((state) => state.setCommandOpen);
+
+  const isTerminalOpen = useUiStore((state) => state.isTerminalOpen);
+  const terminalLines = useUiStore((state) => state.terminalLines);
+  const setTerminalOpen = useUiStore((state) => state.setTerminalOpen);
 
   const tabs = useMemo(
     () =>
@@ -396,108 +366,17 @@ function VscodeWindow({
     icon: (typeof portfolioFiles)[number]["icon"];
   }[];
 
-  const frameClass = cn(
-    "overflow-hidden border border-white/25 bg-vscode-surface/90 shadow-[0_30px_80px_-10px_rgba(0,0,0,0.55),0_60px_120px_-30px_rgba(0,0,0,0.4),0_0_0_0.5px_rgba(255,255,255,0.12)] backdrop-blur-2xl",
-    isMobile ? "rounded-none border-x-0 border-b-0" : "rounded-[1.6rem]",
-    isMaximized && !isMobile && "rounded-[1.05rem]",
-  );
 
-  const sizeClass = cn(
-    "h-[70vh] min-h-[520px] max-h-[760px]",
-    isMobile
-      ? "h-full w-full max-w-none"
-      : isMaximized
-        ? "h-[72vh] min-h-[560px] max-h-[820px] w-[calc(100vw-3rem)] max-w-none"
-        : isTablet
-          ? "h-[68vh] min-h-[480px] max-h-[700px] w-[min(93vw,1120px)]"
-          : "h-[70vh] min-h-[520px] max-h-[760px] w-[min(88vw,1360px)]",
-  );
 
   const panelGridClass = cn(
-    "grid h-[calc(100%-3rem)] overflow-hidden",
+    "grid h-full overflow-hidden",
     isMobile ? "grid-cols-1" : "grid-cols-[3.25rem_1fr]",
   );
   const editorLineCount = 24;
 
   return (
-    <motion.div layout className={cn("relative", sizeClass)}>
-      <div className={frameClass}>
-        <div 
-          className="flex h-12 items-center justify-between border-b border-border/60 bg-vscode-titlebar/85 px-3 backdrop-blur-xl md:px-4 select-none"
-          style={{ cursor: isMaximized || isMobile ? "default" : "grab" }}
-          onPointerDown={(event) => {
-            if (!isMobile && !isMaximized) {
-              dragControls.start(event);
-            }
-          }}
-        >
-          <div className="flex min-w-0 items-center gap-2 md:gap-3">
-            {isMobile ? (
-              <MobileSidebarSheet />
-            ) : (
-              <div className="group flex items-center gap-1.5" onPointerDown={(e) => e.stopPropagation()}>
-                <button
-                  type="button"
-                  className="size-3 rounded-full bg-[#ff5f57] transition-transform hover:scale-110"
-                  onClick={onClose}
-                  aria-label={t("actions.close")}
-                />
-                <button
-                  type="button"
-                  className="size-3 rounded-full bg-[#febc2e] transition-transform hover:scale-110"
-                  onClick={onMinimize}
-                  aria-label={t("actions.minimize")}
-                />
-                <button
-                  type="button"
-                  className="size-3 rounded-full bg-[#28c840] transition-transform hover:scale-110"
-                  onClick={onMaximize}
-                  aria-label={t("actions.maximize")}
-                />
-              </div>
-            )}
-            <Separator orientation="vertical" className="h-4" />
-            <Avatar className="size-7" onPointerDown={(e) => e.stopPropagation()}>
-              <AvatarImage src="/profile.jpg" alt="Profile" />
-              <AvatarFallback className="bg-primary/20 text-[10px] font-bold text-primary">
-                JF
-              </AvatarFallback>
-            </Avatar>
-            <p className="truncate text-sm text-muted-foreground">
-              {t("app.subtitle")}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-1" onPointerDown={(e) => e.stopPropagation()}>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hidden gap-2 md:flex"
-              onClick={() => setCommandOpen(true)}
-            >
-              <Command className="size-4" />
-              {t("app.openCommand")}
-            </Button>
-            {!isDesktop ? (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setCommandOpen(true)}
-                aria-label={t("app.openCommand")}
-              >
-                <Search className="size-4" />
-              </Button>
-            ) : null}
-            {!isMobile ? (
-              <>
-                <LanguageToggle />
-                <ThemeToggle />
-              </>
-            ) : null}
-          </div>
-        </div>
-
-        <div className={panelGridClass}>
+    <div className="flex flex-col h-full w-full bg-vscode-surface/40 backdrop-blur-xl">
+      <div className={panelGridClass}>
           {!isMobile ? (
             <Card className="rounded-none border-0 border-r border-border/60 bg-vscode-activity/90 shadow-none">
               <CardContent className="flex h-full flex-col items-center gap-2 p-2">
@@ -623,6 +502,30 @@ function VscodeWindow({
                 </div>
               </ScrollArea>
 
+              {/* Terminal panel */}
+              {isTerminalOpen && (
+                <div className="h-44 border-t border-border/50 bg-[#1e1e1e] text-emerald-500 font-mono text-[11px] leading-relaxed flex flex-col select-text shrink-0">
+                  {/* Header */}
+                  <div className="flex h-8 shrink-0 items-center justify-between border-b border-border/30 bg-[#252526] px-4 select-none">
+                    <div className="flex items-center gap-4 text-[10px] text-muted-foreground/80">
+                      <span className="font-bold border-b-2 border-blue-500 text-[#f3f3f3] pb-0.5 px-1">TERMINAL</span>
+                      <span>PROBLEMS</span>
+                      <span>OUTPUT</span>
+                      <span>DEBUG CONSOLE</span>
+                    </div>
+                    <button onClick={() => setTerminalOpen(false)} className="text-muted-foreground hover:text-foreground">
+                      <X className="size-3.5" />
+                    </button>
+                  </div>
+                  {/* Body */}
+                  <div className="flex-1 overflow-y-auto p-3 font-mono space-y-0.5 bg-[#1e1e1e]">
+                    {terminalLines.map((line, idx) => (
+                      <p key={idx} className="whitespace-pre-wrap">{line}</p>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {!isMobile ? (
                 <div className="flex h-8 items-center justify-between border-t border-border/60 bg-vscode-status/90 px-3 text-xs text-muted-foreground backdrop-blur">
                   <div className="flex items-center gap-3">
@@ -662,27 +565,21 @@ function VscodeWindow({
           </div>
         </div>
       </div>
-    </motion.div>
-  );
+    );
 }
 
 export function VscodeLayout() {
   const { isMobile, isTablet, isDesktop } = useDevice();
-  const windowState = useUiStore((state) => state.windowState);
-  const isWindowMaximized = useUiStore((state) => state.isWindowMaximized);
-  const minimizeWindow = useUiStore((state) => state.minimizeWindow);
-  const closeWindow = useUiStore((state) => state.closeWindow);
-  const restoreWindow = useUiStore((state) => state.restoreWindow);
-  const toggleWindowMaximize = useUiStore(
-    (state) => state.toggleWindowMaximize,
-  );
+  const apps = useUiStore((state) => state.apps);
+  const openApp = useUiStore((state) => state.openApp);
+  const runDevServer = useUiStore((state) => state.runDevServer);
   const setCommandOpen = useUiStore((state) => state.setCommandOpen);
+  const { t } = useTranslation("common");
 
   const dockVscodeRef = useRef<HTMLButtonElement | null>(null);
   const [openFromDock, setOpenFromDock] = useState(false);
   const [dockOffset, setDockOffset] = useState({ x: 0, y: 260 });
-  const [exitMode, setExitMode] = useState<"minimized" | "closed">("closed");
-  const dragControls = useDragControls();
+
 
   useEffect(() => {
     const onCommandShortcut = (event: KeyboardEvent) => {
@@ -716,23 +613,23 @@ export function VscodeLayout() {
   }, []);
 
   const dockItems: DockItem[] = [
-    { id: "finder", label: "Finder", iconSrc: "/juanda.svg" },
-    { id: "safari", label: "Safari", iconSrc: "/dock-icons/safari.svg" },
-    { id: "mail", label: "Mail", iconSrc: "/dock-icons/mail.svg" },
-    { id: "messages", label: "Messages", iconSrc: "/dock-icons/messages.svg" },
-    { id: "calendar", label: "Calendar", iconSrc: "/dock-icons/calendar.svg" },
-    { id: "notes", label: "Notes", iconSrc: "/dock-icons/notes.svg" },
-    { id: "files", label: "Files", iconSrc: "/dock-icons/files.svg" },
-    { id: "music", label: "Music", iconSrc: "/dock-icons/music.svg" },
-    { id: "settings", label: "Settings", iconSrc: "/dock-icons/settings.svg" },
+    { id: "finder", label: "Finder", iconSrc: "/juanda.svg", active: apps.finder.state === "open", onClick: () => openApp("finder") },
+    { id: "safari", label: "Safari", iconSrc: "/dock-icons/safari.svg", active: apps.safari.state === "open", onClick: () => openApp("safari") },
+    { id: "mail", label: "Mail", iconSrc: "/dock-icons/mail.svg", active: apps.mail.state === "open", onClick: () => openApp("mail") },
+    { id: "messages", label: "Messages", iconSrc: "/dock-icons/messages.svg", active: apps.messages.state === "open", onClick: () => openApp("messages") },
+    { id: "calendar", label: "Calendar", iconSrc: "/dock-icons/calendar.svg", active: apps.calendar.state === "open", onClick: () => openApp("calendar") },
+    { id: "notes", label: "Notes", iconSrc: "/dock-icons/notes.svg", active: apps.notes.state === "open", onClick: () => openApp("notes") },
+    { id: "files", label: "Files", iconSrc: "/dock-icons/files.svg", active: apps.finder.state === "open", onClick: () => openApp("finder") },
+    { id: "music", label: "Music", iconSrc: "/dock-icons/music.svg", active: apps.music.state === "open", onClick: () => openApp("music") },
+    { id: "settings", label: "Settings", iconSrc: "/dock-icons/settings.svg", active: apps.settings.state === "open", onClick: () => openApp("settings") },
     {
       id: "vscode",
       label: "VS Code",
       iconSrc: "/dock-icons/vscode.svg",
-      active: windowState === "open",
+      active: apps.vscode.state === "open",
       onClick: () => {
         setOpenFromDock(true);
-        restoreWindow();
+        openApp("vscode");
       },
       dockRef: (node) => {
         dockVscodeRef.current = node;
@@ -740,7 +637,7 @@ export function VscodeLayout() {
     },
   ];
 
-  const shouldRenderWindow = windowState === "open";
+  const shouldRenderWindow = apps.vscode.state === "open";
   const enteringFromDock = shouldRenderWindow && openFromDock;
 
   return (
@@ -752,71 +649,175 @@ export function VscodeLayout() {
 
         <div
           className={cn(
-            "fixed inset-x-0 flex items-center justify-center px-0 sm:px-4",
+            "fixed inset-x-0 flex items-center justify-center px-0 sm:px-4 pointer-events-none",
             isMobile
               ? "top-[2.75rem] bottom-[5.75rem]"
               : "top-[3.6rem] bottom-[8.5rem]",
           )}
         >
-          <AnimatePresence mode="wait">
-            {shouldRenderWindow ? (
-              <motion.div
-                key="vscode-window"
-                drag={!isMobile && !isWindowMaximized}
-                dragControls={dragControls}
-                dragListener={false}
-                dragMomentum={false}
-                dragElastic={0}
-                initial={
-                  enteringFromDock
-                    ? {
-                        opacity: 0,
-                        scale: 0.2,
-                        x: dockOffset.x,
-                        y: dockOffset.y,
-                      }
-                    : { opacity: 0, scale: 0.96, y: 16 }
-                }
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  x: isWindowMaximized ? 0 : undefined,
-                  y: isWindowMaximized ? 0 : undefined,
-                }}
-                exit={
-                  exitMode === "minimized"
-                    ? {
-                        opacity: 0,
-                        scale: 0.2,
-                        x: dockOffset.x,
-                        y: dockOffset.y,
-                      }
-                    : { opacity: 0, scale: 0.9, y: 30 }
-                }
-                onAnimationComplete={() => setOpenFromDock(false)}
-                transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <VscodeWindow
-                  isMobile={isMobile}
-                  isTablet={isTablet}
-                  isDesktop={isDesktop}
-                  isMaximized={isWindowMaximized}
-                  dragControls={dragControls}
-                  onMinimize={() => {
-                    setExitMode("minimized");
-                    setOpenFromDock(false);
-                    minimizeWindow();
-                  }}
-                  onMaximize={toggleWindowMaximize}
-                  onClose={() => {
-                    setExitMode("closed");
-                    setOpenFromDock(false);
-                    closeWindow();
-                  }}
-                />
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+          <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
+            <AnimatePresence>
+              {apps.vscode.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="vscode"
+                    title="VS Code"
+                    defaultSizeClass="w-[min(88vw,1360px)] h-[70vh] min-h-[520px]"
+                    initial={
+                      enteringFromDock
+                        ? {
+                            opacity: 0,
+                            scale: 0.2,
+                            x: dockOffset.x,
+                            y: dockOffset.y,
+                          }
+                        : { opacity: 0, scale: 0.96, y: 16 }
+                    }
+                    animate={{
+                      opacity: 1,
+                      scale: 1,
+                      x: apps.vscode.isMaximized ? 0 : undefined,
+                      y: apps.vscode.isMaximized ? 0 : undefined,
+                    }}
+                    exit={{ opacity: 0, scale: 0.9, y: 30 }}
+                    customHeaderLeft={
+                      <>
+                        <Separator orientation="vertical" className="h-4" />
+                        <Avatar className="size-7">
+                          <AvatarImage src="/profile.jpg" alt="Profile" />
+                          <AvatarFallback className="bg-primary/20 text-[10px] font-bold text-primary">
+                            JF
+                          </AvatarFallback>
+                        </Avatar>
+                        <p className="truncate text-sm text-muted-foreground hidden sm:block">
+                          {t("app.subtitle")}
+                        </p>
+                      </>
+                    }
+                    customHeaderRight={
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="gap-2 h-8 text-[11px] px-2 text-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold"
+                          onClick={() => runDevServer()}
+                        >
+                          <Play className="size-3.5 shrink-0 fill-current" />
+                          <span>Live Preview</span>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hidden gap-2 md:flex h-8 text-[11px] px-2"
+                          onClick={() => setCommandOpen(true)}
+                        >
+                          <Command className="size-3.5" />
+                          {t("app.openCommand")}
+                        </Button>
+                        {!isDesktop ? (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="size-8"
+                            onClick={() => setCommandOpen(true)}
+                            aria-label={t("app.openCommand")}
+                          >
+                            <Search className="size-3.5" />
+                          </Button>
+                        ) : null}
+                        {!isMobile ? (
+                          <>
+                            <LanguageToggle />
+                            <ThemeToggle />
+                          </>
+                        ) : null}
+                      </>
+                    }
+                  >
+                    <VscodeWindow isMobile={isMobile} isTablet={isTablet} />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Safari Window */}
+              {apps.safari.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="safari"
+                    title="Safari"
+                    defaultSizeClass="w-[min(90vw,1100px)] h-[75vh] min-h-[550px]"
+                  >
+                    <SafariWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Finder Window */}
+              {apps.finder.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="finder"
+                    title="Finder"
+                    defaultSizeClass="w-[min(85vw,800px)] h-[55vh] min-h-[400px]"
+                  >
+                    <FinderWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Preview Window */}
+              {apps.preview.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="preview"
+                    title="Preview"
+                    defaultSizeClass="w-[min(85vw,750px)] h-[75vh] min-h-[500px]"
+                  >
+                    <PreviewWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Calendar Window */}
+              {apps.calendar.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="calendar"
+                    title="Calendar"
+                    defaultSizeClass="w-[min(90vw,950px)] h-[65vh] min-h-[480px]"
+                  >
+                    <CalendarWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Notes Window */}
+              {apps.notes.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="notes"
+                    title="Notes"
+                    defaultSizeClass="w-[min(85vw,850px)] h-[60vh] min-h-[420px]"
+                  >
+                    <NotesWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Messages Window */}
+              {apps.messages.state === "open" && (
+                <div className="absolute pointer-events-auto">
+                  <DesktopWindow
+                    appId="messages"
+                    title="Messages"
+                    defaultSizeClass="w-[min(85vw,750px)] h-[65vh] min-h-[480px]"
+                  >
+                    <MessagesWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         <MacDock items={dockItems} isMobile={isMobile} />
