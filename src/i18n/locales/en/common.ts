@@ -5,10 +5,10 @@ import { finderEn } from './finder'
 import { calendarEn } from './calendar'
 import { notesEn } from './notes'
 import { messagesEn } from './messages'
-import { musicEn } from './music'
 import { mailEn } from './mail'
 import { settingsEn } from './settings'
 import { sectionsEn } from './sections'
+import { tutorialEn } from './tutorial'
 
 export const enCommon = {
   app: appEn,
@@ -18,10 +18,10 @@ export const enCommon = {
   calendar: calendarEn,
   notes: notesEn,
   messages: messagesEn,
-  music: musicEn,
   mail: mailEn,
   settings: settingsEn,
   files: appEn.files,
   actions: appEn.actions,
   sections: sectionsEn,
+  tutorial: tutorialEn,
 } as const;

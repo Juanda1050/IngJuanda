@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { portfolioFiles } from '@/features/portfolio/data/portfolio-data'
 import { type SectionId } from '@/types/portfolio'
 
-export type AppId = 'vscode' | 'safari' | 'notes' | 'messages' | 'finder' | 'calendar' | 'preview' | 'mail' | 'music' | 'settings'
+export type AppId = 'vscode' | 'safari' | 'notes' | 'messages' | 'finder' | 'calendar' | 'preview' | 'mail' | 'settings'
 
 export interface AppWindowState {
   state: 'open' | 'minimized' | 'closed'
@@ -60,6 +60,12 @@ interface UiState {
   setWallpaper: (wp: string) => void
   setBrightness: (brightness: number) => void
   setNightShift: (active: boolean) => void
+
+  // Tutorial states
+  isTutorialActive: boolean
+  currentTutorialStep: number
+  setTutorialActive: (active: boolean) => void
+  setCurrentTutorialStep: (step: number) => void
 }
 
 const fallbackFile: SectionId = portfolioFiles[0]?.id ?? 'about'
@@ -85,7 +91,6 @@ export const useUiStore = create<UiState>((set, get) => ({
     calendar: { state: 'closed', isMaximized: false },
     preview: { state: 'closed', isMaximized: false },
     mail: { state: 'closed', isMaximized: false },
-    music: { state: 'closed', isMaximized: false },
     settings: { state: 'closed', isMaximized: false },
   },
   stackingOrder: ['vscode'],
@@ -278,6 +283,12 @@ export const useUiStore = create<UiState>((set, get) => ({
   setWallpaper: (wp) => set({ wallpaper: wp }),
   setBrightness: (brightness) => set({ brightness }),
   setNightShift: (nightShift) => set({ nightShift }),
+
+  // Tutorial initial state and actions
+  isTutorialActive: false,
+  currentTutorialStep: 0,
+  setTutorialActive: (active) => set({ isTutorialActive: active }),
+  setCurrentTutorialStep: (step) => set({ currentTutorialStep: step }),
 
   // Legacy window actions wrappers
   closeWindow: () => get().closeApp('vscode'),

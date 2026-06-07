@@ -99,6 +99,7 @@ export function DesktopWindow({
       style={{ zIndex }}
       onPointerDown={() => focusApp(appId)}
       className={cn(
+        'pointer-events-auto',
         isMaximized
           ? isMobile
             ? 'fixed inset-x-0 top-[2.75rem] bottom-[5.75rem]'

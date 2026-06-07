@@ -39,7 +39,6 @@ import { PreviewWindow } from "@/features/preview/components/preview-window";
 import { CalendarWindow } from "@/features/calendar/components/calendar-window";
 import { NotesWindow } from "@/features/notes/components/notes-window";
 import { MessagesWindow } from "@/features/messages/components/messages-window";
-import { MusicWindow } from "@/features/music/components/music-window";
 import { MailWindow } from "@/features/mail/components/mail-window";
 import { SettingsWindow } from "@/features/settings/components/settings-window";
 import { useDevice } from "@/hooks/use-device";
@@ -62,6 +61,7 @@ import { useUiStore } from "@/store/ui-store";
 import { cn } from "@/lib/utils";
 import { type SectionId } from "@/types/portfolio";
 import { formatWithAppleEmojis } from "@/components/apple-emoji";
+import { TutorialTour } from "@/components/tutorial-tour";
 
 function SidebarContent({
   onPick,
@@ -126,6 +126,8 @@ function MacMenuBar() {
   const openApp = useUiStore((state) => state.openApp);
   const setCommandOpen = useUiStore((state) => state.setCommandOpen);
   const setPreviewPdfUrl = useUiStore((state) => state.setPreviewPdfUrl);
+  const setTutorialActive = useUiStore((state) => state.setTutorialActive);
+  const setCurrentTutorialStep = useUiStore((state) => state.setCurrentTutorialStep);
 
   useEffect(() => {
     const tick = () => setNow(new Date());
@@ -199,7 +201,6 @@ function MacMenuBar() {
       { label: 'Open Safari', action: () => openApp('safari') },
       { label: 'Open Calendar', action: () => openApp('calendar') },
       { label: 'Open Notes', action: () => openApp('notes') },
-      { label: 'Open Music', action: () => openApp('music') },
       { divider: true, label: '' },
       { label: t('toolbar.menus.view.enterFullScreen'), shortcut: '⌃⌘F', disabled: true },
     ],
@@ -213,11 +214,18 @@ function MacMenuBar() {
       { label: 'Messages', action: () => openApp('messages') },
       { label: 'Calendar', action: () => openApp('calendar') },
       { label: 'Notes', action: () => openApp('notes') },
-      { label: 'Music', action: () => openApp('music') },
       { label: t('toolbar.controlCenter.shortcuts.settings'), action: () => openApp('settings') },
     ],
     Help: [
       { label: t('toolbar.menus.help.portfolioHelp'), action: () => openApp('safari') },
+      {
+        label: t('tutorial.start'),
+        action: () => {
+          openApp('vscode');
+          setTutorialActive(true);
+          setCurrentTutorialStep(0);
+        },
+      },
       { divider: true, label: '' },
       { label: 'danielalejandre1050@gmail.com', disabled: true },
     ],
@@ -319,8 +327,9 @@ function MacMenuBar() {
               minute: "2-digit",
             })}
           </p>
-          <div className="relative">
+          <div className="relative" onMouseLeave={() => setShowProfile(false)}>
             <button
+              id="profile-avatar"
               className="rounded-full ring-2 ring-transparent hover:ring-white/50 transition-all active:scale-95"
               onClick={() => setShowProfile(!showProfile)}
               onMouseEnter={() => setShowProfile(true)}
@@ -484,6 +493,7 @@ function MacDock({
       className="fixed inset-x-0 bottom-2 z-50 flex justify-center px-2 pb-[max(0.3rem,env(safe-area-inset-bottom))]"
     >
       <div
+        id="mac-dock"
         ref={dockRef}
         role="toolbar"
         aria-label="macOS dock"
@@ -617,6 +627,7 @@ function VscodeWindow({
             <AnimatePresence initial={false}>
               {!isMobile && isSidebarOpen ? (
                 <motion.aside
+                  id="vscode-sidebar"
                   key="desktop-sidebar"
                   initial={{ x: -16, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
@@ -819,7 +830,6 @@ export function VscodeLayout() {
     { id: "calendar", label: t('calendar.title'), iconSrc: "/dock-icons/calendar.svg", active: apps.calendar.state !== "closed", onClick: () => openApp("calendar") },
     { id: "notes", label: t('notes.title'), iconSrc: "/dock-icons/notes.svg", active: apps.notes.state !== "closed", onClick: () => openApp("notes") },
     { id: "files", label: t('finder.title'), iconSrc: "/dock-icons/files.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
-    { id: "music", label: t('music.title'), iconSrc: "/dock-icons/music.svg", active: apps.music.state !== "closed", onClick: () => openApp("music") },
     { id: "settings", label: t('toolbar.controlCenter.shortcuts.settings'), iconSrc: "/dock-icons/settings.svg", active: apps.settings.state !== "closed", onClick: () => openApp("settings") },
     {
       id: "vscode",
@@ -877,7 +887,7 @@ export function VscodeLayout() {
           <div className="relative w-full h-full flex items-center justify-center pointer-events-none">
             <AnimatePresence>
               {apps.vscode.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="vscode"
                     title="VS Code"
@@ -916,6 +926,7 @@ export function VscodeLayout() {
                     customHeaderRight={
                       <>
                         <Button
+                          id="live-preview-btn"
                           variant="ghost"
                           size="sm"
                           className="gap-2 h-8 text-[11px] px-2 text-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold"
@@ -960,7 +971,7 @@ export function VscodeLayout() {
 
               {/* Safari Window */}
               {apps.safari.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="safari"
                     title={t('safari.title')}
@@ -973,7 +984,7 @@ export function VscodeLayout() {
 
               {/* Finder Window */}
               {apps.finder.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="finder"
                     title={t('finder.title')}
@@ -986,7 +997,7 @@ export function VscodeLayout() {
 
               {/* Preview Window */}
               {apps.preview.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="preview"
                     title={t('finder.preview.title')}
@@ -999,7 +1010,7 @@ export function VscodeLayout() {
 
               {/* Calendar Window */}
               {apps.calendar.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="calendar"
                     title={t('calendar.title')}
@@ -1012,7 +1023,7 @@ export function VscodeLayout() {
 
               {/* Notes Window */}
               {apps.notes.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="notes"
                     title={t('notes.title')}
@@ -1025,7 +1036,7 @@ export function VscodeLayout() {
 
               {/* Messages Window */}
               {apps.messages.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="messages"
                     title={t('messages.title')}
@@ -1036,22 +1047,10 @@ export function VscodeLayout() {
                 </div>
               )}
 
-              {/* Music Window */}
-              {apps.music.state === "open" && (
-                <div className="absolute pointer-events-auto">
-                  <DesktopWindow
-                    appId="music"
-                    title={t('music.title')}
-                    defaultSizeClass="w-[min(90vw,1000px)] h-[70vh] min-h-[480px]"
-                  >
-                    <MusicWindow />
-                  </DesktopWindow>
-                </div>
-              )}
 
               {/* Mail Window */}
               {apps.mail.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="mail"
                     title="Mail"
@@ -1064,7 +1063,7 @@ export function VscodeLayout() {
 
               {/* Settings Window */}
               {apps.settings.state === "open" && (
-                <div className="absolute pointer-events-auto">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="settings"
                     title={t('toolbar.controlCenter.shortcuts.settings')}
@@ -1081,6 +1080,7 @@ export function VscodeLayout() {
         <MacDock items={dockItems} isMobile={isMobile} />
 
         <CommandPalette />
+        <TutorialTour />
       </div>
     </TooltipProvider>
   );

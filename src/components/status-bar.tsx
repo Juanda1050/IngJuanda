@@ -315,9 +315,8 @@ export function ControlCenter() {
             </div>
 
             {/* Quick actions */}
-            <div className="grid grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-2 gap-1.5">
               {[
-                { label: t('toolbar.controlCenter.shortcuts.music'), emoji: '🎵', app: 'music' as const },
                 { label: t('toolbar.controlCenter.shortcuts.calendar'), emoji: '📅', app: 'calendar' as const },
                 { label: t('toolbar.controlCenter.shortcuts.settings'), emoji: '⚙️', app: 'settings' as const },
               ].map(({ label, emoji, app }) => (
