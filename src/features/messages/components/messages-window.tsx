@@ -148,7 +148,7 @@ export function MessagesWindow() {
     <div className="flex h-full w-full bg-background dark:bg-[#1e1e1e] text-foreground font-sans text-sm select-none">
       
       {/* Messages Sidebar */}
-      <div className="w-60 shrink-0 border-r border-border/50 bg-[#f6f6f6] dark:bg-[#252526] flex flex-col min-h-0">
+      <div className={cn("w-60 shrink-0 border-r border-border/50 bg-[#f6f6f6] dark:bg-[#252526] flex flex-col min-h-0", "hidden md:flex")}>
         {/* Search */}
         <div className="p-3 border-b border-border/40 shrink-0">
           <div className="relative flex items-center">

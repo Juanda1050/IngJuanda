@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Search, FileText, Calendar, AlignLeft } from 'lucide-react'
+import { Search, FileText, Calendar, AlignLeft, ChevronLeft } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatWithAppleEmojis } from '@/components/apple-emoji'
 
@@ -17,6 +17,7 @@ export function NotesWindow() {
 
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedNoteId, setSelectedNoteId] = useState('about_me')
+  const [mobileView, setMobileView] = useState<'list' | 'detail'>('list')
 
   const notesData = useMemo(() => {
     return t('notes.notesData', { returnObjects: true }) as NoteItem[]
@@ -45,7 +46,7 @@ export function NotesWindow() {
     <div className="flex h-full w-full bg-[#fdfcf7] dark:bg-[#1c1c1e] text-foreground font-sans text-sm select-none">
       
       {/* Notes Sidebar */}
-      <div className="w-56 shrink-0 border-r border-border/50 bg-[#f4f2ea] dark:bg-[#252526] flex flex-col min-h-0">
+      <div className={cn("w-full md:w-56 shrink-0 border-r border-border/50 bg-[#f4f2ea] dark:bg-[#252526] flex flex-col min-h-0", mobileView === 'list' ? 'flex' : 'hidden md:flex')}>
         
         {/* Search Input */}
         <div className="p-3 border-b border-border/40 shrink-0">
@@ -78,7 +79,10 @@ export function NotesWindow() {
               return (
                 <button
                   key={note.id}
-                  onClick={() => setSelectedNoteId(note.id)}
+                  onClick={() => {
+                    setSelectedNoteId(note.id)
+                    setMobileView('detail')
+                  }}
                   className={cn(
                     "w-full rounded-lg p-2.5 text-left transition-all relative border border-transparent",
                     isSelected
@@ -104,7 +108,16 @@ export function NotesWindow() {
       </div>
 
       {/* Note Body Editor Area */}
-      <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col relative select-text bg-[#fcfbf9] dark:bg-[#1e1e1e]">
+      <div className={cn("flex-1 overflow-y-auto p-6 md:p-8 flex flex-col relative select-text bg-[#fcfbf9] dark:bg-[#1e1e1e]", mobileView === 'detail' ? 'flex' : 'hidden md:flex')}>
+        {/* Mobile Back Button */}
+        <button 
+          onClick={() => setMobileView('list')}
+          className="md:hidden flex items-center text-[#b8ad87] dark:text-[#d2c9ab] gap-1 mb-4 select-none self-start font-semibold text-sm"
+        >
+          <ChevronLeft className="size-4" />
+          <span>Notes</span>
+        </button>
+
         {/* Apple Notes styled paper texture overlay (simulated by subtle border / shadow layout) */}
         <div className="max-w-2xl w-full mx-auto flex-1 flex flex-col h-full">
           

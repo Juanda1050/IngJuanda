@@ -29,5 +29,17 @@ export const tutorialEn = {
       title: "You're All Set! 🎉",
       description: "You are now ready to explore! Have fun clicking around the windows. If you ever need this guide again, click 'Help' in the top menu bar."
     }
+  },
+  mobile: {
+    next: "Next",
+    finish: "Got it",
+    step1: {
+      title: "Welcome to iPhone UI",
+      desc: "This is a mobile-optimized view of the portfolio. Tap the icons to open apps."
+    },
+    step2: {
+      title: "Settings App",
+      desc: "Open the Settings app to change language and appearance."
+    }
   }
 } as const;

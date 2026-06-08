@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { 
   Inbox, Send, File, AlertOctagon, Trash, 
-  Plus, Search, Reply, SendHorizontal, X, CheckCircle2
+  Plus, Search, Reply, SendHorizontal, X, CheckCircle2, ChevronLeft
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatWithAppleEmojis } from '@/components/apple-emoji'
@@ -22,6 +22,7 @@ export function MailWindow() {
   const [activeFolder, setActiveFolder] = useState<'inbox' | 'sent' | 'drafts' | 'junk' | 'trash'>('inbox')
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [mobileView, setMobileView] = useState<'folders' | 'list' | 'detail'>('folders')
   
   // Compose modal states
   const [isComposing, setIsComposing] = useState(false)
@@ -132,6 +133,7 @@ export function MailWindow() {
       setShowToast(true)
       setActiveFolder('sent')
       setSelectedEmailId(newEmail.id)
+      setMobileView('detail')
 
       // Auto dismiss toast
       setTimeout(() => setShowToast(false), 3000)
@@ -150,7 +152,7 @@ export function MailWindow() {
   return (
     <div className="flex h-full w-full bg-background dark:bg-[#1a1a1c] text-foreground font-sans text-sm select-none relative">
       {/* 1st Pane: Sidebar */}
-      <div className="w-44 shrink-0 border-r border-border/50 bg-vscode-sidebar/95 p-3 flex flex-col justify-between overflow-y-auto">
+      <div className={cn("w-full md:w-44 shrink-0 border-r border-border/50 bg-vscode-sidebar/95 p-3 flex flex-col justify-between overflow-y-auto", mobileView === 'folders' ? 'flex' : 'hidden md:flex')}>
         <div className="space-y-4">
           <button
             onClick={handleNewMessage}
@@ -170,6 +172,7 @@ export function MailWindow() {
                   onClick={() => {
                     setActiveFolder(folder.id)
                     setSelectedEmailId(null)
+                    setMobileView('list')
                   }}
                   className={cn(
                     'flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors text-left',
@@ -203,7 +206,16 @@ export function MailWindow() {
       </div>
 
       {/* 2nd Pane: Email List */}
-      <div className="w-64 shrink-0 border-r border-border/40 bg-background/50 dark:bg-[#1a1a1c]/50 backdrop-blur-md flex flex-col min-h-0">
+      <div className={cn("w-full md:w-64 shrink-0 border-r border-border/40 bg-background/50 dark:bg-[#1a1a1c]/50 backdrop-blur-md flex flex-col min-h-0", mobileView === 'list' ? 'flex' : 'hidden md:flex')}>
+        {/* Mobile Back Button */}
+        <button 
+          onClick={() => setMobileView('folders')}
+          className="md:hidden flex items-center text-blue-500 gap-1 px-3 py-2 font-semibold text-xs border-b border-border/20 self-start select-none"
+        >
+          <ChevronLeft className="size-4" />
+          <span>Mailboxes</span>
+        </button>
+
         {/* Search */}
         <div className="p-3 border-b border-border/40 relative">
           <Search className="absolute left-6 top-5 size-3.5 text-muted-foreground/60" />
@@ -228,7 +240,10 @@ export function MailWindow() {
               return (
                 <button
                   key={email.id}
-                  onClick={() => setSelectedEmailId(email.id)}
+                  onClick={() => {
+                    setSelectedEmailId(email.id)
+                    setMobileView('detail')
+                  }}
                   className={cn(
                     'w-full text-left p-3 flex flex-col gap-1 transition-colors outline-none border-l-4',
                     isSelected
@@ -258,7 +273,15 @@ export function MailWindow() {
       </div>
 
       {/* 3rd Pane: Email Details */}
-      <div className="flex-1 bg-background dark:bg-[#1a1a1c] p-6 flex flex-col justify-between overflow-y-auto select-text min-w-0">
+      <div className={cn("flex-1 bg-background dark:bg-[#1a1a1c] p-6 flex flex-col justify-between overflow-y-auto select-text min-w-0", mobileView === 'detail' ? 'flex' : 'hidden md:flex')}>
+        {/* Mobile Back Button */}
+        <button 
+          onClick={() => setMobileView('list')}
+          className="md:hidden flex items-center text-blue-500 gap-1 mb-4 font-semibold text-xs self-start select-none"
+        >
+          <ChevronLeft className="size-4" />
+          <span>Emails</span>
+        </button>
         {activeEmail ? (
           <div className="space-y-6 flex-1 flex flex-col justify-between">
             <div className="space-y-4">

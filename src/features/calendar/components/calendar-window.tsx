@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { Badge } from '@/shared/ui'
 import { motion, AnimatePresence } from 'framer-motion'
 import { formatWithAppleEmojis } from '@/components/apple-emoji'
+import { useMobile } from '@/hooks/use-mobile'
 
 interface MilestoneEvent {
   id: string
@@ -45,6 +46,7 @@ const getColorForType = (type: 'work' | 'education' | 'project') => {
 export function CalendarWindow() {
   const { t, i18n } = useTranslation('common')
   const isEn = i18n.language === 'en'
+  const isMobile = useMobile()
 
   // Map filters
   const [filters, setFilters] = useState({
@@ -53,6 +55,8 @@ export function CalendarWindow() {
     project: true
   })
 
+  const [showEventsList, setShowEventsList] = useState(false)
+  
   // Date View State (Defaults to June 2026 which has our portfolio launch)
   const [currentMonth, setCurrentMonth] = useState(() => new Date(2026, 5, 1))
   const [selectedEvent, setSelectedEvent] = useState<MilestoneEvent | null>(null)
@@ -183,9 +187,11 @@ export function CalendarWindow() {
     // Return localized abbreviations of weekdays starting Sunday
     return Array.from({ length: 7 }).map((_, idx) => {
       const d = new Date(2026, 4, 3 + idx) // May 3, 2026 is a Sunday
-      return d.toLocaleDateString(isEn ? 'en-US' : 'es-ES', { weekday: 'short' })
+      return d.toLocaleDateString(isEn ? 'en-US' : 'es-ES', {
+        weekday: isMobile ? 'narrow' : 'short'
+      })
     })
-  }, [isEn])
+  }, [isEn, isMobile])
 
   // Format date helper
   const formatEventDate = (dateStr: string) => {
@@ -199,17 +205,47 @@ export function CalendarWindow() {
   }
 
   return (
-    <div className="flex h-full w-full flex-col md:flex-row bg-background dark:bg-[#1a1a1a] text-foreground font-sans text-sm select-none">
+    <div className={cn(
+      "flex h-full w-full flex-col md:flex-row text-foreground font-sans text-sm select-none",
+      isMobile ? "bg-white dark:bg-black" : "bg-background dark:bg-[#1a1a1a]"
+    )}>
       
       {/* Sidebar Filter and Upcoming List */}
-      <div className="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-border/50 bg-vscode-sidebar/95 p-4 flex flex-col justify-between overflow-y-auto">
+      <div className={cn(
+        "w-full md:w-64 shrink-0 p-4 flex flex-col overflow-y-auto",
+        isMobile 
+          ? "bg-[#f2f2f7] dark:bg-black border-transparent justify-start" 
+          : "justify-between border-b md:border-b-0 md:border-r border-border/50 bg-vscode-sidebar/95",
+        showEventsList ? "flex w-full h-full" : "hidden md:flex"
+      )}>
+        {isMobile && showEventsList && (
+          <div className="flex items-center justify-between pb-3 border-b border-black/10 dark:border-white/10 mb-4 shrink-0">
+            <button
+              onClick={() => setShowEventsList(false)}
+              className="flex items-center gap-0.5 text-[#ff3b30] dark:text-[#ff453a] font-semibold text-[16px] -ml-2"
+            >
+              <ChevronLeft className="size-5 shrink-0" />
+              <span>{t('calendar.title', 'Calendar')}</span>
+            </button>
+            <span className="font-bold text-[17px] text-foreground">
+              {t('calendar.sidebar.listTitle', 'Events')}
+            </span>
+            <div className="w-16" />
+          </div>
+        )}
         <div className="space-y-6">
           {/* Calendar Selectors */}
           <div className="space-y-2.5">
-            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">
+            <h3 className={cn(
+              "text-xs font-bold uppercase tracking-wider px-1",
+              isMobile ? "text-gray-500 dark:text-gray-400" : "text-muted-foreground"
+            )}>
               {t('calendar.sidebar.title')}
             </h3>
-            <div className="space-y-1.5">
+            <div className={cn(
+              "space-y-1.5",
+              isMobile ? "bg-white dark:bg-[#1c1c1e] rounded-xl p-2.5 divide-y divide-gray-200 dark:divide-white/10" : ""
+            )}>
               {[
                 { type: 'work', label: t('calendar.sidebar.work'), color: 'bg-emerald-500' },
                 { type: 'education', label: t('calendar.sidebar.education'), color: 'bg-blue-500' },
@@ -218,7 +254,12 @@ export function CalendarWindow() {
                 <button
                   key={item.type}
                   onClick={() => setFilters(prev => ({ ...prev, [item.type]: !prev[item.type as keyof typeof prev] }))}
-                  className="flex w-full items-center gap-2.5 rounded-lg px-2 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-left"
+                  className={cn(
+                    "flex w-full items-center gap-2.5 px-2 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors text-left",
+                    isMobile 
+                      ? "text-black dark:text-white text-[15px] py-3 hover:bg-transparent" 
+                      : "hover:bg-black/5 dark:hover:bg-white/5"
+                  )}
                 >
                   <span className={cn(
                     "flex size-4 items-center justify-center rounded border transition-all",
@@ -237,25 +278,33 @@ export function CalendarWindow() {
 
           {/* Milestone list (Chronological shortcut) */}
           <div className="space-y-2.5">
-            <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1">
+            <h3 className={cn(
+              "text-xs font-bold uppercase tracking-wider px-1",
+              isMobile ? "text-gray-500 dark:text-gray-400" : "text-muted-foreground"
+            )}>
               {t('calendar.sidebar.listTitle')}
             </h3>
-            <div className="space-y-1.5 max-h-44 md:max-h-none overflow-y-auto pr-1">
+            <div className={cn(
+              "space-y-1.5 pr-1",
+              isMobile ? "space-y-2.5 max-h-none overflow-visible" : "max-h-44 md:max-h-none overflow-y-auto"
+            )}>
               {milestonesData.map(evt => (
                 <button
                   key={evt.id}
                   onClick={() => selectMilestone(evt)}
                   className={cn(
                     "flex w-full items-start gap-2.5 rounded-lg p-2 text-xs transition-all text-left border border-transparent",
-                    selectedEvent?.id === evt.id
-                      ? "bg-primary/10 border-primary/20 text-foreground"
-                      : "hover:bg-black/5 dark:hover:bg-white/5 text-muted-foreground hover:text-foreground"
+                    isMobile
+                      ? "bg-white dark:bg-[#1c1c1e] p-3 rounded-xl shadow-sm"
+                      : selectedEvent?.id === evt.id
+                        ? "bg-primary/10 border-primary/20 text-foreground"
+                        : "hover:bg-black/5 dark:hover:bg-white/5 text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <span className={cn("size-2 rounded-full shrink-0 mt-1.5", getColorForType(evt.type).dot)} />
                   <div className="min-w-0">
-                    <p className="font-semibold truncate">{formatWithAppleEmojis(evt.title)}</p>
-                    <p className="text-[10px] text-muted-foreground/70">{formatWithAppleEmojis(evt.company)} • {evt.date.split('-')[0]}</p>
+                    <p className={cn("font-semibold truncate", isMobile ? "text-[14px]" : "")}>{formatWithAppleEmojis(evt.title)}</p>
+                    <p className={cn("text-[10px] text-muted-foreground/70", isMobile ? "text-[12px] mt-0.5" : "")}>{formatWithAppleEmojis(evt.company)} • {evt.date.split('-')[0]}</p>
                   </div>
                 </button>
               ))}
@@ -271,34 +320,77 @@ export function CalendarWindow() {
       </div>
 
       {/* Main Grid Calendar Container */}
-      <div className="flex-1 flex flex-col min-w-0 bg-background dark:bg-[#1c1c1e] relative">
+      <div className={cn(
+        "flex-1 flex flex-col min-w-0 relative",
+        isMobile ? "bg-white dark:bg-black" : "bg-background dark:bg-[#1c1c1e]",
+        showEventsList ? "hidden md:flex" : "flex"
+      )}>
         
         {/* Calendar Nav Header */}
-        <div className="flex h-12 shrink-0 items-center justify-between border-b border-border/40 bg-background/50 dark:bg-[#1c1c1e]/50 px-4 md:px-6 backdrop-blur-md">
+        <div className={cn(
+          "flex h-12 shrink-0 items-center justify-between border-b backdrop-blur-md px-4 md:px-6",
+          isMobile 
+            ? "border-transparent bg-white/50 dark:bg-black/50" 
+            : "border-border/40 bg-background/50 dark:bg-[#1c1c1e]/50"
+        )}>
           {/* Month/Year Name */}
-          <h2 className="text-base font-bold capitalize tracking-tight text-foreground/90">
+          <h2 className={cn(
+            "text-base font-bold capitalize tracking-tight",
+            isMobile ? "text-[#ff3b30] dark:text-[#ff453a]" : "text-foreground/90"
+          )}>
             {monthLabel}
           </h2>
 
           {/* Actions & Navigation */}
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setShowEventsList(!showEventsList)}
+              className={cn(
+                "md:hidden px-3 py-1 text-xs font-semibold rounded-md border active:scale-95 transition-all",
+                isMobile 
+                  ? "border-[#ff3b30]/20 bg-[#ff3b30]/10 hover:bg-[#ff3b30]/20 text-[#ff3b30] dark:text-[#ff453a]" 
+                  : "border-border/80 hover:bg-black/5 dark:hover:bg-white/5 text-foreground"
+              )}
+            >
+              {showEventsList ? "Calendar" : "Events"}
+            </button>
+            <button
               onClick={jumpToToday}
-              className="px-3 py-1 text-xs font-semibold rounded-md border border-border/80 hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all text-foreground"
+              className={cn(
+                "px-3 py-1 text-xs font-semibold rounded-md active:scale-95 transition-all",
+                isMobile 
+                  ? "text-[#ff3b30] dark:text-[#ff453a] hover:text-[#ff3b30]/80 font-bold" 
+                  : "border border-border/80 hover:bg-black/5 dark:hover:bg-white/5 text-foreground"
+              )}
             >
               {t('calendar.header.today')}
             </button>
-            <div className="flex items-center rounded-md border border-border/80 bg-background dark:bg-transparent overflow-hidden">
+            <div className={cn(
+              "flex items-center overflow-hidden",
+              isMobile 
+                ? "text-[#ff3b30] dark:text-[#ff453a]" 
+                : "rounded-md border border-border/80 bg-background dark:bg-transparent"
+            )}>
               <button
                 onClick={prevMonth}
-                className="flex size-7 items-center justify-center border-r border-border hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                className={cn(
+                  "flex size-7 items-center justify-center transition-colors",
+                  isMobile 
+                    ? "hover:text-[#ff3b30]/80 active:scale-90" 
+                    : "border-r border-border hover:bg-black/5 dark:hover:bg-white/5"
+                )}
                 aria-label="Previous month"
               >
                 <ChevronLeft className="size-4" />
               </button>
               <button
                 onClick={nextMonth}
-                className="flex size-7 items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                className={cn(
+                  "flex size-7 items-center justify-center transition-colors",
+                  isMobile 
+                    ? "hover:text-[#ff3b30]/80 active:scale-90" 
+                    : "hover:bg-black/5 dark:hover:bg-white/5"
+                )}
                 aria-label="Next month"
               >
                 <ChevronRight className="size-4" />
@@ -308,10 +400,13 @@ export function CalendarWindow() {
         </div>
 
         {/* Weekday Row */}
-        <div className="grid grid-cols-7 border-b border-border/30 bg-black/[0.02] dark:bg-white/[0.01]">
-          {weekdayHeadings.map(day => (
+        <div className={cn(
+          "grid grid-cols-7 border-b bg-black/[0.02] dark:bg-white/[0.01]",
+          isMobile ? "border-transparent bg-transparent" : "border-border/30"
+        )}>
+          {weekdayHeadings.map((day, idx) => (
             <div
-              key={day}
+              key={`${day}-${idx}`}
               className="py-2 text-center text-[10px] font-bold text-muted-foreground/80 uppercase tracking-wider"
             >
               {day}
@@ -320,31 +415,50 @@ export function CalendarWindow() {
         </div>
 
         {/* Calendar Days Grid */}
-        <div className="flex-1 grid grid-cols-7 grid-rows-6 min-h-0 bg-black/[0.01] dark:bg-white/[0.003]">
+        <div className={cn(
+          "flex-1 grid grid-cols-7 grid-rows-6 min-h-0",
+          isMobile ? "bg-transparent" : "bg-black/[0.01] dark:bg-white/[0.003]"
+        )}>
           {gridCells.map((cell, idx) => (
             <div
               key={`${cell.dateStr}-${idx}`}
               className={cn(
-                "relative flex flex-col border-b border-r border-border/30 p-1 md:p-1.5 select-none min-h-0",
-                !cell.isCurrentMonth && "opacity-30 dark:opacity-20 bg-muted/10",
-                idx % 7 === 6 && "border-r-0"
+                "relative flex flex-col select-none min-h-0",
+                isMobile 
+                  ? "items-center justify-start pt-2 bg-transparent" 
+                  : "border-b border-r border-border/30 p-1 md:p-1.5",
+                !isMobile && !cell.isCurrentMonth && "opacity-30 dark:opacity-20 bg-muted/10",
+                !isMobile && idx % 7 === 6 && "border-r-0"
               )}
             >
               {/* Day Number */}
-              <div className="flex justify-between items-center mb-1">
+              <div className={cn(
+                "flex flex-col items-center justify-center relative",
+                isMobile ? "size-10" : "w-full flex-row justify-between items-center mb-1"
+              )}>
                 <span className={cn(
-                  "flex size-5.5 md:size-6 items-center justify-center rounded-full text-xs font-bold transition-all",
+                  "flex size-7 md:size-6 items-center justify-center rounded-full text-xs font-bold transition-all shrink-0",
                   cell.isToday 
-                    ? "bg-red-500 text-white shadow-sm" 
+                    ? "bg-[#ff3b30] text-white shadow-sm" 
                     : cell.isCurrentMonth 
                       ? "text-foreground" 
-                      : "text-muted-foreground"
+                      : isMobile
+                        ? "text-muted-foreground/30"
+                        : "text-muted-foreground"
                 )}>
                   {cell.dayNum}
                 </span>
 
                 {/* Mobile indicators if any events present */}
-                {cell.events.length > 0 && (
+                {isMobile && cell.events.length > 0 && (
+                  <span className="absolute bottom-0.5 flex gap-0.5 justify-center w-full">
+                    {cell.events.map(evt => (
+                      <span key={evt.id} className={cn("size-1 rounded-full", getColorForType(evt.type).dot)} />
+                    ))}
+                  </span>
+                )}
+                
+                {!isMobile && cell.events.length > 0 && (
                   <span className="flex gap-0.5 md:hidden">
                     {cell.events.map(evt => (
                       <span key={evt.id} className={cn("size-1 rounded-full", getColorForType(evt.type).dot)} />
@@ -375,7 +489,7 @@ export function CalendarWindow() {
 
               {/* Mobile overlay tap catcher */}
               <button
-                className="absolute inset-0 block md:hidden bg-transparent border-0 outline-none"
+                className="absolute inset-0 block md:hidden bg-transparent border-0 outline-none cursor-pointer"
                 onClick={() => {
                   if (cell.events.length > 0) {
                     setSelectedEvent(cell.events[0] || null)
@@ -395,7 +509,12 @@ export function CalendarWindow() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 10 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute z-30 bottom-4 right-4 left-4 md:left-auto md:w-96 rounded-2xl border border-white/20 bg-background/95 dark:bg-[#2c2c2e]/98 p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.1)] backdrop-blur-2xl text-foreground"
+              className={cn(
+                "absolute z-30 bottom-4 right-4 left-4 md:left-auto md:w-96 rounded-2xl border p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.1)] backdrop-blur-2xl text-foreground",
+                isMobile 
+                  ? "bg-white/95 dark:bg-[#1c1c1e]/98 border-gray-200 dark:border-white/10"
+                  : "border-white/20 bg-background/95 dark:bg-[#2c2c2e]/98"
+              )}
             >
               {/* Event Category Color Accent Dot */}
               <div className="flex items-start justify-between gap-3 mb-3">
@@ -428,7 +547,7 @@ export function CalendarWindow() {
                   {formatWithAppleEmojis(selectedEvent.description)}
                 </p>
 
-                {/* Achievments bullet points */}
+                {/* Achievements bullet points */}
                 <div className="space-y-1.5 pl-1.5">
                   <p className="text-[10px] font-bold text-muted-foreground/75 uppercase tracking-wider flex items-center gap-1.5">
                     <Info className="size-3 text-primary" />
@@ -448,7 +567,12 @@ export function CalendarWindow() {
               <div className="flex justify-end border-t border-border/40 mt-4 pt-3">
                 <button
                   onClick={() => setSelectedEvent(null)}
-                  className="px-3 py-1.5 bg-primary text-primary-foreground font-semibold rounded-lg text-xs hover:opacity-90 active:scale-95 transition-all shadow-md"
+                  className={cn(
+                    "px-3 py-1.5 font-semibold rounded-lg text-xs hover:opacity-90 active:scale-95 transition-all shadow-md",
+                    isMobile 
+                      ? "bg-[#ff3b30] text-white" 
+                      : "bg-primary text-primary-foreground"
+                  )}
                 >
                   {t('calendar.detailCard.dismiss')}
                 </button>

@@ -29,5 +29,17 @@ export const tutorialEs = {
       title: "¡Todo Listo para Empezar! 🎉",
       description: "Ya puedes explorar todo a tu gusto. Diviértete haciendo clic en los botones y ventanas. Si quieres volver a ver esta guía, haz clic en 'Help' (Ayuda) en la barra superior."
     }
+  },
+  mobile: {
+    next: "Siguiente",
+    finish: "Entendido",
+    step1: {
+      title: "Bienvenido a iPhone UI",
+      desc: "Esta es una vista optimizada para móviles. Toca los íconos para abrir las aplicaciones."
+    },
+    step2: {
+      title: "App de Ajustes",
+      desc: "Abre la aplicación de Ajustes para cambiar el idioma y la apariencia."
+    }
   }
 } as const;
