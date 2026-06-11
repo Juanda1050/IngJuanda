@@ -3,6 +3,7 @@ import { useTheme } from "next-themes";
 import { Moon, Sun, Globe, Info, Monitor } from "lucide-react";
 import { useUiStore } from "@/store/ui-store";
 import { cn } from "@/lib/utils";
+import { WallpaperBackground } from "@/components/wallpaper-background";
 
 export function IosSettings() {
   const { t, i18n } = useTranslation("common");
@@ -11,34 +12,11 @@ export function IosSettings() {
   const setWallpaper = useUiStore((state) => state.setWallpaper);
 
   const wallpaperOptions = [
-    {
-      id: "default",
-      label: t("settings.desktop.options.default", "Default"),
-      preview: "from-blue-200 to-blue-400 dark:from-slate-900 dark:to-blue-950",
-    },
-    {
-      id: "monterey",
-      label: t("settings.desktop.options.monterey", "Monterey"),
-      preview:
-        "from-purple-500 via-indigo-500 to-blue-700 dark:from-purple-900 dark:via-indigo-950 dark:to-zinc-950",
-    },
-    {
-      id: "sonoma",
-      label: t("settings.desktop.options.sonoma", "Sonoma"),
-      preview:
-        "from-amber-400 via-orange-500 to-emerald-600 dark:from-amber-950 dark:via-orange-950 dark:to-emerald-950",
-    },
-    {
-      id: "aurora",
-      label: t("settings.desktop.options.aurora", "Aurora"),
-      preview:
-        "from-teal-400 via-cyan-500 to-blue-600 dark:from-teal-950 dark:via-cyan-950 dark:to-blue-950",
-    },
-    {
-      id: "midnight",
-      label: t("settings.desktop.options.midnight", "Midnight"),
-      preview: "bg-zinc-100 dark:bg-zinc-950",
-    },
+    { id: "default", label: t("settings.desktop.options.default", "Default") },
+    { id: "monterey", label: t("settings.desktop.options.monterey", "Monterey") },
+    { id: "sonoma", label: t("settings.desktop.options.sonoma", "Sonoma") },
+    { id: "aurora", label: t("settings.desktop.options.aurora", "Aurora") },
+    { id: "midnight", label: t("settings.desktop.options.midnight", "Midnight") },
   ];
 
   const languages = [
@@ -138,13 +116,13 @@ export function IosSettings() {
                 >
                   <div
                     className={cn(
-                      "w-full aspect-[9/16] rounded-lg bg-gradient-to-br border shadow-sm transition-all relative overflow-hidden",
-                      wp.preview,
+                      "w-full aspect-[9/16] rounded-lg border shadow-sm transition-all relative overflow-hidden",
                       wallpaper === wp.id
                         ? "border-blue-500 ring-2 ring-blue-500/50 scale-105"
                         : "border-gray-200 dark:border-white/10 opacity-70 hover:opacity-100",
                     )}
                   >
+                    <WallpaperBackground id={wp.id} thumbnail={true} layout="ios" />
                     {wallpaper === wp.id && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/10">
                         <span className="text-white text-[10px] font-bold bg-blue-500 rounded-full w-5 h-5 flex items-center justify-center">

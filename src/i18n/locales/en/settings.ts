@@ -28,11 +28,11 @@ export const settingsEn = {
     title: "Desktop Wallpapers",
     select: "Select a premium gradient for your desktop background:",
     options: {
-      default: "Ventura Dynamic",
-      monterey: "Monterey Purple",
-      sonoma: "Sonoma Organic",
-      aurora: "Aurora Teal",
-      midnight: "Midnight Black",
+      default: "Aqua Dynamic",
+      monterey: "Monterey Waves",
+      sonoma: "Sonoma Horizon",
+      aurora: "Aurora Borealis",
+      midnight: "Midnight Curves",
     },
   },
   displays: {

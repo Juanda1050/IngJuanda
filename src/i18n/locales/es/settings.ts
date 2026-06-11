@@ -28,11 +28,11 @@ export const settingsEs = {
     title: "Fondos de Pantalla",
     select: "Selecciona un gradiente premium para el escritorio:",
     options: {
-      default: "Ventura Dynamic",
-      monterey: "Monterey Purple",
-      sonoma: "Sonoma Organic",
-      aurora: "Aurora Teal",
-      midnight: "Midnight Black"
+      default: "Aqua Dinámico",
+      monterey: "Olas de Monterey",
+      sonoma: "Sonoma Horizonte",
+      aurora: "Aurora Boreal",
+      midnight: "Curvas de Medianoche"
     }
   },
   displays: {

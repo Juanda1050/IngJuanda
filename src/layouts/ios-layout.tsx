@@ -11,18 +11,8 @@ import { IosTutorial } from "@/components/ios-tutorial";
 import { IosSettings } from "@/features/settings/components/ios-settings";
 import { useUiStore } from "@/store/ui-store";
 import { PhoneWindow } from "@/features/phone/components/phone-window";
+import { WallpaperBackground } from "@/components/wallpaper-background";
 
-const WALLPAPER_CLASSES: Record<string, string> = {
-  default:
-    "bg-gradient-to-br from-blue-200 to-blue-400 dark:from-slate-900 dark:to-blue-950",
-  monterey:
-    "bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-700 dark:from-purple-900 dark:via-indigo-950 dark:to-zinc-950",
-  sonoma:
-    "bg-gradient-to-br from-amber-400 via-orange-500 to-emerald-600 dark:from-amber-950 dark:via-orange-950 dark:to-emerald-950",
-  aurora:
-    "bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 dark:from-teal-950 dark:via-cyan-950 dark:to-blue-950",
-  midnight: "bg-zinc-100 dark:bg-zinc-950",
-};
 
 function IosAppContainer({
   title,
@@ -159,12 +149,7 @@ export function IosLayout() {
   return (
     <div className="fixed inset-0 bg-black overflow-hidden flex flex-col font-sans select-none antialiased text-white">
       {/* iOS Background */}
-      <div
-        className={cn(
-          "absolute inset-0 z-0 transition-all duration-500",
-          WALLPAPER_CLASSES[wallpaper] || WALLPAPER_CLASSES.default,
-        )}
-      />
+      <WallpaperBackground id={wallpaper} layout="ios" />
 
       {/* iOS Status Bar */}
       <div

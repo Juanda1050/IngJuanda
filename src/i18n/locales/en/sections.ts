@@ -79,8 +79,8 @@ export const sectionsEn = {
       },
       {
         label: "LinkedIn",
-        value: "linkedin.com/in/danielalejandre1050",
-        href: "https://linkedin.com/in/danielalejandre1050",
+        value: "linkedin.com/in/daniel-alejandre/",
+        href: "https://www.linkedin.com/in/daniel-alejandre-3331951b5/",
       },
       {
         label: "GitHub",

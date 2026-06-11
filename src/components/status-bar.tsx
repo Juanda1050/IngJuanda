@@ -195,13 +195,14 @@ export function BatteryStatus() {
 
 // ------- Search Button -------
 export function SearchButton() {
-  const setCommandOpen = useUiStore((state) => state.setCommandOpen)
+  const setSpotlightOpen = useUiStore((state) => state.setSpotlightOpen)
 
   return (
     <button
-      onClick={() => setCommandOpen(true)}
+      id="top-bar-search"
+      onClick={() => setSpotlightOpen(true)}
       className="flex size-7 items-center justify-center rounded-md hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
-      title="Search (⌘K)"
+      title="Spotlight Search (⌘Space)"
     >
       <Search className="size-3.5" />
     </button>

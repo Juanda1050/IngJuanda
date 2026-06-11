@@ -18,7 +18,12 @@ import {
   X,
   Play,
 } from "lucide-react";
-import { WifiStatus, BatteryStatus, SearchButton, ControlCenter } from "@/components/status-bar";
+import {
+  WifiStatus,
+  BatteryStatus,
+  SearchButton,
+  ControlCenter,
+} from "@/components/status-bar";
 import { SiApple } from "react-icons/si";
 import {
   useEffect,
@@ -29,9 +34,12 @@ import {
 } from "react";
 import { useTranslation } from "react-i18next";
 import { CommandPalette } from "@/components/command-palette";
+import { SpotlightSearch } from "@/components/spotlight-search";
+import { WallpaperBackground } from "@/components/wallpaper-background";
 import { LanguageToggle } from "@/components/language-toggle";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { EditorContent } from "@/features/portfolio/components/editor-content";
+import { SearchSidebar } from "@/features/portfolio/components/search-sidebar";
 import { portfolioFiles } from "@/features/portfolio/data/portfolio-data";
 import { SafariWindow } from "@/features/safari/components/safari-window";
 import { FinderWindow } from "@/features/finder/components/finder-window";
@@ -113,8 +121,6 @@ function SidebarContent({
   );
 }
 
-
-
 function MacMenuBar() {
   const { t, i18n } = useTranslation("common");
   const [now, setNow] = useState(() => new Date());
@@ -127,7 +133,9 @@ function MacMenuBar() {
   const setCommandOpen = useUiStore((state) => state.setCommandOpen);
   const setPreviewPdfUrl = useUiStore((state) => state.setPreviewPdfUrl);
   const setTutorialActive = useUiStore((state) => state.setTutorialActive);
-  const setCurrentTutorialStep = useUiStore((state) => state.setCurrentTutorialStep);
+  const setCurrentTutorialStep = useUiStore(
+    (state) => state.setCurrentTutorialStep,
+  );
 
   useEffect(() => {
     const tick = () => setNow(new Date());
@@ -147,99 +155,162 @@ function MacMenuBar() {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (menuBarRef.current && !menuBarRef.current.contains(e.target as Node)) {
+      if (
+        menuBarRef.current &&
+        !menuBarRef.current.contains(e.target as Node)
+      ) {
         setOpenMenu(null);
         setShowProfile(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  type MenuItem = { label: string; shortcut?: string; action?: () => void; divider?: boolean; disabled?: boolean };
+  type MenuItem = {
+    label: string;
+    shortcut?: string;
+    action?: () => void;
+    divider?: boolean;
+    disabled?: boolean;
+  };
   const menuDefinitions: Record<string, MenuItem[]> = {
     Finder: [
-      { label: t('toolbar.menus.finder.about'), action: () => openApp('safari') },
-      { divider: true, label: '' },
-      { label: t('toolbar.menus.finder.settings'), shortcut: '⌘,', action: () => openApp('settings') },
-      { divider: true, label: '' },
-      { label: t('toolbar.menus.finder.forceQuit'), shortcut: '⌥⌘⎋', disabled: true },
-      { label: t('toolbar.menus.finder.sleep'), action: () => {} },
-      { label: t('toolbar.menus.finder.restart'), action: () => {} },
-      { label: t('toolbar.menus.finder.shutDown'), action: () => {} },
-      { divider: true, label: '' },
-      { label: t('toolbar.menus.finder.lockScreen'), shortcut: '⌃⌘Q', action: () => {} },
-      { label: t('toolbar.menus.finder.logOut'), shortcut: '⇧⌘Q', action: () => {} },
+      {
+        label: t("toolbar.menus.finder.about"),
+        action: () => openApp("safari"),
+      },
+      { divider: true, label: "" },
+      {
+        label: t("toolbar.menus.finder.settings"),
+        shortcut: "⌘,",
+        action: () => openApp("settings"),
+      },
+      { divider: true, label: "" },
+      {
+        label: t("toolbar.menus.finder.forceQuit"),
+        shortcut: "⌥⌘⎋",
+        disabled: true,
+      },
+      { label: t("toolbar.menus.finder.sleep"), action: () => {} },
+      { label: t("toolbar.menus.finder.restart"), action: () => {} },
+      { label: t("toolbar.menus.finder.shutDown"), action: () => {} },
+      { divider: true, label: "" },
+      {
+        label: t("toolbar.menus.finder.lockScreen"),
+        shortcut: "⌃⌘Q",
+        action: () => {},
+      },
+      {
+        label: t("toolbar.menus.finder.logOut"),
+        shortcut: "⇧⌘Q",
+        action: () => {},
+      },
     ],
     File: [
-      { label: t('toolbar.menus.file.newWindow'), shortcut: '⌘N', action: () => openApp('finder') },
-      { divider: true, label: '' },
-      { label: t('toolbar.profile.viewResume') + ' (Spanish)', action: () => {
-          setPreviewPdfUrl('/profile/CV Juan Daniel González Alejandre.pdf');
-          openApp('preview');
-        } 
+      {
+        label: t("toolbar.menus.file.newWindow"),
+        shortcut: "⌘N",
+        action: () => openApp("finder"),
       },
-      { label: t('toolbar.profile.viewResume') + ' (English)', action: () => {
-          setPreviewPdfUrl('/profile/Resume Juan Daniel González Alejandre.pdf');
-          openApp('preview');
-        } 
+      { divider: true, label: "" },
+      {
+        label: t("toolbar.profile.viewResume") + " (Spanish)",
+        action: () => {
+          setPreviewPdfUrl("/profile/CV Juan Daniel González Alejandre.pdf");
+          openApp("preview");
+        },
       },
-      { divider: true, label: '' },
-      { label: t('toolbar.menus.file.closeWindow'), shortcut: '⌘W', disabled: true },
+      {
+        label: t("toolbar.profile.viewResume") + " (English)",
+        action: () => {
+          setPreviewPdfUrl(
+            "/profile/Resume Juan Daniel González Alejandre.pdf",
+          );
+          openApp("preview");
+        },
+      },
+      { divider: true, label: "" },
+      {
+        label: t("toolbar.menus.file.closeWindow"),
+        shortcut: "⌘W",
+        disabled: true,
+      },
     ],
     Edit: [
-      { label: t('toolbar.menus.edit.undo'), shortcut: '⌘Z', disabled: true },
-      { label: t('toolbar.menus.edit.redo'), shortcut: '⇧⌘Z', disabled: true },
-      { divider: true, label: '' },
-      { label: t('toolbar.menus.edit.cut'), shortcut: '⌘X', disabled: true },
-      { label: t('toolbar.menus.edit.copy'), shortcut: '⌘C', disabled: true },
-      { label: t('toolbar.menus.edit.paste'), shortcut: '⌘V', disabled: true },
-      { divider: true, label: '' },
-      { label: 'Find…', shortcut: '⌘F', action: () => setCommandOpen(true) },
+      { label: t("toolbar.menus.edit.undo"), shortcut: "⌘Z", disabled: true },
+      { label: t("toolbar.menus.edit.redo"), shortcut: "⇧⌘Z", disabled: true },
+      { divider: true, label: "" },
+      { label: t("toolbar.menus.edit.cut"), shortcut: "⌘X", disabled: true },
+      { label: t("toolbar.menus.edit.copy"), shortcut: "⌘C", disabled: true },
+      { label: t("toolbar.menus.edit.paste"), shortcut: "⌘V", disabled: true },
+      { divider: true, label: "" },
+      { label: "Find…", shortcut: "⌘F", action: () => setCommandOpen(true) },
     ],
     View: [
-      { label: 'Open Safari', action: () => openApp('safari') },
-      { label: 'Open Calendar', action: () => openApp('calendar') },
-      { label: 'Open Notes', action: () => openApp('notes') },
-      { divider: true, label: '' },
-      { label: t('toolbar.menus.view.enterFullScreen'), shortcut: '⌃⌘F', disabled: true },
+      { label: "Open Safari", action: () => openApp("safari") },
+      { label: "Open Calendar", action: () => openApp("calendar") },
+      { label: "Open Notes", action: () => openApp("notes") },
+      { divider: true, label: "" },
+      {
+        label: t("toolbar.menus.view.enterFullScreen"),
+        shortcut: "⌃⌘F",
+        disabled: true,
+      },
     ],
     Window: [
-      { label: t('toolbar.menus.window.minimize'), shortcut: '⌘M', disabled: true },
-      { label: t('toolbar.menus.window.zoom'), disabled: true },
-      { divider: true, label: '' },
-      { label: 'Finder', action: () => openApp('finder') },
-      { label: 'Safari', action: () => openApp('safari') },
-      { label: 'Mail', action: () => openApp('mail') },
-      { label: 'Messages', action: () => openApp('messages') },
-      { label: 'Calendar', action: () => openApp('calendar') },
-      { label: 'Notes', action: () => openApp('notes') },
-      { label: t('toolbar.controlCenter.shortcuts.settings'), action: () => openApp('settings') },
+      {
+        label: t("toolbar.menus.window.minimize"),
+        shortcut: "⌘M",
+        disabled: true,
+      },
+      { label: t("toolbar.menus.window.zoom"), disabled: true },
+      { divider: true, label: "" },
+      { label: "Finder", action: () => openApp("finder") },
+      { label: "Safari", action: () => openApp("safari") },
+      { label: "Mail", action: () => openApp("mail") },
+      { label: "Messages", action: () => openApp("messages") },
+      { label: "Calendar", action: () => openApp("calendar") },
+      { label: "Notes", action: () => openApp("notes") },
+      {
+        label: t("toolbar.controlCenter.shortcuts.settings"),
+        action: () => openApp("settings"),
+      },
     ],
     Help: [
-      { label: t('toolbar.menus.help.portfolioHelp'), action: () => openApp('safari') },
       {
-        label: t('tutorial.start'),
+        label: t("toolbar.menus.help.portfolioHelp"),
+        action: () => openApp("safari"),
+      },
+      {
+        label: t("tutorial.start"),
         action: () => {
-          openApp('vscode');
+          openApp("vscode");
           setTutorialActive(true);
           setCurrentTutorialStep(0);
         },
       },
-      { divider: true, label: '' },
-      { label: 'danielalejandre1050@gmail.com', disabled: true },
+      { divider: true, label: "" },
+      { label: "danielalejandre1050@gmail.com", disabled: true },
     ],
   };
 
   const getMenuLabel = (key: string) => {
     switch (key) {
-      case 'Finder': return t('toolbar.menus.finder.title');
-      case 'File': return t('toolbar.menus.file.title');
-      case 'Edit': return t('toolbar.menus.edit.title');
-      case 'View': return t('toolbar.menus.view.title');
-      case 'Window': return t('toolbar.menus.window.title');
-      case 'Help': return t('toolbar.menus.help.title');
-      default: return key;
+      case "Finder":
+        return t("toolbar.menus.finder.title");
+      case "File":
+        return t("toolbar.menus.file.title");
+      case "Edit":
+        return t("toolbar.menus.edit.title");
+      case "View":
+        return t("toolbar.menus.view.title");
+      case "Window":
+        return t("toolbar.menus.window.title");
+      case "Help":
+        return t("toolbar.menus.help.title");
+      default:
+        return key;
     }
   };
 
@@ -250,11 +321,14 @@ function MacMenuBar() {
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/20 px-4 py-1.5 backdrop-blur-2xl dark:border-black/20 dark:bg-black/25"
     >
-      <div ref={menuBarRef} className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 text-sm">
+      <div
+        ref={menuBarRef}
+        className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 text-sm"
+      >
         <div className="flex min-w-0 items-center gap-0 text-[13px]">
           <button
             className="flex size-7 items-center justify-center rounded-md hover:bg-white/15 dark:hover:bg-white/10 transition-colors"
-            onClick={() => setOpenMenu(openMenu === 'Finder' ? null : 'Finder')}
+            onClick={() => setOpenMenu(openMenu === "Finder" ? null : "Finder")}
             aria-label="Apple Menu"
           >
             <SiApple className="size-3.5" />
@@ -268,8 +342,10 @@ function MacMenuBar() {
                   onClick={() => setOpenMenu(openMenu === menu ? null : menu)}
                   className={cn(
                     "rounded-md px-2 py-0.5 text-[13px] transition-colors",
-                    openMenu === menu ? "bg-white/30 dark:bg-white/15 text-foreground" : "text-foreground/80 hover:bg-white/15 dark:hover:bg-white/10",
-                    menu === 'Finder' && "font-semibold"
+                    openMenu === menu
+                      ? "bg-white/30 dark:bg-white/15 text-foreground"
+                      : "text-foreground/80 hover:bg-white/15 dark:hover:bg-white/10",
+                    menu === "Finder" && "font-semibold",
                   )}
                 >
                   {getMenuLabel(menu)}
@@ -280,27 +356,41 @@ function MacMenuBar() {
                       initial={{ opacity: 0, y: -4, scale: 0.97 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -4, scale: 0.97 }}
-                      transition={{ duration: 0.12, ease: 'easeOut' }}
+                      transition={{ duration: 0.12, ease: "easeOut" }}
                       className="absolute left-0 top-full mt-1.5 w-56 rounded-xl border border-black/10 dark:border-white/10 bg-[#f0f0f0]/95 dark:bg-[#1f1f1f]/95 backdrop-blur-2xl shadow-2xl shadow-black/30 py-1 z-[9999]"
                     >
                       {(menuDefinitions[menu] ?? []).map((item, idx) =>
                         item.divider ? (
-                          <div key={idx} className="my-1 h-px bg-black/10 dark:bg-white/10 mx-2" />
+                          <div
+                            key={idx}
+                            className="my-1 h-px bg-black/10 dark:bg-white/10 mx-2"
+                          />
                         ) : (
                           <button
                             key={idx}
-                            onClick={() => { if (!item.disabled && item.action) { item.action(); setOpenMenu(null); } }}
+                            onClick={() => {
+                              if (!item.disabled && item.action) {
+                                item.action();
+                                setOpenMenu(null);
+                              }
+                            }}
                             disabled={item.disabled}
                             className={cn(
                               "flex items-center justify-between px-3 py-1 text-[13px] text-left rounded-md transition-colors mx-1",
-                              item.disabled ? "text-foreground/30 cursor-default" : "text-foreground/90 hover:bg-blue-500 hover:text-white cursor-default"
+                              item.disabled
+                                ? "text-foreground/30 cursor-default"
+                                : "text-foreground/90 hover:bg-blue-500 hover:text-white cursor-default",
                             )}
-                            style={{ width: 'calc(100% - 8px)' }}
+                            style={{ width: "calc(100% - 8px)" }}
                           >
                             <span>{item.label}</span>
-                            {item.shortcut && <span className="text-[11px] text-foreground/40 ml-4 shrink-0">{item.shortcut}</span>}
+                            {item.shortcut && (
+                              <span className="text-[11px] text-foreground/40 ml-4 shrink-0">
+                                {item.shortcut}
+                              </span>
+                            )}
                           </button>
-                        )
+                        ),
                       )}
                     </motion.div>
                   )}
@@ -317,15 +407,21 @@ function MacMenuBar() {
             <ControlCenter />
           </div>
           <p className="hidden px-2 text-[12px] font-medium md:block select-none">
-            {now.toLocaleDateString(i18n.language === 'en' ? 'en-US' : 'es-ES', {
-              weekday: "short",
-              month: "short",
-              day: "numeric",
-            })}{" "}
-            {now.toLocaleTimeString(i18n.language === 'en' ? 'en-US' : 'es-ES', {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            {now.toLocaleDateString(
+              i18n.language === "en" ? "en-US" : "es-ES",
+              {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+              },
+            )}{" "}
+            {now.toLocaleTimeString(
+              i18n.language === "en" ? "en-US" : "es-ES",
+              {
+                hour: "2-digit",
+                minute: "2-digit",
+              },
+            )}
           </p>
           <div className="relative" onMouseLeave={() => setShowProfile(false)}>
             <button
@@ -337,7 +433,9 @@ function MacMenuBar() {
             >
               <Avatar className="size-6 cursor-pointer">
                 <AvatarImage src="/profile.jpg" alt="Profile" />
-                <AvatarFallback className="bg-primary/30 text-[10px] font-semibold text-primary">JG</AvatarFallback>
+                <AvatarFallback className="bg-primary/30 text-[10px] font-semibold text-primary">
+                  JG
+                </AvatarFallback>
               </Avatar>
             </button>
 
@@ -347,31 +445,65 @@ function MacMenuBar() {
                   initial={{ opacity: 0, y: -6, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.95 }}
-                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
                   onMouseLeave={() => setShowProfile(false)}
                   className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-black/10 dark:border-white/10 bg-[#f0f0f0]/95 dark:bg-[#1c1c1e]/95 backdrop-blur-2xl shadow-2xl shadow-black/30 overflow-hidden z-[9999]"
                 >
                   <div className="h-16 relative overflow-hidden">
-                    <div className="absolute inset-0 scale-110" style={{ backgroundImage: 'url(/profile.jpg)', backgroundSize: 'cover', backgroundPosition: 'center top', filter: 'blur(10px) brightness(0.7)' }} />
+                    <div
+                      className="absolute inset-0 scale-110"
+                      style={{
+                        backgroundImage: "url(/profile.jpg)",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center top",
+                        filter: "blur(10px) brightness(0.7)",
+                      }}
+                    />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/30" />
                   </div>
                   <div className="px-4 pb-4">
                     <div className="-mt-8 mb-2">
                       <Avatar className="size-16 ring-4 ring-[#f0f0f0] dark:ring-[#1c1c1e] shadow-xl">
                         <AvatarImage src="/profile.jpg" alt="Profile" />
-                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-2xl font-bold text-white">JG</AvatarFallback>
+                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-2xl font-bold text-white">
+                          JG
+                        </AvatarFallback>
                       </Avatar>
                     </div>
-                    <p className="text-[15px] font-bold text-foreground leading-tight">{t('toolbar.profile.name')}</p>
-                    <p className="text-[12px] text-muted-foreground mt-0.5">{t('toolbar.profile.email')}</p>
+                    <p className="text-[15px] font-bold text-foreground leading-tight">
+                      {t("toolbar.profile.name")}
+                    </p>
+                    <p className="text-[12px] text-muted-foreground mt-0.5">
+                      {t("toolbar.profile.email")}
+                    </p>
                     <div className="mt-3 pt-3 border-t border-black/10 dark:border-white/10 space-y-0.5">
                       {[
-                        { emoji: '✉️', label: t('toolbar.profile.sendMessage'), app: 'messages' as const },
-                        { emoji: '📅', label: t('toolbar.profile.scheduleMeeting'), app: 'calendar' as const },
-                        { emoji: '📄', label: t('toolbar.profile.viewResume'), app: 'finder' as const },
+                        {
+                          emoji: "✉️",
+                          label: t("toolbar.profile.sendMessage"),
+                          app: "messages" as const,
+                        },
+                        {
+                          emoji: "📅",
+                          label: t("toolbar.profile.scheduleMeeting"),
+                          app: "calendar" as const,
+                        },
+                        {
+                          emoji: "📄",
+                          label: t("toolbar.profile.viewResume"),
+                          app: "finder" as const,
+                        },
                       ].map(({ emoji, label, app }) => (
-                        <button key={app} onClick={() => { openApp(app); setShowProfile(false); }} className="w-full text-left px-3 py-1.5 text-[13px] rounded-lg hover:bg-blue-500 hover:text-white text-foreground/80 transition-colors">
-                          {formatWithAppleEmojis(emoji)} {formatWithAppleEmojis(label)}
+                        <button
+                          key={app}
+                          onClick={() => {
+                            openApp(app);
+                            setShowProfile(false);
+                          }}
+                          className="w-full text-left px-3 py-1.5 text-[13px] rounded-lg hover:bg-blue-500 hover:text-white text-foreground/80 transition-colors"
+                        >
+                          {formatWithAppleEmojis(emoji)}{" "}
+                          {formatWithAppleEmojis(label)}
                         </button>
                       ))}
                     </div>
@@ -537,7 +669,7 @@ function VscodeWindow({
   isMobile: boolean;
   isTablet: boolean;
 }) {
-  const { t } = useTranslation("common");
+  const { t, i18n } = useTranslation("common");
   const openFiles = useUiStore((state) => state.openFiles);
   const activeFile = useUiStore((state) => state.activeFile);
   const closeFile = useUiStore((state) => state.closeFile);
@@ -545,6 +677,8 @@ function VscodeWindow({
   const isSidebarOpen = useUiStore((state) => state.isSidebarOpen);
   const toggleSidebar = useUiStore((state) => state.toggleSidebar);
   const setCommandOpen = useUiStore((state) => state.setCommandOpen);
+  const activeSidebarTab = useUiStore((state) => state.activeSidebarTab);
+  const setActiveSidebarTab = useUiStore((state) => state.setActiveSidebarTab);
 
   const isTerminalOpen = useUiStore((state) => state.isTerminalOpen);
   const terminalLines = useUiStore((state) => state.terminalLines);
@@ -562,8 +696,6 @@ function VscodeWindow({
     icon: (typeof portfolioFiles)[number]["icon"];
   }[];
 
-
-
   const panelGridClass = cn(
     "grid h-full overflow-hidden",
     isMobile ? "grid-cols-1" : "grid-cols-[3.25rem_1fr]",
@@ -573,205 +705,224 @@ function VscodeWindow({
   return (
     <div className="flex flex-col h-full w-full bg-vscode-surface/40 backdrop-blur-xl">
       <div className={panelGridClass}>
-          {!isMobile ? (
-            <Card className="rounded-none border-0 border-r border-border/60 bg-vscode-activity/90 shadow-none">
-              <CardContent className="flex h-full flex-col items-center gap-2 p-2">
-                {[
-                  {
-                    icon: isSidebarOpen ? PanelLeftClose : PanelLeftOpen,
-                    label: isSidebarOpen
-                      ? `${t("actions.close")} ${t("app.explorer")}`
-                      : t("app.explorer"),
-                    action: toggleSidebar,
+        {!isMobile ? (
+          <Card className="rounded-none border-0 border-r border-border/60 bg-vscode-activity/90 shadow-none">
+            <CardContent className="flex h-full flex-col items-center gap-2 p-2">
+              {[
+                {
+                  id: "activity-bar-explorer",
+                  icon: Folder,
+                  label: t("app.explorer"),
+                  active: isSidebarOpen && activeSidebarTab === "explorer",
+                  action: () => {
+                    if (isSidebarOpen && activeSidebarTab === "explorer") {
+                      toggleSidebar();
+                    } else {
+                      if (!isSidebarOpen) toggleSidebar();
+                      setActiveSidebarTab("explorer");
+                    }
                   },
-                  {
-                    icon: Search,
-                    label: t("app.openCommand"),
-                    action: () => setCommandOpen(true),
+                },
+                {
+                  id: "activity-bar-search",
+                  icon: Search,
+                  label: i18n.language === "en" ? "Search" : "Buscar",
+                  active: isSidebarOpen && activeSidebarTab === "search",
+                  action: () => {
+                    if (isSidebarOpen && activeSidebarTab === "search") {
+                      toggleSidebar();
+                    } else {
+                      if (!isSidebarOpen) toggleSidebar();
+                      setActiveSidebarTab("search");
+                    }
                   },
-                  {
-                    icon: Folder,
-                    label: t("app.portfolioFiles"),
-                    action: () => void 0,
-                  },
-                ].map((item) => (
-                  <Tooltip key={item.label}>
-                    <TooltipTrigger asChild>
+                },
+                {
+                  id: "activity-bar-toggle",
+                  icon: isSidebarOpen ? PanelLeftClose : PanelLeftOpen,
+                  label: isSidebarOpen ? t("actions.close") : t("actions.maximize"),
+                  active: false,
+                  action: toggleSidebar,
+                },
+              ].map((item, idx) => (
+                <Tooltip key={idx}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      id={item.id}
+                      variant="ghost"
+                      size="icon"
+                      className={cn(
+                        "text-muted-foreground transition-all duration-150",
+                        item.active
+                          ? "text-primary bg-primary/10 border-l-2 border-primary rounded-none"
+                          : "hover:bg-primary/10 hover:text-foreground",
+                      )}
+                      aria-label={item.label}
+                      onClick={item.action}
+                    >
+                      <item.icon className="size-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">{item.label}</TooltipContent>
+                </Tooltip>
+              ))}
+            </CardContent>
+          </Card>
+        ) : null}
+
+        <div className="flex h-full w-full overflow-hidden">
+          <AnimatePresence initial={false}>
+            {!isMobile && isSidebarOpen ? (
+              <motion.aside
+                id="vscode-sidebar"
+                key="desktop-sidebar"
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "clamp(15.5rem, 24vw, 19rem)", opacity: 1 }}
+                exit={{ width: 0, opacity: 0 }}
+                transition={{ duration: 0.22, ease: "easeOut" }}
+                className="overflow-hidden min-w-0 shrink-0"
+              >
+                <div className="w-[clamp(15.5rem,24vw,19rem)] h-full shrink-0">
+                  {activeSidebarTab === "explorer" ? (
+                    <SidebarContent compact={isTablet} />
+                  ) : (
+                    <SearchSidebar compact={isTablet} />
+                  )}
+                </div>
+              </motion.aside>
+            ) : null}
+          </AnimatePresence>
+
+          <div className="flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-vscode-editor/45">
+            <ScrollArea className="w-full border-b border-border/60 bg-vscode-tabs/85">
+              <div className="flex min-h-10 min-w-full items-stretch">
+                {tabs.map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeFile === tab.id;
+                  return (
+                    <motion.div
+                      key={tab.id}
+                      initial={{ opacity: 0.75 }}
+                      animate={{ opacity: 1 }}
+                      className="group flex items-center border-r border-border/40"
+                    >
                       <Button
                         variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground hover:bg-primary/10 hover:text-foreground"
-                        aria-label={item.label}
-                        onClick={item.action}
+                        className={cn(
+                          "h-10 rounded-none gap-2 px-3 font-mono text-xs",
+                          isActive
+                            ? "bg-background/80 text-foreground"
+                            : "text-muted-foreground",
+                        )}
+                        onClick={() => setActiveFile(tab.id)}
                       >
-                        <item.icon className="size-4" />
+                        <Icon className="size-3.5 shrink-0" />
+                        <span className="truncate">{t(tab.key)}</span>
                       </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right">{item.label}</TooltipContent>
-                  </Tooltip>
-                ))}
-              </CardContent>
-            </Card>
-          ) : null}
-
-          <div
-            className={cn(
-              "grid h-full overflow-hidden",
-              isMobile
-                ? "grid-cols-1"
-                : isSidebarOpen
-                  ? "grid-cols-[clamp(15.5rem,24vw,19rem)_1fr]"
-                  : "grid-cols-1",
-            )}
-          >
-            <AnimatePresence initial={false}>
-              {!isMobile && isSidebarOpen ? (
-                <motion.aside
-                  id="vscode-sidebar"
-                  key="desktop-sidebar"
-                  initial={{ x: -16, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: -16, opacity: 0 }}
-                  transition={{ duration: 0.22, ease: "easeOut" }}
-                  className="min-w-0"
-                >
-                  <SidebarContent compact={isTablet} />
-                </motion.aside>
-              ) : null}
-            </AnimatePresence>
-
-            <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-vscode-editor/45">
-              <ScrollArea className="w-full border-b border-border/60 bg-vscode-tabs/85">
-                <div className="flex min-h-10 min-w-full items-stretch">
-                  {tabs.map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeFile === tab.id;
-                    return (
-                      <motion.div
-                        key={tab.id}
-                        initial={{ opacity: 0.75 }}
-                        animate={{ opacity: 1 }}
-                        className="group flex items-center border-r border-border/40"
-                      >
+                      {tabs.length > 1 ? (
                         <Button
                           variant="ghost"
-                          className={cn(
-                            "h-10 rounded-none gap-2 px-3 font-mono text-xs",
-                            isActive
-                              ? "bg-background/80 text-foreground"
-                              : "text-muted-foreground",
-                          )}
-                          onClick={() => setActiveFile(tab.id)}
+                          size="icon"
+                          className="ml-[-0.25rem] mr-1 hidden size-6 rounded-sm group-hover:inline-flex"
+                          onClick={() => closeFile(tab.id)}
                         >
-                          <Icon className="size-3.5 shrink-0" />
-                          <span className="truncate">{t(tab.key)}</span>
+                          <X className="size-3" />
                         </Button>
-                        {tabs.length > 1 ? (
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="ml-[-0.25rem] mr-1 hidden size-6 rounded-sm group-hover:inline-flex"
-                            onClick={() => closeFile(tab.id)}
-                          >
-                            <X className="size-3" />
-                          </Button>
-                        ) : null}
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </ScrollArea>
+                      ) : null}
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </ScrollArea>
 
-              <ScrollArea className="min-h-0 flex-1">
-                <div className="flex min-h-full px-0 py-0 md:px-4 md:py-6">
-                  <div className="grid w-full grid-cols-[3.25rem_1fr] bg-background/35 font-mono">
-                    <div className="border-r border-border/60 bg-vscode-tabs/70 px-2 py-4 text-right text-xs leading-6 text-muted-foreground">
-                      {Array.from({ length: editorLineCount }).map(
-                        (_, index) => (
-                          <p key={index + 1}>{index + 1}</p>
-                        ),
-                      )}
-                    </div>
-                    <div className="min-w-0 py-2">
-                      <EditorContent section={activeFile} />
-                    </div>
-                  </div>
-                </div>
-              </ScrollArea>
-
-              {/* Terminal panel */}
-              {isTerminalOpen && (
-                <div className="h-44 border-t border-border/50 bg-[#1e1e1e] text-emerald-500 font-mono text-[11px] leading-relaxed flex flex-col select-text shrink-0">
-                  {/* Header */}
-                  <div className="flex h-8 shrink-0 items-center justify-between border-b border-border/30 bg-[#252526] px-4 select-none">
-                    <div className="flex items-center gap-4 text-[10px] text-muted-foreground/80">
-                      <span className="font-bold border-b-2 border-blue-500 text-[#f3f3f3] pb-0.5 px-1">TERMINAL</span>
-                      <span>PROBLEMS</span>
-                      <span>OUTPUT</span>
-                      <span>DEBUG CONSOLE</span>
-                    </div>
-                    <button onClick={() => setTerminalOpen(false)} className="text-muted-foreground hover:text-foreground">
-                      <X className="size-3.5" />
-                    </button>
-                  </div>
-                  {/* Body */}
-                  <div className="flex-1 overflow-y-auto p-3 font-mono space-y-0.5 bg-[#1e1e1e]">
-                    {terminalLines.map((line, idx) => (
-                      <p key={idx} className="whitespace-pre-wrap">{line}</p>
+            <ScrollArea className="min-h-0 flex-1">
+              <div className="flex min-h-full px-0 py-0 md:px-4 md:py-6">
+                <div className="grid w-full grid-cols-[3.25rem_1fr] bg-background/35 font-mono">
+                  <div className="border-r border-border/60 bg-vscode-tabs/70 px-2 py-4 text-right text-xs leading-6 text-muted-foreground">
+                    {Array.from({ length: editorLineCount }).map((_, index) => (
+                      <p key={index + 1}>{index + 1}</p>
                     ))}
                   </div>
+                  <div className="min-w-0 py-2">
+                    <EditorContent section={activeFile} />
+                  </div>
                 </div>
-              )}
+              </div>
+            </ScrollArea>
 
-              {!isMobile ? (
-                <div className="flex h-8 items-center justify-between border-t border-border/60 bg-vscode-status/90 px-3 text-xs text-muted-foreground backdrop-blur">
-                  <div className="flex items-center gap-3">
-                    <Badge
-                      variant="secondary"
-                      className="gap-1 rounded-sm px-2 py-0.5"
-                    >
-                      <GitBranch className="size-3" />
-                      {t("app.branch")}
-                    </Badge>
-                    <span>{t("app.status")}</span>
+            {/* Terminal panel */}
+            {isTerminalOpen && (
+              <div className="h-44 border-t border-border/50 bg-[#1e1e1e] text-emerald-500 font-mono text-[11px] leading-relaxed flex flex-col select-text shrink-0">
+                {/* Header */}
+                <div className="flex h-8 shrink-0 items-center justify-between border-b border-border/30 bg-[#252526] px-4 select-none">
+                  <div className="flex items-center gap-4 text-[10px] text-muted-foreground/80">
+                    <span className="font-bold border-b-2 border-blue-500 text-[#f3f3f3] pb-0.5 px-1">
+                      TERMINAL
+                    </span>
+                    <span>PROBLEMS</span>
+                    <span>OUTPUT</span>
+                    <span>DEBUG CONSOLE</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Terminal className="size-3.5" />
-                    <span>{t("app.terminal")}</span>
-                    <Command className="size-3.5" />
-                    <span>⌘K</span>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex h-14 items-center justify-between border-t border-border/60 bg-vscode-status/95 px-4 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-2 text-xs text-muted-foreground backdrop-blur-2xl">
-                  <Button
-                    variant="ghost"
-                    className="h-9 gap-2 px-2"
-                    onClick={() => setCommandOpen(true)}
+                  <button
+                    onClick={() => setTerminalOpen(false)}
+                    className="text-muted-foreground hover:text-foreground"
                   >
-                    <Search className="size-4" />
-                    {t("app.openCommand")}
-                  </Button>
-                  <div className="flex items-center gap-1">
-                    <LanguageToggle />
-                    <ThemeToggle />
-                  </div>
+                    <X className="size-3.5" />
+                  </button>
                 </div>
-              )}
-            </div>
+                {/* Body */}
+                <div className="flex-1 overflow-y-auto p-3 font-mono space-y-0.5 bg-[#1e1e1e]">
+                  {terminalLines.map((line, idx) => (
+                    <p key={idx} className="whitespace-pre-wrap">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {!isMobile ? (
+              <div className="flex h-8 items-center justify-between border-t border-border/60 bg-vscode-status/90 px-3 text-xs text-muted-foreground backdrop-blur">
+                <div className="flex items-center gap-3">
+                  <Badge
+                    variant="secondary"
+                    className="gap-1 rounded-sm px-2 py-0.5"
+                  >
+                    <GitBranch className="size-3" />
+                    {t("app.branch")}
+                  </Badge>
+                  <span>{t("app.status")}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Terminal className="size-3.5" />
+                  <span>{t("app.terminal")}</span>
+                  <Command className="size-3.5" />
+                  <span>⌘K</span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex h-14 items-center justify-between border-t border-border/60 bg-vscode-status/95 px-4 pb-[max(0.4rem,env(safe-area-inset-bottom))] pt-2 text-xs text-muted-foreground backdrop-blur-2xl">
+                <Button
+                  variant="ghost"
+                  className="h-9 gap-2 px-2"
+                  onClick={() => setCommandOpen(true)}
+                >
+                  <Search className="size-4" />
+                  {t("app.openCommand")}
+                </Button>
+                <div className="flex items-center gap-1">
+                  <LanguageToggle />
+                  <ThemeToggle />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-    );
+    </div>
+  );
 }
 
-const WALLPAPER_CLASSES: Record<string, string> = {
-  default: "",
-  monterey: "bg-gradient-to-br from-purple-500 via-indigo-500 to-blue-700 dark:from-purple-900 dark:via-indigo-950 dark:to-zinc-950",
-  sonoma: "bg-gradient-to-br from-amber-400 via-orange-500 to-emerald-600 dark:from-amber-950 dark:via-orange-950 dark:to-emerald-950",
-  aurora: "bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 dark:from-teal-950 dark:via-cyan-950 dark:to-blue-950",
-  midnight: "bg-zinc-100 dark:bg-zinc-950"
-};
 
 export function VscodeLayout() {
   const { isMobile, isTablet, isDesktop } = useDevice();
@@ -779,7 +930,8 @@ export function VscodeLayout() {
   const openApp = useUiStore((state) => state.openApp);
   const runDevServer = useUiStore((state) => state.runDevServer);
   const setCommandOpen = useUiStore((state) => state.setCommandOpen);
-  
+  const setSpotlightOpen = useUiStore((state) => state.setSpotlightOpen);
+
   const wallpaper = useUiStore((state) => state.wallpaper);
   const brightness = useUiStore((state) => state.brightness);
   const nightShift = useUiStore((state) => state.nightShift);
@@ -790,17 +942,20 @@ export function VscodeLayout() {
   const [openFromDock, setOpenFromDock] = useState(false);
   const [dockOffset, setDockOffset] = useState({ x: 0, y: 260 });
 
-
   useEffect(() => {
     const onCommandShortcut = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
         setCommandOpen(true);
       }
+      if ((event.metaKey || event.ctrlKey) && (event.key === " " || event.code === "Space")) {
+        event.preventDefault();
+        setSpotlightOpen(true);
+      }
     };
     window.addEventListener("keydown", onCommandShortcut);
     return () => window.removeEventListener("keydown", onCommandShortcut);
-  }, [setCommandOpen]);
+  }, [setCommandOpen, setSpotlightOpen]);
 
   useEffect(() => {
     const updateOffset = () => {
@@ -823,14 +978,62 @@ export function VscodeLayout() {
   }, []);
 
   const dockItems: DockItem[] = [
-    { id: "finder", label: t('finder.title'), iconSrc: "/juanda.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
-    { id: "safari", label: t('safari.title'), iconSrc: "/dock-icons/safari.svg", active: apps.safari.state !== "closed", onClick: () => openApp("safari") },
-    { id: "mail", label: "Mail", iconSrc: "/dock-icons/mail.svg", active: apps.mail.state !== "closed", onClick: () => openApp("mail") },
-    { id: "messages", label: t('messages.title'), iconSrc: "/dock-icons/messages.svg", active: apps.messages.state !== "closed", onClick: () => openApp("messages") },
-    { id: "calendar", label: t('calendar.title'), iconSrc: "/dock-icons/calendar.svg", active: apps.calendar.state !== "closed", onClick: () => openApp("calendar") },
-    { id: "notes", label: t('notes.title'), iconSrc: "/dock-icons/notes.svg", active: apps.notes.state !== "closed", onClick: () => openApp("notes") },
-    { id: "files", label: t('finder.title'), iconSrc: "/dock-icons/files.svg", active: apps.finder.state !== "closed", onClick: () => openApp("finder") },
-    { id: "settings", label: t('toolbar.controlCenter.shortcuts.settings'), iconSrc: "/dock-icons/settings.svg", active: apps.settings.state !== "closed", onClick: () => openApp("settings") },
+    {
+      id: "finder",
+      label: t("finder.title"),
+      iconSrc: "/juanda.svg",
+      active: apps.finder.state !== "closed",
+      onClick: () => openApp("finder"),
+    },
+    {
+      id: "safari",
+      label: t("safari.title"),
+      iconSrc: "/dock-icons/safari.svg",
+      active: apps.safari.state !== "closed",
+      onClick: () => openApp("safari"),
+    },
+    {
+      id: "mail",
+      label: "Mail",
+      iconSrc: "/dock-icons/mail.svg",
+      active: apps.mail.state !== "closed",
+      onClick: () => openApp("mail"),
+    },
+    {
+      id: "messages",
+      label: t("messages.title"),
+      iconSrc: "/dock-icons/messages.svg",
+      active: apps.messages.state !== "closed",
+      onClick: () => openApp("messages"),
+    },
+    {
+      id: "calendar",
+      label: t("calendar.title"),
+      iconSrc: "/dock-icons/calendar.svg",
+      active: apps.calendar.state !== "closed",
+      onClick: () => openApp("calendar"),
+    },
+    {
+      id: "notes",
+      label: t("notes.title"),
+      iconSrc: "/dock-icons/notes.svg",
+      active: apps.notes.state !== "closed",
+      onClick: () => openApp("notes"),
+    },
+    {
+      id: "files",
+      label: t("finder.title"),
+      iconSrc: "/dock-icons/files.svg",
+      active: apps.finder.state !== "closed",
+      onClick: () => openApp("finder"),
+    },
+    {
+      id: "settings",
+      label: t("toolbar.controlCenter.shortcuts.settings"),
+      iconSrc: "/dock-icons/settings.svg",
+      active: apps.settings.state !== "closed",
+      onClick: () => openApp("settings"),
+    },
     {
       id: "vscode",
       label: "VS Code",
@@ -846,23 +1049,21 @@ export function VscodeLayout() {
     },
   ];
 
+
+
   const shouldRenderWindow = apps.vscode.state === "open";
   const enteringFromDock = shouldRenderWindow && openFromDock;
-
-  const customWallpaperClass = WALLPAPER_CLASSES[wallpaper] || "";
 
   return (
     <TooltipProvider>
       <div className="relative min-h-screen overflow-hidden">
         {/* Custom Wallpaper Backdrop */}
-        {customWallpaperClass && (
-          <div className={cn("fixed inset-0 transition-all duration-500 z-[-10]", customWallpaperClass)} />
-        )}
-        
+        <WallpaperBackground id={wallpaper} layout="macos" />
+
         {/* Screen Brightness Dimmer Overlay */}
         {brightness < 100 && (
-          <div 
-            className="fixed inset-0 bg-black pointer-events-none transition-all duration-300 z-[99999]" 
+          <div
+            className="fixed inset-0 bg-black pointer-events-none transition-all duration-300 z-[99999]"
             style={{ opacity: (100 - brightness) / 100 }}
           />
         )}
@@ -933,9 +1134,10 @@ export function VscodeLayout() {
                           onClick={() => runDevServer()}
                         >
                           <Play className="size-3.5 shrink-0 fill-current" />
-                          <span>{t('app.livePreview')}</span>
+                          <span>{t("app.livePreview")}</span>
                         </Button>
                         <Button
+                          id="vscode-command-btn"
                           variant="ghost"
                           size="sm"
                           className="hidden gap-2 md:flex h-8 text-[11px] px-2"
@@ -974,7 +1176,7 @@ export function VscodeLayout() {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="safari"
-                    title={t('safari.title')}
+                    title={t("safari.title")}
                     defaultSizeClass="w-[min(90vw,1100px)] h-[75vh] min-h-[550px]"
                   >
                     <SafariWindow />
@@ -987,7 +1189,7 @@ export function VscodeLayout() {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="finder"
-                    title={t('finder.title')}
+                    title={t("finder.title")}
                     defaultSizeClass="w-[min(85vw,800px)] h-[55vh] min-h-[400px]"
                   >
                     <FinderWindow />
@@ -1000,7 +1202,7 @@ export function VscodeLayout() {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="preview"
-                    title={t('finder.preview.title')}
+                    title={t("finder.preview.title")}
                     defaultSizeClass="w-[min(85vw,750px)] h-[75vh] min-h-[500px]"
                   >
                     <PreviewWindow />
@@ -1013,7 +1215,7 @@ export function VscodeLayout() {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="calendar"
-                    title={t('calendar.title')}
+                    title={t("calendar.title")}
                     defaultSizeClass="w-[min(90vw,950px)] h-[65vh] min-h-[480px]"
                   >
                     <CalendarWindow />
@@ -1026,7 +1228,7 @@ export function VscodeLayout() {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="notes"
-                    title={t('notes.title')}
+                    title={t("notes.title")}
                     defaultSizeClass="w-[min(85vw,850px)] h-[60vh] min-h-[420px]"
                   >
                     <NotesWindow />
@@ -1039,14 +1241,13 @@ export function VscodeLayout() {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="messages"
-                    title={t('messages.title')}
-                    defaultSizeClass="w-[min(85vw,750px)] h-[65vh] min-h-[480px]"
+                    title={t("messages.title")}
+                    defaultSizeClass="w-[min(85vw,900px)] h-[65vh] min-h-[480px]"
                   >
                     <MessagesWindow />
                   </DesktopWindow>
                 </div>
               )}
-
 
               {/* Mail Window */}
               {apps.mail.state === "open" && (
@@ -1066,7 +1267,7 @@ export function VscodeLayout() {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="settings"
-                    title={t('toolbar.controlCenter.shortcuts.settings')}
+                    title={t("toolbar.controlCenter.shortcuts.settings")}
                     defaultSizeClass="w-[min(85vw,850px)] h-[65vh] min-h-[450px]"
                   >
                     <SettingsWindow />
@@ -1080,6 +1281,7 @@ export function VscodeLayout() {
         <MacDock items={dockItems} isMobile={isMobile} />
 
         <CommandPalette />
+        <SpotlightSearch />
         <TutorialTour />
       </div>
     </TooltipProvider>

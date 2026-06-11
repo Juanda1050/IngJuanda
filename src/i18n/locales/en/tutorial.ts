@@ -25,6 +25,18 @@ export const tutorialEn = {
       title: "Contact & Resume 📇",
       description: "Click on my profile picture at the top right to download my PDF resume (in English or Spanish), schedule a meeting with me, or send me an email."
     },
+    spotlight: {
+      title: "Spotlight Search 🔍",
+      description: "Click on the top menu bar search icon or press Ctrl+Space to open Spotlight. Use it to search and open apps, change wallpaper, toggle dark mode, switch language, or read my PDF resume."
+    },
+    commandPalette: {
+      title: "Command Palette ⌨️",
+      description: "Click 'Open command palette' or press Ctrl+K to run editor scripts. Toggle the terminal console, stop the local dev server, clear console logs, or reset desktop settings."
+    },
+    searchSidebar: {
+      title: "Search in Files 🔎",
+      description: "Click on the search magnifying glass in the VS Code sidebar to search for any keyword or text snippet inside the portfolio code files. Click a result to jump to that line!"
+    },
     finish: {
       title: "You're All Set! 🎉",
       description: "You are now ready to explore! Have fun clicking around the windows. If you ever need this guide again, click 'Help' in the top menu bar."

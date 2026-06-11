@@ -23,10 +23,14 @@ interface UiState {
   openFiles: SectionId[]
   isSidebarOpen: boolean
   isCommandOpen: boolean
+  isSpotlightOpen: boolean
+  activeSidebarTab: 'explorer' | 'search'
   setActiveFile: (file: SectionId) => void
   closeFile: (file: SectionId) => void
   toggleSidebar: () => void
   setCommandOpen: (open: boolean) => void
+  setSpotlightOpen: (open: boolean) => void
+  setActiveSidebarTab: (tab: 'explorer' | 'search') => void
 
   // New multi-window app state
   apps: Record<AppId, AppWindowState>
@@ -80,6 +84,8 @@ export const useUiStore = create<UiState>((set, get) => ({
   openFiles: [fallbackFile],
   isSidebarOpen: true,
   isCommandOpen: false,
+  isSpotlightOpen: false,
+  activeSidebarTab: 'explorer',
 
   // New multi-window app state
   apps: {
@@ -115,6 +121,8 @@ export const useUiStore = create<UiState>((set, get) => ({
     }),
   toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   setCommandOpen: (open) => set({ isCommandOpen: open }),
+  setSpotlightOpen: (open) => set({ isSpotlightOpen: open }),
+  setActiveSidebarTab: (tab) => set({ activeSidebarTab: tab }),
 
   // Multi-window app actions
   openApp: (appId) => {

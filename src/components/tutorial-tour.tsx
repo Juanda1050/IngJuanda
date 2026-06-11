@@ -26,6 +26,24 @@ const TOUR_STEPS: TourStep[] = [
     placement: "right",
   },
   {
+    targetId: "top-bar-search",
+    titleKey: "tutorial.steps.spotlight.title",
+    descKey: "tutorial.steps.spotlight.description",
+    placement: "bottom",
+  },
+  {
+    targetId: "vscode-command-btn",
+    titleKey: "tutorial.steps.commandPalette.title",
+    descKey: "tutorial.steps.commandPalette.description",
+    placement: "bottom",
+  },
+  {
+    targetId: "activity-bar-search",
+    titleKey: "tutorial.steps.searchSidebar.title",
+    descKey: "tutorial.steps.searchSidebar.description",
+    placement: "right",
+  },
+  {
     targetId: "live-preview-btn",
     titleKey: "tutorial.steps.livePreview.title",
     descKey: "tutorial.steps.livePreview.description",
