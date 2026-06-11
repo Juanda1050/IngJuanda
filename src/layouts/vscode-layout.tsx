@@ -70,6 +70,7 @@ import { cn } from "@/lib/utils";
 import { type SectionId } from "@/types/portfolio";
 import { formatWithAppleEmojis } from "@/components/apple-emoji";
 import { TutorialTour } from "@/components/tutorial-tour";
+import { MacSystemOverlays } from "@/components/mac-system-overlays";
 
 function SidebarContent({
   onPick,
@@ -136,6 +137,7 @@ function MacMenuBar() {
   const setCurrentTutorialStep = useUiStore(
     (state) => state.setCurrentTutorialStep,
   );
+  const setSystemState = useUiStore((state) => state.setSystemState);
 
   useEffect(() => {
     const tick = () => setNow(new Date());
@@ -192,19 +194,19 @@ function MacMenuBar() {
         shortcut: "⌥⌘⎋",
         disabled: true,
       },
-      { label: t("toolbar.menus.finder.sleep"), action: () => {} },
-      { label: t("toolbar.menus.finder.restart"), action: () => {} },
-      { label: t("toolbar.menus.finder.shutDown"), action: () => {} },
+      { label: t("toolbar.menus.finder.sleep"), action: () => setSystemState("sleep") },
+      { label: t("toolbar.menus.finder.restart"), action: () => setSystemState("restart") },
+      { label: t("toolbar.menus.finder.shutDown"), action: () => setSystemState("shutdown") },
       { divider: true, label: "" },
       {
         label: t("toolbar.menus.finder.lockScreen"),
         shortcut: "⌃⌘Q",
-        action: () => {},
+        action: () => setSystemState("locked"),
       },
       {
         label: t("toolbar.menus.finder.logOut"),
         shortcut: "⇧⌘Q",
-        action: () => {},
+        action: () => setSystemState("logged_out"),
       },
     ],
     File: [
@@ -1283,6 +1285,7 @@ export function VscodeLayout() {
         <CommandPalette />
         <SpotlightSearch />
         <TutorialTour />
+        <MacSystemOverlays />
       </div>
     </TooltipProvider>
   );

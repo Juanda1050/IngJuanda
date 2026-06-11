@@ -27,7 +27,7 @@ export function WallpaperBackground({
     >
       <svg
         viewBox={viewBox}
-        preserveAspectRatio="none"
+        preserveAspectRatio="xMidYMid slice"
         className="w-full h-full scale-105 pointer-events-none select-none"
       >
         <defs>
@@ -65,10 +65,10 @@ export function WallpaperBackground({
 
           {/* Large Aurora Blur */}
           <filter id="aurora-blur-1" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation={thumbnail ? 15 : 60} />
+            <feGaussianBlur stdDeviation={thumbnail ? 10 : 45} />
           </filter>
           <filter id="aurora-blur-2" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation={thumbnail ? 22 : 80} />
+            <feGaussianBlur stdDeviation={thumbnail ? 15 : 60} />
           </filter>
 
           {/* Horizontal Arc Glow Gradient (Symmetric) */}

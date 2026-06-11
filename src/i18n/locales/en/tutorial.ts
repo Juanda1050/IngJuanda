@@ -45,13 +45,35 @@ export const tutorialEn = {
   mobile: {
     next: "Next",
     finish: "Got it",
+    skip: "Skip",
+    back: "Back",
     step1: {
-      title: "Welcome to iPhone UI",
-      desc: "This is a mobile-optimized view of the portfolio. Tap the icons to open apps."
+      title: "Welcome to iPhone UI 📱",
+      desc: "This is a mobile-optimized view of the portfolio. Let's do a quick tour!"
+    },
+    statusbar: {
+      title: "Status Bar 🔋",
+      desc: "Shows the current time, Wi-Fi status, and battery percentage."
+    },
+    apps: {
+      title: "Applications Grid 📁",
+      desc: "Tap any icon here to open apps like Notes or Calendar."
     },
     step2: {
-      title: "Settings App",
-      desc: "Open the Settings app to change language and appearance."
+      title: "Settings App ⚙️",
+      desc: "Open Settings to change the language or toggle dark/light themes."
+    },
+    dock: {
+      title: "App Dock 📥",
+      desc: "Quick access to Phone, Safari, Messages, and Mail."
+    },
+    home: {
+      title: "Home Indicator 🏠",
+      desc: "When inside any app, tap this bottom bar to return to the home screen."
+    },
+    finishStep: {
+      title: "All Set! 🎉",
+      desc: "You are ready to explore. Have fun clicking around the iOS interface!"
     }
   }
 } as const;

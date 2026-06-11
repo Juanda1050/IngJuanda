@@ -1,15 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Globe, Info, Monitor } from "lucide-react";
+import { Moon, Sun, Globe, Info, Monitor, Sparkles, ChevronRight } from "lucide-react";
 import { useUiStore } from "@/store/ui-store";
 import { cn } from "@/lib/utils";
 import { WallpaperBackground } from "@/components/wallpaper-background";
 
-export function IosSettings() {
+export function IosSettings({ onClose }: { onClose?: () => void }) {
   const { t, i18n } = useTranslation("common");
   const { theme, setTheme } = useTheme();
   const wallpaper = useUiStore((state) => state.wallpaper);
   const setWallpaper = useUiStore((state) => state.setWallpaper);
+  const setMobileTutorialActive = useUiStore((state) => state.setMobileTutorialActive);
+  const closeApp = useUiStore((state) => state.closeApp);
 
   const wallpaperOptions = [
     { id: "default", label: t("settings.desktop.options.default", "Default") },
@@ -137,6 +139,31 @@ export function IosSettings() {
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Tutorial Group */}
+        <div className="space-y-2">
+          <span className="text-xs font-medium text-gray-500 uppercase ml-4">
+            {t("settings.tutorial.title", "Tutorial")}
+          </span>
+          <div className="bg-white dark:bg-[#1c1c1e] rounded-xl overflow-hidden divide-y divide-gray-200 dark:divide-white/10">
+            <button
+              onClick={() => {
+                setMobileTutorialActive(true);
+                closeApp("settings");
+                onClose?.();
+              }}
+              className="w-full flex items-center justify-between px-4 py-3 active:bg-gray-100 dark:active:bg-white/5 transition-colors text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-md bg-indigo-500 text-white flex items-center justify-center">
+                  <Sparkles size={16} />
+                </div>
+                <span className="text-[17px]">{t("settings.tutorial.restart", "Restart Tour")}</span>
+              </div>
+              <ChevronRight size={16} className="text-gray-400" />
+            </button>
           </div>
         </div>
 

@@ -45,13 +45,35 @@ export const tutorialEs = {
   mobile: {
     next: "Siguiente",
     finish: "Entendido",
+    skip: "Omitir",
+    back: "Atrás",
     step1: {
-      title: "Bienvenido a iPhone UI",
-      desc: "Esta es una vista optimizada para móviles. Toca los íconos para abrir las aplicaciones."
+      title: "Bienvenido a la interfaz de iPhone 📱",
+      desc: "Esta es una vista optimizada para móviles de mi portafolio. ¡Hagamos un recorrido rápido!"
+    },
+    statusbar: {
+      title: "Barra de Estado 🔋",
+      desc: "Muestra la hora actual, el estado de la conexión Wi-Fi y el nivel de batería."
+    },
+    apps: {
+      title: "Cuadrícula de Aplicaciones 📁",
+      desc: "Toca cualquier ícono aquí para abrir aplicaciones como Notas o Calendario."
     },
     step2: {
-      title: "App de Ajustes",
-      desc: "Abre la aplicación de Ajustes para cambiar el idioma y la apariencia."
+      title: "Aplicación de Ajustes ⚙️",
+      desc: "Abre Ajustes para cambiar el idioma o alternar entre el tema claro y oscuro."
+    },
+    dock: {
+      title: "Dock de Aplicaciones 📥",
+      desc: "Acceso rápido a las aplicaciones de Teléfono, Safari, Mensajes y Correo."
+    },
+    home: {
+      title: "Indicador de Inicio 🏠",
+      desc: "Cuando estés dentro de una app, toca esta barra inferior para volver a la pantalla de inicio."
+    },
+    finishStep: {
+      title: "¡Todo Listo! 🎉",
+      desc: "Ya estás listo para explorar. ¡Diviértete navegando por la interfaz de iOS!"
     }
   }
 } as const;

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { X, ChevronRight, ChevronLeft, Sparkles } from 'lucide-react'
+import { useUiStore } from '@/store/ui-store'
 
 interface TourStep {
   targetId?: string
@@ -12,6 +13,8 @@ interface TourStep {
 
 export function IosTutorial() {
   const { t } = useTranslation('common')
+  const isMobileTutorialActive = useUiStore((state) => state.isMobileTutorialActive)
+  const setMobileTutorialActive = useUiStore((state) => state.setMobileTutorialActive)
   const [isVisible, setIsVisible] = useState(false)
   const [step, setStep] = useState(0)
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null)
@@ -53,8 +56,8 @@ export function IosTutorial() {
       placement: "top"
     },
     {
-      title: t('tutorial.mobile.finish.title', 'All Set! 🎉'),
-      description: t('tutorial.mobile.finish.desc', 'You are ready to explore. Have fun clicking around the iOS interface!'),
+      title: t('tutorial.mobile.finishStep.title', 'All Set! 🎉'),
+      description: t('tutorial.mobile.finishStep.desc', 'You are ready to explore. Have fun clicking around the iOS interface!'),
       placement: "center"
     }
   ]
@@ -62,10 +65,21 @@ export function IosTutorial() {
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem('mobile-tutorial-seen')
     if (!hasSeenTutorial) {
-      const timer = setTimeout(() => setIsVisible(true), 1200)
+      const timer = setTimeout(() => {
+        setMobileTutorialActive(true)
+      }, 1200)
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [setMobileTutorialActive])
+
+  useEffect(() => {
+    if (isMobileTutorialActive) {
+      setIsVisible(true)
+      setStep(0)
+    } else {
+      setIsVisible(false)
+    }
+  }, [isMobileTutorialActive])
 
   // Track the target element bounding box
   useEffect(() => {
@@ -97,6 +111,7 @@ export function IosTutorial() {
 
   const handleDismiss = () => {
     setIsVisible(false)
+    setMobileTutorialActive(false)
     localStorage.setItem('mobile-tutorial-seen', 'true')
   }
 

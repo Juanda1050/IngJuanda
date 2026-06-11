@@ -75,5 +75,9 @@ export const settingsEs = {
     osVersionVal: "macOS Juanda (Versión 10.5)",
     serial: "Número de serie",
     serialVal: "JDA1050DANIELMX"
+  },
+  tutorial: {
+    title: "Tutorial de Bienvenida",
+    restart: "Volver a ver el tutorial"
   }
 } as const;

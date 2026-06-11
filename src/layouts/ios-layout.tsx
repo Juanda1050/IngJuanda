@@ -87,7 +87,7 @@ export function IosLayout() {
   const renderApp = () => {
     switch (activeApp) {
       case "settings":
-        return <IosSettings />;
+        return <IosSettings onClose={() => setActiveApp(null)} />;
       case "phone":
         return (
           <IosAppContainer title="Phone">

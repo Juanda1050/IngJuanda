@@ -70,6 +70,14 @@ interface UiState {
   currentTutorialStep: number
   setTutorialActive: (active: boolean) => void
   setCurrentTutorialStep: (step: number) => void
+  isMobileTutorialActive: boolean
+  setMobileTutorialActive: (active: boolean) => void
+
+  // System State and User Context
+  systemState: 'normal' | 'sleep' | 'restart' | 'shutdown' | 'locked' | 'logged_out'
+  currentUser: 'juan' | 'guest'
+  setSystemState: (state: 'normal' | 'sleep' | 'restart' | 'shutdown' | 'locked' | 'logged_out') => void
+  setCurrentUser: (user: 'juan' | 'guest') => void
 }
 
 const fallbackFile: SectionId = portfolioFiles[0]?.id ?? 'about'
@@ -297,6 +305,14 @@ export const useUiStore = create<UiState>((set, get) => ({
   currentTutorialStep: 0,
   setTutorialActive: (active) => set({ isTutorialActive: active }),
   setCurrentTutorialStep: (step) => set({ currentTutorialStep: step }),
+  isMobileTutorialActive: false,
+  setMobileTutorialActive: (active) => set({ isMobileTutorialActive: active }),
+
+  // System State and User Context
+  systemState: 'logged_out',
+  currentUser: 'juan',
+  setSystemState: (state) => set({ systemState: state }),
+  setCurrentUser: (user) => set({ currentUser: user }),
 
   // Legacy window actions wrappers
   closeWindow: () => get().closeApp('vscode'),

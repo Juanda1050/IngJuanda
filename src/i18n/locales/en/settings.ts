@@ -78,4 +78,8 @@ export const settingsEn = {
     serial: "Serial Number",
     serialVal: "JDA1050DANIELMX",
   },
+  tutorial: {
+    title: "Onboarding Tutorial",
+    restart: "Restart Tour",
+  },
 } as const;
