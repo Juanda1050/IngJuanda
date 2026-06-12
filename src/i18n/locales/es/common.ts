@@ -9,6 +9,7 @@ import { mailEs } from './mail'
 import { settingsEs } from './settings'
 import { sectionsEs } from './sections'
 import { tutorialEs } from './tutorial'
+import { dashboardEs } from './dashboard'
 
 export const esCommon = {
   app: appEs,
@@ -24,4 +25,6 @@ export const esCommon = {
   actions: appEs.actions,
   sections: sectionsEs,
   tutorial: tutorialEs,
+  dashboard: dashboardEs,
 } as const;
+

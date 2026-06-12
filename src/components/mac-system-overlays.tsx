@@ -92,6 +92,9 @@ export function MacSystemOverlays() {
     // Artificially delay login to show the loader, enhancing the UX
     setTimeout(() => {
       setCurrentUser("juan");
+      if (typeof window !== "undefined") {
+        localStorage.setItem("portfolio_login_completed", "true");
+      }
       setSystemState("normal");
       setIsLoggingIn(false);
     }, 600);

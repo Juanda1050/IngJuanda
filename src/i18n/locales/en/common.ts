@@ -9,6 +9,7 @@ import { mailEn } from './mail'
 import { settingsEn } from './settings'
 import { sectionsEn } from './sections'
 import { tutorialEn } from './tutorial'
+import { dashboardEn } from './dashboard'
 
 export const enCommon = {
   app: appEn,
@@ -24,4 +25,6 @@ export const enCommon = {
   actions: appEn.actions,
   sections: sectionsEn,
   tutorial: tutorialEn,
+  dashboard: dashboardEn,
 } as const;
+

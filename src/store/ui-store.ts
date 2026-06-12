@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { portfolioFiles } from '@/features/portfolio/data/portfolio-data'
 import { type SectionId } from '@/types/portfolio'
 
-export type AppId = 'vscode' | 'safari' | 'notes' | 'messages' | 'finder' | 'calendar' | 'preview' | 'mail' | 'settings'
+export type AppId = 'vscode' | 'safari' | 'notes' | 'messages' | 'finder' | 'calendar' | 'preview' | 'mail' | 'settings' | 'dashboard'
 
 export interface AppWindowState {
   state: 'open' | 'minimized' | 'closed'
@@ -90,7 +90,7 @@ const fallbackFile: SectionId = portfolioFiles[0]?.id ?? 'about'
 
 export const useUiStore = create<UiState>((set, get) => ({
   // Legacy VS Code window state
-  windowState: 'open',
+  windowState: 'closed',
   isWindowMaximized: false,
 
   // File explorer states
@@ -103,7 +103,7 @@ export const useUiStore = create<UiState>((set, get) => ({
 
   // New multi-window app state
   apps: {
-    vscode: { state: 'open', isMaximized: false },
+    vscode: { state: 'closed', isMaximized: false },
     safari: { state: 'closed', isMaximized: false },
     notes: { state: 'closed', isMaximized: false },
     messages: { state: 'closed', isMaximized: false },
@@ -112,9 +112,10 @@ export const useUiStore = create<UiState>((set, get) => ({
     preview: { state: 'closed', isMaximized: false },
     mail: { state: 'closed', isMaximized: false },
     settings: { state: 'closed', isMaximized: false },
+    dashboard: { state: 'open', isMaximized: false },
   },
-  stackingOrder: ['vscode'],
-  activeApp: 'vscode',
+  stackingOrder: ['dashboard'],
+  activeApp: 'dashboard',
   previewPdfUrl: null,
 
   // File actions
@@ -317,9 +318,14 @@ export const useUiStore = create<UiState>((set, get) => ({
   setMobileTutorialActive: (active) => set({ isMobileTutorialActive: active }),
 
   // System State and User Context
-  systemState: 'logged_out',
+  systemState: (typeof window !== 'undefined' && localStorage.getItem('portfolio_login_completed') === 'true') ? 'normal' : 'logged_out',
   currentUser: 'juan',
-  setSystemState: (state) => set({ systemState: state }),
+  setSystemState: (state) => {
+    if (typeof window !== 'undefined' && state === 'logged_out') {
+      localStorage.removeItem('portfolio_login_completed');
+    }
+    set({ systemState: state });
+  },
   setCurrentUser: (user) => set({ currentUser: user }),
 
   // Finder click mode settings

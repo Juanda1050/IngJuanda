@@ -49,6 +49,7 @@ import { NotesWindow } from "@/features/notes/components/notes-window";
 import { MessagesWindow } from "@/features/messages/components/messages-window";
 import { MailWindow } from "@/features/mail/components/mail-window";
 import { SettingsWindow } from "@/features/settings/components/settings-window";
+import { DashboardWindow } from "@/features/dashboard/components/dashboard-window";
 import { useDevice } from "@/hooks/use-device";
 import {
   Avatar,
@@ -981,11 +982,11 @@ export function VscodeLayout() {
 
   const dockItems: DockItem[] = [
     {
-      id: "finder",
-      label: t("finder.title"),
+      id: "dashboard",
+      label: t("dashboard.dockLabel"),
       iconSrc: "/juanda.svg",
-      active: apps.finder.state !== "closed",
-      onClick: () => openApp("finder"),
+      active: apps.dashboard.state !== "closed",
+      onClick: () => openApp("dashboard"),
     },
     {
       id: "safari",
@@ -1195,6 +1196,19 @@ export function VscodeLayout() {
                     defaultSizeClass="w-[min(85vw,800px)] h-[55vh] min-h-[400px]"
                   >
                     <FinderWindow />
+                  </DesktopWindow>
+                </div>
+              )}
+
+              {/* Dashboard Window */}
+              {apps.dashboard.state === "open" && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <DesktopWindow
+                    appId="dashboard"
+                    title={t("dashboard.title")}
+                    defaultSizeClass="w-[min(90vw,980px)] h-[78vh] min-h-[550px]"
+                  >
+                    <DashboardWindow />
                   </DesktopWindow>
                 </div>
               )}
