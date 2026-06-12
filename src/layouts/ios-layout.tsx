@@ -12,6 +12,8 @@ import { IosSettings } from "@/features/settings/components/ios-settings";
 import { useUiStore } from "@/store/ui-store";
 import { PhoneWindow } from "@/features/phone/components/phone-window";
 import { WallpaperBackground } from "@/components/wallpaper-background";
+import { useTranslation } from "react-i18next";
+import { DashboardWindow } from "@/features/dashboard/components/dashboard-window";
 
 
 function IosAppContainer({
@@ -37,6 +39,12 @@ function IosAppContainer({
 }
 
 const IOS_APPS = [
+  {
+    id: "dashboard",
+    name: "Launchpad",
+    icon: "/juanda.svg",
+    color: "#000",
+  },
   {
     id: "settings",
     name: "Settings",
@@ -75,8 +83,9 @@ const IOS_DOCK_APPS = [
 ];
 
 export function IosLayout() {
+  const { t } = useTranslation("common");
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [activeApp, setActiveApp] = useState<string | null>(null);
+  const [activeApp, setActiveApp] = useState<string | null>("dashboard");
   const wallpaper = useUiStore((state) => state.wallpaper);
 
   useEffect(() => {
@@ -86,6 +95,12 @@ export function IosLayout() {
 
   const renderApp = () => {
     switch (activeApp) {
+      case "dashboard":
+        return (
+          <IosAppContainer title={t("dashboard.dockLabel")}>
+            <DashboardWindow />
+          </IosAppContainer>
+        );
       case "settings":
         return <IosSettings onClose={() => setActiveApp(null)} />;
       case "phone":
@@ -209,7 +224,15 @@ export function IosLayout() {
                   >
                     {renderIcon(app)}
                     <span className="text-[11px] font-medium text-white drop-shadow-md">
-                      {app.name}
+                      {app.id === "dashboard"
+                        ? t("dashboard.dockLabel")
+                        : app.id === "settings"
+                        ? t("settings.title")
+                        : app.id === "calendar"
+                        ? t("calendar.title")
+                        : app.id === "notes"
+                        ? t("notes.title")
+                        : app.name}
                     </span>
                   </div>
                 ))}
