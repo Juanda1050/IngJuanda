@@ -22,7 +22,12 @@ export const settingsEs = {
     mode: "Modo de color",
     light: "Claro",
     dark: "Oscuro",
-    system: "Auto / Sistema"
+    system: "Auto / Sistema",
+    finderTitle: "Finder",
+    finderClickToOpen: "Abrir archivos con",
+    finderClickToOpenDesc: "Elige si deseas abrir archivos con un solo clic o doble clic.",
+    singleClick: "Un solo clic",
+    doubleClick: "Doble clic"
   },
   desktop: {
     title: "Fondos de Pantalla",
@@ -39,7 +44,12 @@ export const settingsEs = {
     title: "Ajustes de Pantalla",
     brightness: "Brillo",
     nightShift: "Night Shift",
-    nightShiftDesc: "Night Shift cambia los colores de la pantalla a tonos más cálidos tras el anochecer para reducir la fatiga visual."
+    nightShiftDesc: "Night Shift cambia los colores de la pantalla a tonos más cálidos tras el anochecer para reducir la fatiga visual.",
+    gfxAccel: "Aceleración gráfica",
+    gfxAccelDesc: "Desactiva la aceleración gráfica para optimizar el rendimiento en entornos renderizados por CPU (ej. máquinas virtuales o equipos antiguos). Esto desactiva desenfoques de fondo, filtros SVG y animaciones."
+  },
+  performance: {
+    title: "Rendimiento"
   },
   sound: {
     title: "Ajustes de Sonido",

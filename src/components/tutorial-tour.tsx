@@ -81,9 +81,12 @@ export function TutorialTour() {
   const setTutorialActive = useUiStore((state) => state.setTutorialActive);
   const setCurrentStep = useUiStore((state) => state.setCurrentTutorialStep);
   const openApp = useUiStore((state) => state.openApp);
+  const systemState = useUiStore((state) => state.systemState);
 
   // Trigger automatically on first load
   useEffect(() => {
+    if (systemState !== "normal") return;
+
     const completed = localStorage.getItem("portfolio_tutorial_completed");
     if (completed !== "true") {
       const timer = setTimeout(() => {
@@ -91,10 +94,10 @@ export function TutorialTour() {
         openApp("vscode");
         setTutorialActive(true);
         setCurrentStep(0);
-      }, 1800);
+      }, 500);
       return () => clearTimeout(timer);
     }
-  }, [openApp, setTutorialActive, setCurrentStep]);
+  }, [openApp, setTutorialActive, setCurrentStep, systemState]);
 
   // Track the target element bounding box
   useEffect(() => {
@@ -180,7 +183,7 @@ export function TutorialTour() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isTutorialActive, currentStep]);
 
-  if (!isTutorialActive) return null;
+  if (!isTutorialActive || systemState !== "normal") return null;
 
   const currentStepObj = TOUR_STEPS[currentStep]!;
   const padding = 8;

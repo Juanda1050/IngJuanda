@@ -61,9 +61,11 @@ interface UiState {
   wallpaper: string
   brightness: number
   nightShift: boolean
+  graphicsAcceleration: boolean
   setWallpaper: (wp: string) => void
   setBrightness: (brightness: number) => void
   setNightShift: (active: boolean) => void
+  setGraphicsAcceleration: (active: boolean) => void
 
   // Tutorial states
   isTutorialActive: boolean
@@ -78,6 +80,10 @@ interface UiState {
   currentUser: 'juan' | 'guest'
   setSystemState: (state: 'normal' | 'sleep' | 'restart' | 'shutdown' | 'locked' | 'logged_out') => void
   setCurrentUser: (user: 'juan' | 'guest') => void
+
+  // Finder click mode settings
+  finderClickMode: 'single' | 'double'
+  setFinderClickMode: (mode: 'single' | 'double') => void
 }
 
 const fallbackFile: SectionId = portfolioFiles[0]?.id ?? 'about'
@@ -296,9 +302,11 @@ export const useUiStore = create<UiState>((set, get) => ({
   wallpaper: 'default',
   brightness: 100,
   nightShift: false,
+  graphicsAcceleration: true,
   setWallpaper: (wp) => set({ wallpaper: wp }),
   setBrightness: (brightness) => set({ brightness }),
   setNightShift: (nightShift) => set({ nightShift }),
+  setGraphicsAcceleration: (graphicsAcceleration) => set({ graphicsAcceleration }),
 
   // Tutorial initial state and actions
   isTutorialActive: false,
@@ -313,6 +321,10 @@ export const useUiStore = create<UiState>((set, get) => ({
   currentUser: 'juan',
   setSystemState: (state) => set({ systemState: state }),
   setCurrentUser: (user) => set({ currentUser: user }),
+
+  // Finder click mode settings
+  finderClickMode: 'single',
+  setFinderClickMode: (mode) => set({ finderClickMode: mode }),
 
   // Legacy window actions wrappers
   closeWindow: () => get().closeApp('vscode'),

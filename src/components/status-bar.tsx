@@ -218,6 +218,8 @@ export function ControlCenter() {
   const setVolume = useUiStore((state) => state.setVolume)
   const muted = useUiStore((state) => state.muted)
   const setMuted = useUiStore((state) => state.setMuted)
+  const graphicsAcceleration = useUiStore((state) => state.graphicsAcceleration)
+  const setGraphicsAcceleration = useUiStore((state) => state.setGraphicsAcceleration)
   const ref = useRef<HTMLDivElement>(null)
   const openApp = useUiStore((state) => state.openApp)
 
@@ -294,6 +296,32 @@ export function ControlCenter() {
                   {isEn ? 'ES →' : 'EN →'}
                 </button>
               </div>
+            </div>
+
+            {/* Performance Mode / Gfx Accel Quick Toggle */}
+            <div className="rounded-xl bg-black/5 dark:bg-white/5 p-3 mb-2 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <Monitor className="size-4 text-blue-500 shrink-0" />
+                <div className="text-left">
+                  <p className="text-[11px] font-semibold text-foreground leading-tight">
+                    {t('settings.displays.gfxAccel')}
+                  </p>
+                  <p className="text-[9px] text-muted-foreground leading-tight mt-0.5">
+                    {graphicsAcceleration ? (isEn ? 'High Quality' : 'Calidad Alta') : (isEn ? 'Performance Mode' : 'Modo Rendimiento')}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setGraphicsAcceleration(!graphicsAcceleration)}
+                className={cn(
+                  "rounded-lg px-2.5 py-1 text-[10px] font-extrabold transition-all cursor-pointer select-none",
+                  graphicsAcceleration
+                    ? "bg-blue-500 text-white shadow-sm"
+                    : "bg-black/15 dark:bg-white/15 text-foreground"
+                )}
+              >
+                {graphicsAcceleration ? 'ON' : 'OFF'}
+              </button>
             </div>
 
             {/* Volume */}

@@ -68,6 +68,12 @@ export function SettingsWindow() {
   const nightShift = useUiStore((state) => state.nightShift);
   const setNightShift = useUiStore((state) => state.setNightShift);
 
+  const graphicsAcceleration = useUiStore((state) => state.graphicsAcceleration);
+  const setGraphicsAcceleration = useUiStore((state) => state.setGraphicsAcceleration);
+
+  const finderClickMode = useUiStore((state) => state.finderClickMode);
+  const setFinderClickMode = useUiStore((state) => state.setFinderClickMode);
+
   // Local settings states
   const [energySaver, setEnergySaver] = useState(false);
 
@@ -347,6 +353,51 @@ export function SettingsWindow() {
                 </button>
               ))}
             </div>
+
+            <hr className="border-border/30" />
+
+            <div className="space-y-4">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground pl-1">
+                {t("settings.appearance.finderTitle")}
+              </h4>
+              
+              <div className="rounded-2xl border border-border bg-background p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-0.5">
+                  <span className="text-xs font-bold text-foreground block">
+                    {t("settings.appearance.finderClickToOpen")}
+                  </span>
+                  <p className="text-[11px] text-muted-foreground leading-normal max-w-sm">
+                    {t("settings.appearance.finderClickToOpenDesc")}
+                  </p>
+                </div>
+                <div className="flex bg-muted/40 dark:bg-black/20 p-1 rounded-xl border border-border/40 w-fit shrink-0 self-start sm:self-center">
+                  <button
+                    type="button"
+                    onClick={() => setFinderClickMode("single")}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
+                      finderClickMode === "single"
+                        ? "bg-background text-foreground shadow-sm font-bold"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {t("settings.appearance.singleClick")}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFinderClickMode("double")}
+                    className={cn(
+                      "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
+                      finderClickMode === "double"
+                        ? "bg-background text-foreground shadow-sm font-bold"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    {t("settings.appearance.doubleClick")}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -436,6 +487,28 @@ export function SettingsWindow() {
                   </label>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">
                     {t("settings.displays.nightShiftDesc")}
+                  </p>
+                </div>
+              </div>
+
+              {/* Graphics Acceleration Toggle */}
+              <div className="rounded-2xl border border-border bg-background p-4 flex items-start gap-4">
+                <input
+                  type="checkbox"
+                  id="gfx-accel-toggle"
+                  checked={graphicsAcceleration}
+                  onChange={(e) => setGraphicsAcceleration(e.target.checked)}
+                  className="size-4.5 rounded-md border-border accent-blue-500 text-white cursor-pointer mt-0.5"
+                />
+                <div className="space-y-1">
+                  <label
+                    htmlFor="gfx-accel-toggle"
+                    className="text-xs font-bold cursor-pointer hover:text-blue-500 transition-colors"
+                  >
+                    {t("settings.displays.gfxAccel")}
+                  </label>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed">
+                    {t("settings.displays.gfxAccelDesc")}
                   </p>
                 </div>
               </div>

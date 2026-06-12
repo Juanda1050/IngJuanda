@@ -96,3 +96,122 @@
     @apply min-h-screen;
   }
 }
+
+/* Performance Optimization Rules for CPU-only rendering (no graphics acceleration) */
+.no-gfx-accel {
+  --transition-all: none !important;
+  --transition: none !important;
+}
+
+.no-gfx-accel *,
+.no-gfx-accel *::before,
+.no-gfx-accel *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+
+/* Disable backdrop blur filtering */
+.no-gfx-accel .backdrop-blur,
+.no-gfx-accel .backdrop-blur-sm,
+.no-gfx-accel .backdrop-blur-md,
+.no-gfx-accel .backdrop-blur-lg,
+.no-gfx-accel .backdrop-blur-xl,
+.no-gfx-accel .backdrop-blur-2xl,
+.no-gfx-accel .backdrop-blur-3xl {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Adjust panel opacities for readable contrast without blur */
+.no-gfx-accel .bg-white\/20,
+.no-gfx-accel .bg-white\/22 {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.no-gfx-accel.dark .bg-white\/20,
+.no-gfx-accel.dark .bg-white\/22,
+.no-gfx-accel .dark .bg-white\/20,
+.no-gfx-accel .dark .bg-white\/22 {
+  background-color: rgba(30, 30, 30, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.no-gfx-accel .bg-black\/25,
+.no-gfx-accel .bg-black\/28,
+.no-gfx-accel .bg-black\/40,
+.no-gfx-accel .bg-black\/50 {
+  background-color: rgba(20, 20, 20, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.no-gfx-accel .bg-vscode-sidebar\/90,
+.no-gfx-accel .bg-vscode-sidebar\/95 {
+  background-color: hsl(var(--vscode-sidebar)) !important;
+}
+
+.no-gfx-accel .bg-vscode-surface\/40 {
+  background-color: hsl(var(--vscode-surface)) !important;
+}
+
+.no-gfx-accel .bg-vscode-status\/90,
+.no-gfx-accel .bg-vscode-status\/95 {
+  background-color: hsl(var(--vscode-status)) !important;
+}
+
+.no-gfx-accel .bg-vscode-tabs\/70,
+.no-gfx-accel .bg-vscode-tabs\/85 {
+  background-color: hsl(var(--vscode-tabs)) !important;
+}
+
+.no-gfx-accel .bg-vscode-editor\/45 {
+  background-color: hsl(var(--vscode-editor)) !important;
+}
+
+.no-gfx-accel .bg-background\/50 {
+  background-color: hsl(var(--background)) !important;
+}
+
+.no-gfx-accel .bg-\[\#f0f0f0\]\/95 {
+  background-color: rgb(245, 245, 247) !important;
+}
+
+.no-gfx-accel .bg-\[\#fbfbfb\]\/85 {
+  background-color: rgb(251, 251, 251) !important;
+}
+
+.no-gfx-accel .bg-\[\#f2f2f7\]\/80 {
+  background-color: rgb(242, 242, 247) !important;
+}
+
+/* Ensure dark mode background class overrides match Tailwind's dark: prefix format exactly */
+.no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/95,
+.no-gfx-accel.dark .dark\:bg-\[\#1f1f1f\]\/95,
+.no-gfx-accel.dark .dark\:bg-\[\#1e1e1e\]\/98,
+.no-gfx-accel.dark .dark\:bg-\[\#1a1a1c\]\/50,
+.no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/80,
+.no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/50,
+.no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/95,
+.no-gfx-accel .dark .dark\:bg-\[\#1f1f1f\]\/95,
+.no-gfx-accel .dark .dark\:bg-\[\#1e1e1e\]\/98,
+.no-gfx-accel .dark .dark\:bg-\[\#1a1a1c\]\/50,
+.no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/80,
+.no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/50 {
+  background-color: rgb(28, 28, 30) !important;
+}
+
+/* Specific styling for all top-bar absolute dropdowns and Control Center popup boxes */
+.no-gfx-accel header.fixed .absolute {
+  background-color: rgb(246, 246, 248) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.no-gfx-accel.dark header.fixed .absolute,
+.no-gfx-accel .dark header.fixed .absolute {
+  background-color: rgb(32, 32, 35) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+

@@ -23,6 +23,11 @@ export const settingsEn = {
     light: "Light",
     dark: "Dark",
     system: "Auto / System",
+    finderTitle: "Finder",
+    finderClickToOpen: "Open files with",
+    finderClickToOpenDesc: "Choose whether to open files with a single click or a double click.",
+    singleClick: "Single click",
+    doubleClick: "Double click",
   },
   desktop: {
     title: "Desktop Wallpapers",
@@ -41,6 +46,12 @@ export const settingsEn = {
     nightShift: "Night Shift",
     nightShiftDesc:
       "Night Shift automatically shifts the colors of your display to the warmer end of the spectrum after dark to reduce eye strain.",
+    gfxAccel: "Graphics Acceleration",
+    gfxAccelDesc:
+      "Disable graphics acceleration to optimize performance under CPU-only environments (e.g. Virtual Machines or older PCs). This disables backdrop blurs, SVG filters, and transitions.",
+  },
+  performance: {
+    title: "Performance",
   },
   sound: {
     title: "Sound Settings",

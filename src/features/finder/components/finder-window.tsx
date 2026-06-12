@@ -17,6 +17,7 @@ export function FinderWindow() {
   const [activeTab, setActiveTab] = useState<'documents' | 'desktop' | 'downloads'>('documents')
   const openApp = useUiStore((state) => state.openApp)
   const setPreviewPdfUrl = useUiStore((state) => state.setPreviewPdfUrl)
+  const finderClickMode = useUiStore((state) => state.finderClickMode)
 
   const documentFiles: FileItem[] = useMemo(() => [
     {
@@ -111,8 +112,9 @@ export function FinderWindow() {
             {filesByTab[activeTab].map((file) => (
               <div
                 key={file.name}
-                onDoubleClick={() => handleFileDoubleClick(file)}
-                onTouchEnd={() => handleFileDoubleClick(file)} // Mobile double-tap help
+                onClick={finderClickMode === 'single' ? () => handleFileDoubleClick(file) : undefined}
+                onDoubleClick={finderClickMode === 'double' ? () => handleFileDoubleClick(file) : undefined}
+                onTouchEnd={finderClickMode === 'double' ? () => handleFileDoubleClick(file) : undefined} // Mobile double-tap help
                 className="group flex flex-col items-center text-center p-2 rounded-xl border border-transparent hover:border-border/30 hover:bg-primary/5 active:bg-primary/10 cursor-pointer select-none"
               >
                 {/* PDF Red Icon */}

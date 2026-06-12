@@ -12,6 +12,8 @@ export function IosSettings({ onClose }: { onClose?: () => void }) {
   const setWallpaper = useUiStore((state) => state.setWallpaper);
   const setMobileTutorialActive = useUiStore((state) => state.setMobileTutorialActive);
   const closeApp = useUiStore((state) => state.closeApp);
+  const graphicsAcceleration = useUiStore((state) => state.graphicsAcceleration);
+  const setGraphicsAcceleration = useUiStore((state) => state.setGraphicsAcceleration);
 
   const wallpaperOptions = [
     { id: "default", label: t("settings.desktop.options.default", "Default") },
@@ -139,6 +141,34 @@ export function IosSettings({ onClose }: { onClose?: () => void }) {
                 </button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Performance Group */}
+        <div className="space-y-2">
+          <span className="text-xs font-medium text-gray-500 uppercase ml-4">
+            {t("settings.performance.title", "Performance")}
+          </span>
+          <div className="bg-white dark:bg-[#1c1c1e] rounded-xl p-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-7 h-7 rounded-md bg-orange-500 text-white flex items-center justify-center">
+                <Monitor size={16} />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-[17px] font-medium leading-tight text-foreground">
+                  {t("settings.displays.gfxAccel")}
+                </span>
+                <span className="text-[12px] text-gray-500 max-w-[200px] leading-tight mt-0.5">
+                  {t("settings.displays.gfxAccelDesc")}
+                </span>
+              </div>
+            </div>
+            <input
+              type="checkbox"
+              checked={graphicsAcceleration}
+              onChange={(e) => setGraphicsAcceleration(e.target.checked)}
+              className="size-5 rounded-md border-gray-300 accent-blue-500 cursor-pointer"
+            />
           </div>
         </div>
 

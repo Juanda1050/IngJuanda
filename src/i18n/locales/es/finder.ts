@@ -35,6 +35,6 @@ export const finderEs = {
     zoomIn: "Acercar",
     zoomOut: "Alejar",
     noDocument: "Ningún documento seleccionado",
-    instructions: "Haz doble clic en un archivo PDF en Finder para verlo aquí."
+    instructions: "Haz clic en un archivo PDF en Finder para verlo aquí."
   }
 } as const;

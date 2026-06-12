@@ -35,6 +35,6 @@ export const finderEn = {
     zoomIn: "Zoom In",
     zoomOut: "Zoom Out",
     noDocument: "No document selected",
-    instructions: "Double click a PDF file in Finder to view it here."
+    instructions: "Click a PDF file in Finder to view it here."
   }
 } as const;
