@@ -55,21 +55,22 @@ export const tutorialEs = {
       title: "Barra de Estado 🔋",
       desc: "Muestra la hora actual, el estado de la conexión Wi-Fi y el nivel de batería."
     },
-    apps: {
-      title: "Cuadrícula de Aplicaciones 📁",
-      desc: "Toca cualquier ícono aquí para abrir aplicaciones como Notas o Calendario."
+    home: {
+      title: "Indicador de Inicio 🏠",
+      desc: "Cuando estés dentro de una app, desliza esta barra hacia arriba o tócala para cerrarla y volver al inicio. ¡Pruébalo ahora para continuar!",
+      actionPrompt: "Desliza hacia arriba o toca la barra inferior"
     },
-    step2: {
-      title: "Aplicación de Ajustes ⚙️",
-      desc: "Abre Ajustes para cambiar el idioma o alternar entre el tema claro y oscuro."
+    apps: {
+      title: "Aplicaciones de Juanda 📁",
+      desc: "Toca cualquier ícono aquí para abrir aplicaciones como Notas, Calendario o Ajustes."
     },
     dock: {
       title: "Dock de Aplicaciones 📥",
       desc: "Acceso rápido a las aplicaciones de Teléfono, Safari, Mensajes y Correo."
     },
-    home: {
-      title: "Indicador de Inicio 🏠",
-      desc: "Cuando estés dentro de una app, toca esta barra inferior para volver a la pantalla de inicio."
+    step2: {
+      title: "Aplicación de Ajustes ⚙️",
+      desc: "Abre Ajustes para cambiar el idioma o alternar entre el tema claro y oscuro."
     },
     finishStep: {
       title: "¡Todo Listo! 🎉",

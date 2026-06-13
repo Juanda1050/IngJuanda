@@ -6,7 +6,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatWithAppleEmojis } from '@/components/apple-emoji'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useDragControls, useMotionValue, animate } from 'framer-motion'
 
 interface Email {
   id: string
@@ -23,6 +23,39 @@ export function MailWindow() {
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [mobileView, setMobileView] = useState<'folders' | 'list' | 'detail'>('folders')
+
+  const [isMobile, setIsMobile] = useState(false)
+  const listDragX = useMotionValue(0)
+  const listDragControls = useDragControls()
+  const detailDragX = useMotionValue(0)
+  const detailDragControls = useDragControls()
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768)
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  useEffect(() => {
+    listDragX.set(0)
+    detailDragX.set(0)
+  }, [mobileView, listDragX, detailDragX])
+
+  // Handle global swipe-back custom event
+  useEffect(() => {
+    const handleSwipe = (e: Event) => {
+      if (mobileView === 'detail') {
+        e.preventDefault()
+        setMobileView('list')
+      } else if (mobileView === 'list') {
+        e.preventDefault()
+        setMobileView('folders')
+      }
+    }
+    window.addEventListener('ios-swipe-back', handleSwipe)
+    return () => window.removeEventListener('ios-swipe-back', handleSwipe)
+  }, [mobileView])
   
   // Compose modal states
   const [isComposing, setIsComposing] = useState(false)
@@ -150,9 +183,9 @@ export function MailWindow() {
   ]
 
   return (
-    <div className="flex h-full w-full bg-background dark:bg-[#1a1a1c] text-foreground font-sans text-sm select-none relative">
+    <div className="flex h-full w-full bg-background dark:bg-[#1a1a1c] text-foreground font-sans text-sm select-none relative overflow-hidden">
       {/* 1st Pane: Sidebar */}
-      <div className={cn("w-full md:w-44 shrink-0 border-r border-border/50 bg-vscode-sidebar/95 p-3 flex flex-col justify-between overflow-y-auto", mobileView === 'folders' ? 'flex' : 'hidden md:flex')}>
+      <div className={cn("w-full md:w-44 shrink-0 border-r border-border/50 bg-vscode-sidebar/95 p-3 flex flex-col justify-between overflow-y-auto", isMobile ? "w-full h-full" : "flex")}>
         <div className="space-y-4">
           <button
             onClick={handleNewMessage}
@@ -206,129 +239,185 @@ export function MailWindow() {
       </div>
 
       {/* 2nd Pane: Email List */}
-      <div className={cn("w-full md:w-64 shrink-0 border-r border-border/40 bg-background/50 dark:bg-[#1a1a1c]/50 backdrop-blur-md flex flex-col min-h-0", mobileView === 'list' ? 'flex' : 'hidden md:flex')}>
-        {/* Mobile Back Button */}
-        <button 
-          onClick={() => setMobileView('folders')}
-          className="md:hidden flex items-center text-blue-500 gap-1 px-3 py-2 font-semibold text-xs border-b border-border/20 self-start select-none"
-        >
-          <ChevronLeft className="size-4" />
-          <span>Mailboxes</span>
-        </button>
-
-        {/* Search */}
-        <div className="p-3 border-b border-border/40 relative">
-          <Search className="absolute left-6 top-5 size-3.5 text-muted-foreground/60" />
-          <input
-            type="text"
-            placeholder={t('music.sidebar.inputPlaceholder')} // Uses Spotify search placeholder as generic search placeholder
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-md border border-border/60 bg-background/50 dark:bg-[#1e1e1e] py-1 pl-8 pr-3 text-xs outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 text-foreground transition-colors"
-          />
-        </div>
-
-        {/* Email Items list */}
-        <div className="flex-1 overflow-y-auto divide-y divide-border/20">
-          {filteredEmails.length === 0 ? (
-            <div className="flex h-32 items-center justify-center text-xs text-muted-foreground italic">
-              {t('notes.noNotes')}
-            </div>
-          ) : (
-            filteredEmails.map((email) => {
-              const isSelected = activeEmail?.id === email.id
-              return (
-                <button
-                  key={email.id}
-                  onClick={() => {
-                    setSelectedEmailId(email.id)
-                    setMobileView('detail')
-                  }}
-                  className={cn(
-                    'w-full text-left p-3 flex flex-col gap-1 transition-colors outline-none border-l-4',
-                    isSelected
-                      ? 'bg-primary/10 border-primary text-foreground'
-                      : 'hover:bg-black/5 dark:hover:bg-white/5 border-transparent text-muted-foreground hover:text-foreground'
-                  )}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-foreground truncate max-w-[130px]">
-                      {formatWithAppleEmojis(email.fromName)}
-                    </span>
-                    <span className="text-[9px] text-muted-foreground/80 shrink-0">
-                      {email.date.split(',')[0]}
-                    </span>
-                  </div>
-                  <p className="text-xs font-semibold text-foreground truncate leading-snug">
-                    {formatWithAppleEmojis(email.subject)}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground/70 line-clamp-2 leading-relaxed">
-                    {formatWithAppleEmojis(email.body)}
-                  </p>
-                </button>
-              )
-            })
+      {(mobileView === 'list' || mobileView === 'detail' || !isMobile) && (
+        <motion.div
+          drag={isMobile && mobileView === 'list' ? "x" : false}
+          dragControls={listDragControls}
+          dragListener={false}
+          dragConstraints={{ left: 0, right: 400 }}
+          dragElastic={{ left: 0, right: 0.1 }}
+          style={isMobile ? { x: listDragX } : {}}
+          onDragEnd={(_, info) => {
+            if (info.offset.x > 80 || info.velocity.x > 300) {
+              setMobileView('folders');
+            } else {
+              animate(listDragX, 0, { type: "spring", stiffness: 300, damping: 30 });
+            }
+          }}
+          className={cn(
+            "w-full md:w-64 shrink-0 border-r border-border/40 bg-background/50 dark:bg-[#1a1a1c]/50 backdrop-blur-md flex flex-col min-h-0",
+            isMobile ? "absolute inset-0 z-10 bg-background dark:bg-[#1a1a1c] shadow-2xl" : "relative"
           )}
-        </div>
-      </div>
+        >
+          {/* Edge drag gesture handle for list */}
+          {isMobile && mobileView === 'list' && (
+            <div
+              onPointerDown={(e) => listDragControls.start(e)}
+              className="absolute left-0 top-0 bottom-0 w-6 z-50 cursor-ew-resize bg-transparent"
+            />
+          )}
+
+          {/* Mobile Back Button */}
+          <button 
+            onClick={() => setMobileView('folders')}
+            className="md:hidden flex items-center text-blue-500 gap-1 px-3 py-2 font-semibold text-xs border-b border-border/20 self-start select-none"
+          >
+            <ChevronLeft className="size-4" />
+            <span>Mailboxes</span>
+          </button>
+
+          {/* Search */}
+          <div className="p-3 border-b border-border/40 relative">
+            <Search className="absolute left-6 top-5 size-3.5 text-muted-foreground/60" />
+            <input
+              type="text"
+              placeholder={t('music.sidebar.inputPlaceholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-md border border-border/60 bg-background/50 dark:bg-[#1e1e1e] py-1 pl-8 pr-3 text-xs outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 text-foreground transition-colors"
+            />
+          </div>
+
+          {/* Email Items list */}
+          <div className="flex-1 overflow-y-auto divide-y divide-border/20">
+            {filteredEmails.length === 0 ? (
+              <div className="flex h-32 items-center justify-center text-xs text-muted-foreground italic">
+                {t('notes.noNotes')}
+              </div>
+            ) : (
+              filteredEmails.map((email) => {
+                const isSelected = activeEmail?.id === email.id
+                return (
+                  <button
+                    key={email.id}
+                    onClick={() => {
+                      setSelectedEmailId(email.id)
+                      setMobileView('detail')
+                    }}
+                    className={cn(
+                      'w-full text-left p-3 flex flex-col gap-1 transition-colors outline-none border-l-4',
+                      isSelected
+                        ? 'bg-primary/10 border-primary text-foreground'
+                        : 'hover:bg-black/5 dark:hover:bg-white/5 border-transparent text-muted-foreground hover:text-foreground'
+                    )}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs text-foreground truncate max-w-[130px]">
+                        {formatWithAppleEmojis(email.fromName)}
+                      </span>
+                      <span className="text-[9px] text-muted-foreground/80 shrink-0">
+                        {email.date.split(',')[0]}
+                      </span>
+                    </div>
+                    <p className="text-xs font-semibold text-foreground truncate leading-snug">
+                      {formatWithAppleEmojis(email.subject)}
+                    </p>
+                    <p className="text-[11px] text-muted-foreground/70 line-clamp-2 leading-relaxed">
+                      {formatWithAppleEmojis(email.body)}
+                    </p>
+                  </button>
+                )
+              })
+            )}
+          </div>
+        </motion.div>
+      )}
 
       {/* 3rd Pane: Email Details */}
-      <div className={cn("flex-1 bg-background dark:bg-[#1a1a1c] p-6 flex flex-col justify-between overflow-y-auto select-text min-w-0", mobileView === 'detail' ? 'flex' : 'hidden md:flex')}>
-        {/* Mobile Back Button */}
-        <button 
-          onClick={() => setMobileView('list')}
-          className="md:hidden flex items-center text-blue-500 gap-1 mb-4 font-semibold text-xs self-start select-none"
+      {(mobileView === 'detail' || !isMobile) && (
+        <motion.div
+          drag={isMobile ? "x" : false}
+          dragControls={detailDragControls}
+          dragListener={false}
+          dragConstraints={{ left: 0, right: 400 }}
+          dragElastic={{ left: 0, right: 0.1 }}
+          style={isMobile ? { x: detailDragX } : {}}
+          onDragEnd={(_, info) => {
+            if (info.offset.x > 80 || info.velocity.x > 300) {
+              setMobileView('list');
+            } else {
+              animate(detailDragX, 0, { type: "spring", stiffness: 300, damping: 30 });
+            }
+          }}
+          className={cn(
+            "flex-1 bg-background dark:bg-[#1a1a1c] p-6 flex flex-col justify-between overflow-y-auto select-text min-w-0",
+            isMobile ? "absolute inset-0 z-20 bg-background dark:bg-[#1a1a1c] shadow-2xl" : "relative"
+          )}
         >
-          <ChevronLeft className="size-4" />
-          <span>Emails</span>
-        </button>
-        {activeEmail ? (
-          <div className="space-y-6 flex-1 flex flex-col justify-between">
-            <div className="space-y-4">
-              {/* Header card info */}
-              <div className="flex items-start justify-between border-b border-border/30 pb-4">
-                <div className="space-y-1 min-w-0">
-                  <h2 className="text-base font-bold text-foreground leading-tight truncate">
-                    {formatWithAppleEmojis(activeEmail.subject)}
-                  </h2>
-                  <div className="text-xs text-muted-foreground">
-                    <span className="font-bold text-foreground">{formatWithAppleEmojis(activeEmail.fromName)}</span>
-                    <span className="ml-1.5 font-mono select-all">&lt;{activeEmail.fromEmail}&gt;</span>
+          {/* Edge drag gesture handle for detail */}
+          {isMobile && mobileView === 'detail' && (
+            <div
+              onPointerDown={(e) => detailDragControls.start(e)}
+              className="absolute left-0 top-0 bottom-0 w-6 z-50 cursor-ew-resize bg-transparent"
+            />
+          )}
+
+          {/* Mobile Back Button */}
+          <button 
+            onClick={() => setMobileView('list')}
+            className="md:hidden flex items-center text-blue-500 gap-1 mb-4 font-semibold text-xs self-start select-none"
+          >
+            <ChevronLeft className="size-4" />
+            <span>Emails</span>
+          </button>
+          {activeEmail ? (
+            <div className="space-y-6 flex-1 flex flex-col justify-between">
+              <div className="space-y-4">
+                {/* Header card info */}
+                <div className="flex items-start justify-between border-b border-border/30 pb-4">
+                  <div className="space-y-1 min-w-0">
+                    <h2 className="text-base font-bold text-foreground leading-tight truncate">
+                      {formatWithAppleEmojis(activeEmail.subject)}
+                    </h2>
+                    <div className="text-xs text-muted-foreground">
+                      <span className="font-bold text-foreground">{formatWithAppleEmojis(activeEmail.fromName)}</span>
+                      <span className="ml-1.5 font-mono select-all">&lt;{activeEmail.fromEmail}&gt;</span>
+                    </div>
+                    <div className="text-[11px] text-muted-foreground">
+                      <span>{t('mail.compose.to')}</span>
+                      <span className="ml-1 font-semibold select-all">danielalejandre1050@gmail.com</span>
+                    </div>
                   </div>
-                  <div className="text-[11px] text-muted-foreground">
-                    <span>{t('mail.compose.to')}</span>
-                    <span className="ml-1 font-semibold select-all">danielalejandre1050@gmail.com</span>
+                  <div className="text-right shrink-0">
+                    <span className="text-xs text-muted-foreground">{activeEmail.date}</span>
                   </div>
                 </div>
-                <div className="text-right shrink-0">
-                  <span className="text-xs text-muted-foreground">{activeEmail.date}</span>
+
+                {/* Email Body */}
+                <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap font-sans select-text pl-1">
+                  {formatWithAppleEmojis(activeEmail.body)}
                 </div>
               </div>
 
-              {/* Email Body */}
-              <div className="text-sm leading-relaxed text-foreground/90 whitespace-pre-wrap font-sans select-text pl-1">
-                {formatWithAppleEmojis(activeEmail.body)}
+              {/* Reply Actions bottom block */}
+              <div className="pt-4 border-t border-border/30 flex justify-end">
+                <button
+                  onClick={() => handleReply(activeEmail)}
+                  className="flex items-center gap-1.5 rounded-lg border border-border bg-background hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all px-3.5 py-1.5 text-xs font-semibold text-foreground"
+                >
+                  <Reply className="size-4 text-blue-500 shrink-0" />
+                  <span>{t('mail.compose.send')}</span>
+                </button>
               </div>
             </div>
-
-            {/* Reply Actions bottom block */}
-            <div className="pt-4 border-t border-border/30 flex justify-end">
-              <button
-                onClick={() => handleReply(activeEmail)}
-                className="flex items-center gap-1.5 rounded-lg border border-border bg-background hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 transition-all px-3.5 py-1.5 text-xs font-semibold text-foreground"
-              >
-                <Reply className="size-4 text-blue-500 shrink-0" />
-                <span>{t('mail.compose.send')}</span> {/* Repurposing "Send" translation as "Reply / Responder" label */}
-              </button>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground text-center p-6 select-none">
+              <Inbox className="size-12 mb-3 text-muted-foreground/30" />
+              <p className="text-sm font-semibold">{t('finder.preview.noDocument')}</p>
             </div>
-          </div>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground text-center p-6 select-none">
-            <Inbox className="size-12 mb-3 text-muted-foreground/30" />
-            <p className="text-sm font-semibold">{t('finder.preview.noDocument')}</p>
-          </div>
-        )}
-      </div>
+          )}
+        </motion.div>
+      )}
 
       {/* Compose Overlay Modal */}
       <AnimatePresence>

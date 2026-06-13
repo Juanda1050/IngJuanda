@@ -1,6 +1,6 @@
 export const dashboardEs = {
   title: "Juan Daniel González Alejandre",
-  dockLabel: "Launchpad",
+  dockLabel: "Juanda's",
   welcome: "Juan Daniel González",
   roleShort: "Ingeniero de Software",
   roleFull: "Ingeniero de Software • Senior Fullstack Developer",

@@ -55,21 +55,22 @@ export const tutorialEn = {
       title: "Status Bar 🔋",
       desc: "Shows the current time, Wi-Fi status, and battery percentage."
     },
-    apps: {
-      title: "Applications Grid 📁",
-      desc: "Tap any icon here to open apps like Notes or Calendar."
+    home: {
+      title: "Home Indicator 🏠",
+      desc: "When inside any app, swipe this bar up or tap it to close the app and return to the home screen. Try it now to continue!",
+      actionPrompt: "Swipe up or tap the bottom bar"
     },
-    step2: {
-      title: "Settings App ⚙️",
-      desc: "Open Settings to change the language or toggle dark/light themes."
+    apps: {
+      title: "Juanda's Applications 📁",
+      desc: "Tap any icon here to open apps like Notes, Calendar, or Settings."
     },
     dock: {
       title: "App Dock 📥",
       desc: "Quick access to Phone, Safari, Messages, and Mail."
     },
-    home: {
-      title: "Home Indicator 🏠",
-      desc: "When inside any app, tap this bottom bar to return to the home screen."
+    step2: {
+      title: "Settings App ⚙️",
+      desc: "Open Settings to change the language or toggle dark/light themes."
     },
     finishStep: {
       title: "All Set! 🎉",
