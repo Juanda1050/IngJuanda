@@ -70,8 +70,10 @@ interface UiState {
   // Tutorial states
   isTutorialActive: boolean
   currentTutorialStep: number
+  activeTutorialType: 'system' | 'vscode' | null
   setTutorialActive: (active: boolean) => void
   setCurrentTutorialStep: (step: number) => void
+  setActiveTutorialType: (type: 'system' | 'vscode' | null) => void
   isMobileTutorialActive: boolean
   setMobileTutorialActive: (active: boolean) => void
 
@@ -312,9 +314,11 @@ export const useUiStore = create<UiState>((set, get) => ({
   // Tutorial initial state and actions
   isTutorialActive: false,
   currentTutorialStep: 0,
+  activeTutorialType: null,
+  isMobileTutorialActive: false,
   setTutorialActive: (active) => set({ isTutorialActive: active }),
   setCurrentTutorialStep: (step) => set({ currentTutorialStep: step }),
-  isMobileTutorialActive: false,
+  setActiveTutorialType: (type) => set({ activeTutorialType: type }),
   setMobileTutorialActive: (active) => set({ isMobileTutorialActive: active }),
 
   // System State and User Context

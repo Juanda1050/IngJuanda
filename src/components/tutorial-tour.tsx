@@ -13,17 +13,11 @@ interface TourStep {
   placement: "top" | "bottom" | "left" | "right" | "center";
 }
 
-const TOUR_STEPS: TourStep[] = [
+const SYSTEM_TOUR_STEPS: TourStep[] = [
   {
     titleKey: "tutorial.steps.welcome.title",
     descKey: "tutorial.steps.welcome.description",
     placement: "center",
-  },
-  {
-    targetId: "vscode-sidebar",
-    titleKey: "tutorial.steps.sidebar.title",
-    descKey: "tutorial.steps.sidebar.description",
-    placement: "right",
   },
   {
     targetId: "top-bar-search",
@@ -32,21 +26,9 @@ const TOUR_STEPS: TourStep[] = [
     placement: "bottom",
   },
   {
-    targetId: "vscode-command-btn",
-    titleKey: "tutorial.steps.commandPalette.title",
-    descKey: "tutorial.steps.commandPalette.description",
-    placement: "bottom",
-  },
-  {
-    targetId: "activity-bar-search",
-    titleKey: "tutorial.steps.searchSidebar.title",
-    descKey: "tutorial.steps.searchSidebar.description",
-    placement: "right",
-  },
-  {
-    targetId: "live-preview-btn",
-    titleKey: "tutorial.steps.livePreview.title",
-    descKey: "tutorial.steps.livePreview.description",
+    targetId: "profile-avatar",
+    titleKey: "tutorial.steps.profile.title",
+    descKey: "tutorial.steps.profile.description",
     placement: "bottom",
   },
   {
@@ -56,14 +38,51 @@ const TOUR_STEPS: TourStep[] = [
     placement: "top",
   },
   {
-    targetId: "profile-avatar",
-    titleKey: "tutorial.steps.profile.title",
-    descKey: "tutorial.steps.profile.description",
-    placement: "bottom",
+    targetId: "dock-item-vscode",
+    titleKey: "tutorial.steps.dockVscode.title",
+    descKey: "tutorial.steps.dockVscode.description",
+    placement: "top",
   },
   {
     titleKey: "tutorial.steps.finish.title",
     descKey: "tutorial.steps.finish.description",
+    placement: "center",
+  },
+];
+
+const VSCODE_TOUR_STEPS: TourStep[] = [
+  {
+    titleKey: "tutorial.steps.vscodeWelcome.title",
+    descKey: "tutorial.steps.vscodeWelcome.description",
+    placement: "center",
+  },
+  {
+    targetId: "vscode-sidebar",
+    titleKey: "tutorial.steps.sidebar.title",
+    descKey: "tutorial.steps.sidebar.description",
+    placement: "right",
+  },
+  {
+    targetId: "activity-bar-search",
+    titleKey: "tutorial.steps.searchSidebar.title",
+    descKey: "tutorial.steps.searchSidebar.description",
+    placement: "right",
+  },
+  {
+    targetId: "vscode-command-btn",
+    titleKey: "tutorial.steps.commandPalette.title",
+    descKey: "tutorial.steps.commandPalette.description",
+    placement: "bottom",
+  },
+  {
+    targetId: "live-preview-btn",
+    titleKey: "tutorial.steps.livePreview.title",
+    descKey: "tutorial.steps.livePreview.description",
+    placement: "bottom",
+  },
+  {
+    titleKey: "tutorial.steps.vscodeFinish.title",
+    descKey: "tutorial.steps.vscodeFinish.description",
     placement: "center",
   },
 ];
@@ -78,33 +97,62 @@ export function TutorialTour() {
 
   const isTutorialActive = useUiStore((state) => state.isTutorialActive);
   const currentStep = useUiStore((state) => state.currentTutorialStep);
+  const activeTutorialType = useUiStore((state) => state.activeTutorialType);
   const setTutorialActive = useUiStore((state) => state.setTutorialActive);
   const setCurrentStep = useUiStore((state) => state.setCurrentTutorialStep);
-  const openApp = useUiStore((state) => state.openApp);
+  const setActiveTutorialType = useUiStore((state) => state.setActiveTutorialType);
+  
+  const vscodeState = useUiStore((state) => state.apps.vscode.state);
   const systemState = useUiStore((state) => state.systemState);
 
-  // Trigger automatically on first load
+  const steps = activeTutorialType === "vscode" ? VSCODE_TOUR_STEPS : SYSTEM_TOUR_STEPS;
+
+  // Trigger system tutorial automatically on first load
   useEffect(() => {
     if (systemState !== "normal") return;
 
-    const completed = localStorage.getItem("portfolio_tutorial_completed");
+    const completed = localStorage.getItem("portfolio_system_tutorial_completed");
     if (completed !== "true") {
       const timer = setTimeout(() => {
-        // Open VS Code first so target items exist in layout
-        openApp("vscode");
+        setActiveTutorialType("system");
         setTutorialActive(true);
         setCurrentStep(0);
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [openApp, setTutorialActive, setCurrentStep, systemState]);
+  }, [setTutorialActive, setCurrentStep, setActiveTutorialType, systemState]);
+
+  // Trigger vscode tutorial automatically when VS Code opens for the first time
+  useEffect(() => {
+    if (systemState !== "normal" || isTutorialActive) return;
+
+    if (vscodeState === "open") {
+      const completed = localStorage.getItem("portfolio_vscode_tutorial_completed");
+      if (completed !== "true") {
+        const timer = setTimeout(() => {
+          setActiveTutorialType("vscode");
+          setTutorialActive(true);
+          setCurrentStep(0);
+        }, 600);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [vscodeState, isTutorialActive, setActiveTutorialType, setTutorialActive, setCurrentStep, systemState]);
+
+  // Close VS Code tutorial if VS Code app is closed
+  useEffect(() => {
+    if (isTutorialActive && activeTutorialType === "vscode" && vscodeState !== "open") {
+      setTutorialActive(false);
+      setActiveTutorialType(null);
+    }
+  }, [vscodeState, isTutorialActive, activeTutorialType, setTutorialActive, setActiveTutorialType]);
 
   // Track the target element bounding box
   useEffect(() => {
     if (!isTutorialActive) return;
 
     const updateRect = () => {
-      const currentStepObj = TOUR_STEPS[currentStep];
+      const currentStepObj = steps[currentStep];
       if (currentStepObj?.targetId && !isMobile) {
         const el = document.getElementById(currentStepObj.targetId);
         if (el) {
@@ -128,7 +176,7 @@ export function TutorialTour() {
       window.removeEventListener("scroll", updateRect);
       observer.disconnect();
     };
-  }, [currentStep, isTutorialActive, isMobile]);
+  }, [currentStep, isTutorialActive, isMobile, steps]);
 
   // Adjust recorded card width and height for clamping calculations
   useLayoutEffect(() => {
@@ -140,7 +188,7 @@ export function TutorialTour() {
 
   // Handle step actions
   const handleNext = () => {
-    if (currentStep < TOUR_STEPS.length - 1) {
+    if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
       handleComplete();
@@ -154,13 +202,23 @@ export function TutorialTour() {
   };
 
   const handleSkip = () => {
-    localStorage.setItem("portfolio_tutorial_completed", "true");
+    if (activeTutorialType === "system") {
+      localStorage.setItem("portfolio_system_tutorial_completed", "true");
+    } else if (activeTutorialType === "vscode") {
+      localStorage.setItem("portfolio_vscode_tutorial_completed", "true");
+    }
     setTutorialActive(false);
+    setActiveTutorialType(null);
   };
 
   const handleComplete = () => {
-    localStorage.setItem("portfolio_tutorial_completed", "true");
+    if (activeTutorialType === "system") {
+      localStorage.setItem("portfolio_system_tutorial_completed", "true");
+    } else if (activeTutorialType === "vscode") {
+      localStorage.setItem("portfolio_vscode_tutorial_completed", "true");
+    }
     setTutorialActive(false);
+    setActiveTutorialType(null);
   };
 
   // Keyboard navigation
@@ -181,11 +239,11 @@ export function TutorialTour() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isTutorialActive, currentStep]);
+  }, [isTutorialActive, currentStep, steps]);
 
   if (!isTutorialActive || systemState !== "normal") return null;
 
-  const currentStepObj = TOUR_STEPS[currentStep]!;
+  const currentStepObj = steps[currentStep]!;
   const padding = 8;
 
   // Mask dimensions
@@ -301,8 +359,8 @@ export function TutorialTour() {
               </span>
               <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {t("tutorial.steps.welcome.title") !== "tutorial.steps.welcome.title"
-                  ? `${currentStep + 1} / ${TOUR_STEPS.length}`
-                  : `Paso ${currentStep + 1} de ${TOUR_STEPS.length}`}
+                  ? `${currentStep + 1} / ${steps.length}`
+                  : `Paso ${currentStep + 1} de ${steps.length}`}
               </span>
             </div>
             <button
@@ -328,7 +386,7 @@ export function TutorialTour() {
           <div className="flex items-center justify-between">
             {/* Progress Dots */}
             <div className="flex items-center gap-1.5">
-              {TOUR_STEPS.map((_, idx) => (
+              {steps.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentStep(idx)}
@@ -344,7 +402,7 @@ export function TutorialTour() {
 
             {/* Navigation Buttons */}
             <div className="flex items-center gap-2">
-              {currentStep < TOUR_STEPS.length - 1 ? (
+              {currentStep < steps.length - 1 ? (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -374,11 +432,11 @@ export function TutorialTour() {
                 className="text-xs h-8 rounded-lg px-3 flex items-center gap-1 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white transition-all font-medium"
               >
                 <span>
-                  {currentStep === TOUR_STEPS.length - 1
+                  {currentStep === steps.length - 1
                     ? t("tutorial.finish")
                     : t("tutorial.next")}
                 </span>
-                {currentStep < TOUR_STEPS.length - 1 && (
+                {currentStep < steps.length - 1 && (
                   <ChevronRight className="size-3.5" />
                 )}
               </Button>

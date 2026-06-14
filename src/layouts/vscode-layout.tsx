@@ -138,6 +138,9 @@ function MacMenuBar() {
   const setCurrentTutorialStep = useUiStore(
     (state) => state.setCurrentTutorialStep,
   );
+  const setActiveTutorialType = useUiStore(
+    (state) => state.setActiveTutorialType,
+  );
   const setSystemState = useUiStore((state) => state.setSystemState);
 
   useEffect(() => {
@@ -286,9 +289,18 @@ function MacMenuBar() {
         action: () => openApp("safari"),
       },
       {
-        label: t("tutorial.start"),
+        label: t("tutorial.startSystem"),
+        action: () => {
+          setActiveTutorialType("system");
+          setTutorialActive(true);
+          setCurrentTutorialStep(0);
+        },
+      },
+      {
+        label: t("tutorial.startVscode"),
         action: () => {
           openApp("vscode");
+          setActiveTutorialType("vscode");
           setTutorialActive(true);
           setCurrentTutorialStep(0);
         },
@@ -579,6 +591,7 @@ function DockIcon({
     <Tooltip>
       <TooltipTrigger asChild>
         <motion.button
+          id={`dock-item-${item.id}`}
           ref={(node) => {
             ref.current = node;
             item.dockRef?.(node);

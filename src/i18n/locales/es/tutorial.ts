@@ -4,10 +4,24 @@ export const tutorialEs = {
   back: "Anterior",
   finish: "Finalizar",
   start: "Iniciar Tutorial",
+  startSystem: "Iniciar Tutorial del Sistema",
+  startVscode: "Iniciar Tutorial de VS Code",
   steps: {
     welcome: {
       title: "¡Bienvenido a mi Portafolio! 👋",
       description: "He diseñado este portafolio como si fuera el escritorio de una computadora Apple. ¡Hagamos un recorrido rápido de 1 minuto para que veas lo fácil que es navegar y conocer mi trabajo!"
+    },
+    vscodeWelcome: {
+      title: "Editor VS Code 💻",
+      description: "¡Bienvenido a la vista del editor de código! Aquí puedes explorar los archivos y el código fuente del proyecto. ¡Veamos cómo navegar por este espacio de desarrollo!"
+    },
+    vscodeFinish: {
+      title: "¡Editor de Código Listo! 🚀",
+      description: "¡Ya estás listo para inspeccionar mi código y proyectos! Siéntete libre de navegar los archivos, buscar texto o iniciar la vista interactiva. ¡Diviértete explorando!"
+    },
+    dockVscode: {
+      title: "Código Fuente y Proyectos 💻",
+      description: "Este es el icono de VS Code. Haz clic aquí en cualquier momento para abrir el editor de código, donde podrás inspeccionar los archivos del proyecto y realizar el tutorial de desarrollo."
     },
     sidebar: {
       title: "Menú de Secciones 📁",

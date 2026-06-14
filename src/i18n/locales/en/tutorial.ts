@@ -4,10 +4,24 @@ export const tutorialEn = {
   back: "Back",
   finish: "Finish",
   start: "Start Onboarding Tour",
+  startSystem: "Start System Tour",
+  startVscode: "Start VS Code Tour",
   steps: {
     welcome: {
       title: "Welcome to my Portfolio! 👋",
       description: "I designed this portfolio to look like an Apple computer desktop. Let's take a quick 1-minute tour to see how easy it is to explore my work!"
+    },
+    vscodeWelcome: {
+      title: "VS Code Editor 💻",
+      description: "Welcome to the code editor view! Here you can explore the files and project source code. Let's see how to navigate this development workspace."
+    },
+    vscodeFinish: {
+      title: "Code Editor Ready! 🚀",
+      description: "You are now ready to inspect my code and projects! Feel free to edit files, search, or run the live preview. Have fun exploring!"
+    },
+    dockVscode: {
+      title: "Source Code & Projects 💻",
+      description: "This is the VS Code icon. Click here at any time to open the code editor, where you can inspect the project files and take the development tutorial."
     },
     sidebar: {
       title: "Sections Menu 📁",
