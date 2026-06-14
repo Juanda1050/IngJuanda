@@ -44,5 +44,36 @@ export const mailEs = {
       subject: "Propuesta de Colaboración - Sistema de Diseño Open Source",
       body: "Estimado Juan Daniel,\n\nSeguimos de cerca tu trabajo con Storybook y TailwindCSS para crear sistemas de diseño empresariales. Nos gustaría invitarte a participar como colaborador principal en nuestra próxima librería UI open-source enfocada en accesibilidad y layouts adaptativos.\n\nAvísanos si te interesa para agendar una llamada y darte más detalles.\n\nAtentamente,\nOS Labs Team"
     }
-  ]
+  ],
+  summaries: {
+    "1": [
+      "Recruitment Global ha invitado a Juan Daniel a una entrevista para Senior Frontend Developer.",
+      "Destacaron que su simulador de escritorio macOS es un gran ejemplo de modularidad técnica.",
+      "Solicitaron respuesta sobre su disponibilidad para una videollamada."
+    ],
+    "2": [
+      "Sarah Miller de Creative Studios propuso una colaboración freelance.",
+      "Elogió detalles como la sincronización de volumen y los componentes tipo nativo.",
+      "Adjunta un brief de proyecto con los requerimientos de diseño interactivo del cliente."
+    ],
+    "3": [
+      "Dev Relations de OS Labs invitó a Juanda a ser colaborador principal de una biblioteca de diseño UI open-source.",
+      "Mencionaron que siguen su trabajo con Storybook y Tailwind CSS.",
+      "Sugirieron agendar una llamada rápida para revisar los materiales de onboarding."
+    ]
+  },
+  draftPrompt: {
+    title: "¿Guardar borrador?",
+    description: "¿Qué quieres hacer con este mensaje?",
+    save: "Guardar borrador",
+    delete: "Eliminar borrador",
+    keepEditing: "Seguir editando"
+  },
+  undoSend: "Deshacer envío",
+  messageSent: "Mensaje enviado exitosamente",
+  noMail: "Sin correos",
+  noMessageSelected: "Sin mensaje seleccionado",
+  updatedJustNow: "Actualizado ahora",
+  oneMessage: "1 Mensaje",
+  summarize: "Resumir"
 } as const;

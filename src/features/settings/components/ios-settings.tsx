@@ -5,7 +5,7 @@ import { useUiStore } from "@/store/ui-store";
 import { cn } from "@/lib/utils";
 import { WallpaperBackground } from "@/components/wallpaper-background";
 
-export function IosSettings({ onClose }: { onClose?: () => void }) {
+export function IosSettings({ onClose, layout = "ios" }: { onClose?: () => void; layout?: "ios" | "ipad" }) {
   const { t, i18n } = useTranslation("common");
   const { theme, setTheme } = useTheme();
   const wallpaper = useUiStore((state) => state.wallpaper);
@@ -120,15 +120,16 @@ export function IosSettings({ onClose }: { onClose?: () => void }) {
                 >
                   <div
                     className={cn(
-                      "w-full aspect-[9/16] rounded-lg border shadow-sm transition-all relative overflow-hidden",
+                      "w-full rounded-lg border shadow-sm transition-all relative overflow-hidden",
+                      layout === "ipad" ? "aspect-[4/3]" : "aspect-[9/16]",
                       wallpaper === wp.id
                         ? "border-blue-500 ring-2 ring-blue-500/50 scale-105"
                         : "border-gray-200 dark:border-white/10 opacity-70 hover:opacity-100",
                     )}
                   >
-                    <WallpaperBackground id={wp.id} thumbnail={true} layout="ios" />
+                    <WallpaperBackground id={wp.id} thumbnail={true} layout={layout} />
                     {wallpaper === wp.id && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                       <div className="absolute inset-0 flex items-center justify-center bg-black/10">
                         <span className="text-white text-[10px] font-bold bg-blue-500 rounded-full w-5 h-5 flex items-center justify-center">
                           ✓
                         </span>

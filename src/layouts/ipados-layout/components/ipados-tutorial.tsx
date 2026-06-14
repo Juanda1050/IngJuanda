@@ -11,7 +11,7 @@ interface TourStep {
   placement: "top" | "bottom" | "center";
 }
 
-export function IosTutorial({
+export function IpadosTutorial({
   activeApp: _activeApp,
   setActiveApp,
 }: {
@@ -31,70 +31,70 @@ export function IosTutorial({
 
   const steps: TourStep[] = [
     {
-      title: t("tutorial.mobile.step1.title", "Welcome to iPhone UI 📱"),
+      title: t("tutorial.ipad.step1.title", "Welcome to iPadOS UI 📱"),
       description: t(
-        "tutorial.mobile.step1.desc",
-        "This is a mobile-optimized view of the portfolio. Let's do a quick tour!",
+        "tutorial.ipad.step1.desc",
+        "This is a tablet-optimized view of the portfolio. Let's do a quick tour!",
       ),
       placement: "center",
     },
     {
-      targetId: "ios-status-bar",
-      title: t("tutorial.mobile.statusbar.title", "Status Bar 🔋"),
+      targetId: "ipados-status-bar",
+      title: t("tutorial.ipad.statusbar.title", "Status Bar 🔋"),
       description: t(
-        "tutorial.mobile.statusbar.desc",
-        "Shows the current time, Wi-Fi status, and battery percentage.",
+        "tutorial.ipad.statusbar.desc",
+        "Provides local time, date details, Wi-Fi connection, and real-time battery charge indicators at the top.",
       ),
       placement: "bottom",
     },
     {
-      targetId: "ios-home-indicator",
-      title: t("tutorial.mobile.home.title", "Home Indicator 🏠"),
+      targetId: "ipados-home-indicator",
+      title: t("tutorial.ipad.home.title", "Home Indicator 🏠"),
       description: t(
-        "tutorial.mobile.home.desc",
+        "tutorial.ipad.home.desc",
         "Provides a universal home gesture. Swipe this bar up or tap it from within any app to return to the home screen.",
       ),
       placement: "top",
     },
     {
-      targetId: "ios-app-grid",
-      title: t("tutorial.mobile.apps.title", "Juanda's Applications 📁"),
+      targetId: "ipados-app-grid",
+      title: t("tutorial.ipad.apps.title", "Spaced Application Grid 📁"),
       description: t(
-        "tutorial.mobile.apps.desc",
-        "Tap any icon here to open apps like Notes or Calendar.",
+        "tutorial.ipad.apps.desc",
+        "Organized grid for quick access to system applications such as Calendar or Notes.",
       ),
       placement: "bottom",
     },
     {
-      targetId: "ios-dock",
-      title: t("tutorial.mobile.dock.title", "App Dock 📥"),
+      targetId: "ipados-dock",
+      title: t("tutorial.ipad.dock.title", "Centered Wide Dock 📥"),
       description: t(
-        "tutorial.mobile.dock.desc",
-        "Quick access to Phone, Safari, Messages, and Mail.",
+        "tutorial.ipad.dock.desc",
+        "Wider, floating centered dock containing shortcut applications for communication, web, and mail.",
       ),
       placement: "top",
     },
     {
-      targetId: "ios-app-settings",
-      title: t("tutorial.mobile.step2.title", "Settings App ⚙️"),
+      targetId: "ipados-app-settings",
+      title: t("tutorial.ipad.step2.title", "Settings Panel ⚙️"),
       description: t(
-        "tutorial.mobile.step2.desc",
-        "Open Settings to change the language or toggle dark/light themes.",
+        "tutorial.ipad.step2.desc",
+        "Open Settings to change system languages, or customize UI brightness and dark theme values.",
       ),
       placement: "bottom",
     },
     {
-      title: t("tutorial.mobile.finishStep.title", "All Set! 🎉"),
+      title: t("tutorial.ipad.finishStep.title", "iPadOS Ready! 🎉"),
       description: t(
-        "tutorial.mobile.finishStep.desc",
-        "You are ready to explore. Have fun clicking around the iOS interface!",
+        "tutorial.ipad.finishStep.desc",
+        "You are fully set to navigate and inspect the tablet dashboard environment. Enjoy exploring!",
       ),
       placement: "center",
     },
   ];
 
   useEffect(() => {
-    if (localStorage.getItem("mobile-tutorial-seen") === "true") return;
+    if (localStorage.getItem("ipad-tutorial-seen") === "true") return;
     const timer = setTimeout(() => {
       setMobileTutorialActive(true);
     }, 1200);
@@ -110,20 +110,10 @@ export function IosTutorial({
     }
   }, [isMobileTutorialActive]);
 
-  // Reset rect immediately on step change so the mask collapses instead of
-  // spring-travelling across the screen to the new element position
   useEffect(() => {
     setTargetRect(null);
   }, [step]);
 
-  // Continuously track the target element bounding box via rAF loop so the
-  // SVG mask and hit-area stay perfectly aligned during Framer Motion animations.
-  //
-  // WHY no z-index elevation:
-  //   Elements with backdrop-filter, transform, or opacity < 1 in ancestor
-  //   elements create isolated stacking contexts — their children cannot
-  //   escape via z-index regardless of the value used. The clip-path on
-  //   the overlay itself (+ a hit-area div on top) is the only reliable fix.
   useEffect(() => {
     if (!isVisible) return;
 
@@ -162,7 +152,7 @@ export function IosTutorial({
   const handleDismiss = () => {
     setIsVisible(false);
     setMobileTutorialActive(false);
-    localStorage.setItem("mobile-tutorial-seen", "true");
+    localStorage.setItem("ipad-tutorial-seen", "true");
   };
 
   const handleNext = () => {
@@ -200,18 +190,16 @@ export function IosTutorial({
   }, [isVisible, step]);
 
   const prevStepRef = useRef<number>(step);
-  // Tracks whether the current null-activeApp originated from the user's
-  // own swipe/tap (real close) vs. from the step-sync effect below.
   const stepSyncedRef = useRef<boolean>(false);
   const isRestart = useRef<boolean>(false);
 
   useEffect(() => {
     if (isVisible) {
-      isRestart.current = localStorage.getItem("mobile-tutorial-seen") === "true";
+      isRestart.current = localStorage.getItem("ipad-tutorial-seen") === "true";
     }
   }, [isVisible]);
 
-  // Sync activeApp state based on the current tutorial step to ensure context is correct
+  // Sync activeApp layout based on tutorial step
   useEffect(() => {
     if (!isVisible || !setActiveApp || isRestart.current) return;
 
@@ -221,8 +209,7 @@ export function IosTutorial({
     if (step === prevStep) return;
 
     if (step === 2 || step === 3 || step === 4 || step === 5 || step === 6) {
-      // All other steps after step 2: close any open app programmatically.
-      // Guard prevents the auto-advance from firing on this programmatic null.
+      // Close open apps programmatically for other steps
       stepSyncedRef.current = true;
       setActiveApp(null);
     }
@@ -231,24 +218,22 @@ export function IosTutorial({
   if (!isVisible) return null;
 
   const currentStepObj = steps[step]!;
-  const padding = 6;
+  const padding = 8;
 
-  // Mask dimensions
+  // Mask cutout coordinates
   const maskX = targetRect ? targetRect.left - padding : window.innerWidth / 2;
   const maskY = targetRect ? targetRect.top - padding : window.innerHeight / 2;
   const maskW = targetRect ? targetRect.width + padding * 2 : 0;
   const maskH = targetRect ? targetRect.height + padding * 2 : 0;
   const maskRx = 16;
 
-  // Card placement on mobile — position card away from the highlighted element
   const getCardStyle = (): React.CSSProperties => {
     if (!currentStepObj.targetId || !targetRect) {
-      // Center steps (welcome / finish): place near vertical center
       return {
         position: "fixed",
-        left: "16px",
-        right: "16px",
-        top: "30%",
+        left: "50%",
+        top: "35%",
+        transform: "translate(-50%, -50%)",
         zIndex: 100000,
       };
     }
@@ -257,41 +242,37 @@ export function IosTutorial({
     const elementCenterY = targetRect.top + targetRect.height / 2;
 
     if (elementCenterY < screenMidY) {
-      // Element is in the upper half → card goes to bottom
       return {
         position: "fixed",
-        left: "16px",
-        right: "16px",
-        bottom: "34px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        bottom: "40px",
         zIndex: 100000,
       };
     } else {
-      // Element is in the lower half → card goes to top (below status bar)
       return {
         position: "fixed",
-        left: "16px",
-        right: "16px",
-        top: "64px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        top: "70px",
         zIndex: 100000,
       };
     }
   };
 
-  const DARK = "rgba(0,0,0,0.65)" as const;
+  const DARK = "rgba(0,0,0,0.7)" as const;
   const hasTarget = !!targetRect && !!currentStepObj.targetId;
 
   return (
-    <div className="fixed inset-0 z-[99999] select-none pointer-events-none">
-      {/* ── 4-panel spotlight backdrop ── */}
+    <div className="fixed inset-0 z-[99999] select-none pointer-events-none font-sans">
+      {/* 4-panel spotlight background overlay */}
       {!hasTarget ? (
-        /* Full-screen dark for center steps (welcome / finish) */
         <div
           className="absolute inset-0 pointer-events-auto cursor-default"
           style={{ background: DARK }}
         />
       ) : (
         <>
-          {/* Top panel — above the target */}
           <div
             className="pointer-events-auto cursor-default"
             style={{
@@ -303,7 +284,6 @@ export function IosTutorial({
               background: DARK,
             }}
           />
-          {/* Bottom panel — below the target */}
           <div
             className="pointer-events-auto cursor-default"
             style={{
@@ -315,7 +295,6 @@ export function IosTutorial({
               background: DARK,
             }}
           />
-          {/* Left panel — left of the target */}
           <div
             className="pointer-events-auto cursor-default"
             style={{
@@ -327,7 +306,6 @@ export function IosTutorial({
               background: DARK,
             }}
           />
-          {/* Right panel — right of the target */}
           <div
             className="pointer-events-auto cursor-default"
             style={{
@@ -364,7 +342,7 @@ export function IosTutorial({
         />
       )}
 
-      {/* Floating Card */}
+      {/* Floating Spotlight Info Card */}
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -373,24 +351,16 @@ export function IosTutorial({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}
           transition={{ duration: 0.22, ease: "easeOut" }}
-          className="rounded-2xl border border-white/20 dark:border-white/10 bg-[#1c1c1e]/90 backdrop-blur-2xl p-5 shadow-2xl text-white pointer-events-auto max-w-md mx-auto"
+          className="w-[90%] max-w-md rounded-2xl border border-white/10 bg-[#1c1c1e]/90 backdrop-blur-2xl p-5 shadow-2xl text-white pointer-events-auto"
         >
-          {/* Card Header */}
+          {/* Header */}
           <div className="flex items-center justify-between mb-3.5">
             <div className="flex items-center gap-2">
               <span className="flex w-6 h-6 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400">
                 <Sparkles className="w-3.5 h-3.5" />
               </span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-white/50">
-                {t("tutorial.stepCount", {
-                  current: step + 1,
-                  total: steps.length,
-                }) !== `tutorial.stepCount`
-                  ? t("tutorial.stepCount", {
-                      current: step + 1,
-                      total: steps.length,
-                    })
-                  : `Step ${step + 1} of ${steps.length}`}
+                Step {step + 1} of {steps.length}
               </span>
             </div>
             <button
@@ -402,7 +372,7 @@ export function IosTutorial({
             </button>
           </div>
 
-          {/* Card Body */}
+          {/* Body */}
           <div className="space-y-1.5 mb-5">
             <h3 className="text-base font-bold tracking-tight text-white">
               {currentStepObj.title}
@@ -412,9 +382,9 @@ export function IosTutorial({
             </p>
           </div>
 
-          {/* Card Footer */}
+          {/* Footer */}
           <div className="flex items-center justify-between">
-            {/* Progress Dots */}
+            {/* Indicators */}
             <div className="flex items-center gap-1.5">
               {steps.map((_, idx) => (
                 <button
@@ -432,7 +402,7 @@ export function IosTutorial({
               ))}
             </div>
 
-            {/* Navigation Buttons */}
+            {/* Controls */}
             <div className="flex items-center gap-2 flex-wrap justify-end">
               {step < steps.length - 1 ? (
                 <button
@@ -442,7 +412,7 @@ export function IosTutorial({
                   }}
                   className="text-xs text-white/60 hover:text-white font-medium px-2 py-1 shrink-0"
                 >
-                  {t("tutorial.skip", "Skip")}
+                  Skip
                 </button>
               ) : null}
 
@@ -455,7 +425,7 @@ export function IosTutorial({
                   className="text-xs rounded-lg px-2.5 py-1.5 flex items-center gap-1 border border-white/10 hover:bg-white/5 font-medium transition-colors shrink-0"
                 >
                   <ChevronLeft className="w-3.5 h-3.5" />
-                  <span>{t("tutorial.back", "Back")}</span>
+                  <span>Back</span>
                 </button>
               ) : null}
 
@@ -467,9 +437,7 @@ export function IosTutorial({
                 className="text-xs rounded-lg px-3 py-1.5 flex items-center gap-1 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white transition-all font-semibold shadow-md shrink-0"
               >
                 <span>
-                  {step === steps.length - 1
-                    ? t("tutorial.finish", "Got it")
-                    : t("tutorial.next", "Next")}
+                  {step === steps.length - 1 ? "Got it" : "Next"}
                 </span>
                 {step < steps.length - 1 && (
                   <ChevronRight className="w-3.5 h-3.5" />

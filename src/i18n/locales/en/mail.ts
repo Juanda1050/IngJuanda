@@ -44,5 +44,36 @@ export const mailEn = {
       subject: "Collaboration Proposal - Open Source UI Library",
       body: "Dear Juan Daniel,\n\nWe've been following your work with TailwindCSS and Storybook to create accessible UI design systems. We'd love to invite you to participate as a core contributor to our upcoming open-source component library focused on accessibility and adaptive layouts.\n\nLet us know if you're interested so we can schedule a quick brief.\n\nSincerely,\nOS Labs Team"
     }
-  ]
+  ],
+  summaries: {
+    "1": [
+      "Recruitment Global has invited Juan Daniel to a Senior Frontend Developer interview.",
+      "They noted his macOS desktop simulator is a great showcase of technical modularity.",
+      "Requested reply about his calendar availability for a videocall."
+    ],
+    "2": [
+      "Sarah Miller from Creative Studios proposed a freelance collaboration.",
+      "She praised details like volume sync and native-like UI components.",
+      "Attached is a project brief document detailing client interactive design requirements."
+    ],
+    "3": [
+      "Dev Relations at OS Labs invited Juanda to be a core contributor to an open-source UI design system library.",
+      "They mentioned tracking his work using Storybook and Tailwind CSS.",
+      "Suggested arranging a quick call to go over onboarding materials."
+    ]
+  },
+  draftPrompt: {
+    title: "Save Draft?",
+    description: "What would you like to do with this message?",
+    save: "Save Draft",
+    delete: "Delete Draft",
+    keepEditing: "Keep Editing"
+  },
+  undoSend: "Undo Send",
+  messageSent: "Message Sent Successfully",
+  noMail: "No Mail",
+  noMessageSelected: "No Message Selected",
+  updatedJustNow: "Updated Just Now",
+  oneMessage: "1 Message",
+  summarize: "Summarize"
 } as const;

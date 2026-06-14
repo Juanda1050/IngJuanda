@@ -9,16 +9,17 @@ export function WallpaperBackground({
 }: {
   id: string
   thumbnail?: boolean
-  layout?: 'macos' | 'ios'
+  layout?: 'macos' | 'ios' | 'ipad'
 }) {
   const { resolvedTheme } = useTheme()
   const isDark = resolvedTheme === 'dark'
   const graphicsAcceleration = useUiStore((state) => state.graphicsAcceleration)
 
   const isIos = layout === 'ios'
-  const viewBox = isIos ? '0 0 900 1440' : '0 0 1440 900'
-  const width = isIos ? 900 : 1440
-  const height = isIos ? 1440 : 900
+  const isIpad = layout === 'ipad'
+  const viewBox = isIos ? '0 0 900 1440' : isIpad ? '0 0 1366 1024' : '0 0 1440 900'
+  const width = isIos ? 900 : isIpad ? 1366 : 1440
+  const height = isIos ? 1440 : isIpad ? 1024 : 900
 
   // CPU rendering optimizations: bypass filters when graphics acceleration is disabled
   const waveShadow = graphicsAcceleration ? 'url(#wave-shadow)' : undefined
@@ -223,6 +224,55 @@ export function WallpaperBackground({
             <stop offset="0%" stopColor="#09090b" />
             <stop offset="100%" stopColor="#000000" />
           </linearGradient>
+
+          {/* iPad-specific Slate & Metal Gradients */}
+          <radialGradient id="ipad-radial-default" cx="50%" cy="50%" r="75%">
+            <stop offset="0%" stopColor="#1e293b" />
+            <stop offset="60%" stopColor="#0f172a" />
+            <stop offset="100%" stopColor="#020617" />
+          </radialGradient>
+          <radialGradient id="ipad-radial-monterey" cx="50%" cy="50%" r="75%">
+            <stop offset="0%" stopColor="#2e1065" />
+            <stop offset="60%" stopColor="#0f052d" />
+            <stop offset="100%" stopColor="#02000d" />
+          </radialGradient>
+          <radialGradient id="ipad-radial-sonoma" cx="50%" cy="50%" r="75%">
+            <stop offset="0%" stopColor="#064e3b" />
+            <stop offset="60%" stopColor="#022c22" />
+            <stop offset="100%" stopColor="#000f0b" />
+          </radialGradient>
+          <radialGradient id="ipad-radial-aurora" cx="50%" cy="50%" r="75%">
+            <stop offset="0%" stopColor="#172554" />
+            <stop offset="60%" stopColor="#0c1836" />
+            <stop offset="100%" stopColor="#020617" />
+          </radialGradient>
+          <radialGradient id="ipad-radial-midnight" cx="50%" cy="50%" r="75%">
+            <stop offset="0%" stopColor="#18181b" />
+            <stop offset="60%" stopColor="#09090b" />
+            <stop offset="100%" stopColor="#020202" />
+          </radialGradient>
+
+          <linearGradient id="metal-silver-grad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#94a3b8" />
+            <stop offset="35%" stopColor="#475569" />
+            <stop offset="50%" stopColor="#cbd5e1" />
+            <stop offset="65%" stopColor="#334155" />
+            <stop offset="100%" stopColor="#1e293b" />
+          </linearGradient>
+
+          <linearGradient id="metal-chrome-grad" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#e2e8f0" />
+            <stop offset="25%" stopColor="#64748b" />
+            <stop offset="50%" stopColor="#cbd5e1" />
+            <stop offset="75%" stopColor="#475569" />
+            <stop offset="100%" stopColor="#0f172a" />
+          </linearGradient>
+
+          <linearGradient id="steel-blue-grad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15" />
+            <stop offset="50%" stopColor="#60a5fa" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.15" />
+          </linearGradient>
         </defs>
 
         {/* ======================================================== */}
@@ -385,9 +435,102 @@ export function WallpaperBackground({
         )}
 
         {/* ======================================================== */}
+        {/* iPad LANDSCAPE/PORTRAIT METALLIC LAYOUT (viewBox="0 0 1366 1024") */}
+        {/* ======================================================== */}
+        {layout === 'ipad' && (
+          <>
+            {/* Background Canvas */}
+            {id === 'default' && <rect width="1366" height="1024" fill="url(#ipad-radial-default)" />}
+            {id === 'monterey' && <rect width="1366" height="1024" fill="url(#ipad-radial-monterey)" />}
+            {id === 'sonoma' && <rect width="1366" height="1024" fill="url(#ipad-radial-sonoma)" />}
+            {id === 'aurora' && <rect width="1366" height="1024" fill="url(#ipad-radial-aurora)" />}
+            {id === 'midnight' && <rect width="1366" height="1024" fill="url(#ipad-radial-midnight)" />}
+
+            {/* Central Glow (if graphicsAcceleration is active) */}
+            {graphicsAcceleration && (
+              <>
+                {id === 'default' && <circle cx="683" cy="512" r="400" fill="#475569" opacity="0.15" filter="url(#glow-blur)" />}
+                {id === 'monterey' && <circle cx="683" cy="512" r="400" fill="#701a75" opacity="0.12" filter="url(#glow-blur)" />}
+                {id === 'sonoma' && <circle cx="683" cy="512" r="400" fill="#064e3b" opacity="0.12" filter="url(#glow-blur)" />}
+                {id === 'aurora' && <circle cx="683" cy="512" r="400" fill="#1e3b8a" opacity="0.15" filter="url(#glow-blur)" />}
+                {id === 'midnight' && <circle cx="683" cy="512" r="400" fill="#27272a" opacity="0.1" filter="url(#glow-blur)" />}
+              </>
+            )}
+
+            {/* Overlapping Curved Metallic Sheets/Waves */}
+            {/* Wave 3 (Back) */}
+            <path
+              d="M -100,350 C 300,150 900,600 1500,300 L 1500,1100 L -100,1100 Z"
+              fill={
+                id === 'default' ? '#0f172a' :
+                id === 'monterey' ? '#120720' :
+                id === 'sonoma' ? '#011c16' :
+                id === 'aurora' ? '#08112b' : '#09090b'
+              }
+              filter={waveShadow}
+            />
+            <path
+              d="M -100,350 C 300,150 900,600 1500,300"
+              fill="none"
+              stroke={
+                id === 'default' ? 'url(#metal-silver-grad)' :
+                id === 'monterey' ? '#7c3aed' :
+                id === 'sonoma' ? '#10b981' :
+                id === 'aurora' ? '#3b82f6' : '#52525b'
+              }
+              strokeWidth={thumbnail ? 2.5 : 5}
+              opacity="0.8"
+            />
+
+            {/* Wave 2 (Middle) */}
+            <path
+              d="M -100,550 C 400,650 800,350 1500,600 L 1500,1100 L -100,1100 Z"
+              fill={
+                id === 'default' ? '#1e293b' :
+                id === 'monterey' ? '#1e113a' :
+                id === 'sonoma' ? '#022c22' :
+                id === 'aurora' ? '#0c1f4e' : '#18181b'
+              }
+              filter={waveShadow}
+            />
+            <path
+              d="M -100,550 C 400,650 800,350 1500,600"
+              fill="none"
+              stroke="url(#metal-chrome-grad)"
+              strokeWidth={thumbnail ? 3 : 6}
+              opacity="0.9"
+            />
+
+            {/* Wave 1 (Front) */}
+            <path
+              d="M -100,750 C 350,650 1000,850 1500,700 L 1500,1100 L -100,1100 Z"
+              fill={
+                id === 'default' ? '#090d16' :
+                id === 'monterey' ? '#090412' :
+                id === 'sonoma' ? '#000c09' :
+                id === 'aurora' ? '#020718' : '#020202'
+              }
+              filter={waveShadow}
+            />
+            <path
+              d="M -100,750 C 350,650 1000,850 1500,700"
+              fill="none"
+              stroke={
+                id === 'default' ? 'url(#metal-silver-grad)' :
+                id === 'monterey' ? '#db2777' :
+                id === 'sonoma' ? '#34d399' :
+                id === 'aurora' ? '#60a5fa' : '#a1a1aa'
+              }
+              strokeWidth={thumbnail ? 2 : 4}
+              opacity="0.85"
+            />
+          </>
+        )}
+
+        {/* ======================================================== */}
         {/* macOS LANDSCAPE LAYOUT (viewBox="0 0 1440 900") */}
         {/* ======================================================== */}
-        {!isIos && (
+        {layout === 'macos' && (
           <>
             {/* Background Sky */}
             {id === 'default' && <rect width="1440" height="900" fill="url(#macos-sky-default)" />}
