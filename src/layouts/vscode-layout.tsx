@@ -415,10 +415,12 @@ function DockIcon({
             <img
               src={item.iconSrc}
               alt={item.label}
-              className="relative size-10 object-contain select-none pointer-events-none filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)]"
+              className={`relative size-10 object-contain select-none pointer-events-none filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)] ${item.id === "dashboard" ? "bg-white dark:bg-black rounded-sm p-1" : ""}`}
             />
           ) : Icon ? (
-            <Icon className="relative size-7 text-white drop-shadow" />
+            <Icon
+              className={`relative size-7 text-white drop-shadow ${item.id === "dashboard" ? "bg-white dark:bg-black" : ""}`}
+            />
           ) : (
             <span className="relative size-7 rounded-lg bg-white/80 shadow-sm" />
           )}

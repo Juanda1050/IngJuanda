@@ -100,7 +100,7 @@ export function IpadosLayout() {
           </IpadosAppContainer>
         );
       case "mail":
-        return <MailWindow onClose={() => setActiveApp(null)} />;
+        return <MailWindow />;
       default:
         return null;
     }

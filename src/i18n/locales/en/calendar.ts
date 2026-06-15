@@ -5,6 +5,7 @@ export const calendarEn = {
     work: "Work Experiences",
     education: "Education",
     projects: "Projects",
+    project: "Project",
     listTitle: "All Milestones",
     infoText: "Click any event for details",
   },
@@ -62,7 +63,7 @@ export const calendarEn = {
     {
       id: "portfolio_launch",
       date: "2026-06-06",
-      title: "MacOS Portfolio Launch",
+      title: "Portfolio Launch",
       type: "project",
       location: "Colima, Mexico",
       company: "Juanda",

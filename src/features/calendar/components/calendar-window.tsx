@@ -512,7 +512,7 @@ export function CalendarWindow() {
               className={cn(
                 "absolute z-30 bottom-4 right-4 left-4 md:left-auto md:w-96 rounded-2xl border p-4 shadow-[0_20px_50px_rgba(0,0,0,0.35),0_0_0_1px_rgba(255,255,255,0.1)] backdrop-blur-2xl text-foreground",
                 isMobile 
-                  ? "bg-white/95 dark:bg-[#1c1c1e]/98 border-gray-200 dark:border-white/10"
+                  ? "bg-background/95 dark:bg-[#1c1c1e]/98 border-gray-200 dark:border-white/10"
                   : "border-white/20 bg-background/95 dark:bg-[#2c2c2e]/98"
               )}
             >

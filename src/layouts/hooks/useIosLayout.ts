@@ -107,7 +107,7 @@ export function useIosLayout(): UseIosLayoutReturn {
     if (activeApp && activeApp !== "phone") {
       openApp(activeApp as AppId);
     }
-  }, [openApp]);
+  }, [openApp, activeApp]);
 
   // Reset dragValues cuando cambia activeApp
   useEffect(() => {
@@ -134,7 +134,7 @@ export function useIosLayout(): UseIosLayoutReturn {
         damping: 30,
       });
     }
-  }, [edgeDragX]);
+  }, [edgeDragX, setActiveApp]);
 
   // Handler: Drag del home indicator (abrir/cerrar app)
   const handleHomeDragEnd = useCallback(
@@ -149,7 +149,7 @@ export function useIosLayout(): UseIosLayoutReturn {
         });
       }
     },
-    [homeDragY],
+    [homeDragY, setActiveApp],
   );
 
   // Handler: Swipe back gesture (edge drag)
@@ -209,6 +209,7 @@ export function useIosLayout(): UseIosLayoutReturn {
       t,
       currentTime,
       activeApp,
+      setActiveApp,
       wallpaper,
       level,
       charging,

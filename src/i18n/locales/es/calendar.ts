@@ -5,15 +5,16 @@ export const calendarEs = {
     work: "Experiencia Laboral",
     education: "Educación",
     projects: "Proyectos",
+    project: "Proyecto",
     listTitle: "Todos los Hitos",
-    infoText: "Clic en un evento para ver detalles"
+    infoText: "Clic en un evento para ver detalles",
   },
   header: {
-    today: "Hoy"
+    today: "Hoy",
   },
   detailCard: {
     highlights: "Aspectos Destacados",
-    dismiss: "Aceptar"
+    dismiss: "Aceptar",
   },
   milestones: [
     {
@@ -23,11 +24,12 @@ export const calendarEs = {
       type: "education",
       location: "Nuevo León, México",
       company: "Facultad de Ingeniería Mecánica y Eléctrica (FIME)",
-      description: "Graduado de la carrera de Ingeniería en Tecnología de Software.",
+      description:
+        "Graduado de la carrera de Ingeniería en Tecnología de Software.",
       bullets: [
         "Plan de estudios enfocado en diseño de software y desarrollo full-stack.",
-        "Graduado de la Facultad de Ingeniería Mecánica y Eléctrica (FIME)."
-      ]
+        "Graduado de la Facultad de Ingeniería Mecánica y Eléctrica (FIME).",
+      ],
     },
     {
       id: "axsis_join",
@@ -41,8 +43,8 @@ export const calendarEs = {
         "Diseñé e implementé microservicios en .NET aplicando principios de Domain-Driven Design (DDD).",
         "Implementé MobX en aplicaciones React para mejorar la gestión de estado.",
         "Desarrollé APIs e integraciones empresariales para automatizar procesos de facturación.",
-        "Refactoricé aplicaciones frontend monolíticas hacia arquitecturas modulares bajo principios de Clean Code."
-      ]
+        "Refactoricé aplicaciones frontend monolíticas hacia arquitecturas modulares bajo principios de Clean Code.",
+      ],
     },
     {
       id: "axosnet_join",
@@ -55,21 +57,22 @@ export const calendarEs = {
       bullets: [
         "Lideré el rediseño integral de Axosmoney, participando en la definición funcional, diseño UX/UI en Figma y desarrollo.",
         "Diseñé y mantengo Axosnet Components, una librería corporativa de componentes reutilizables.",
-        "Participé en la modernización tecnológica de aplicaciones mediante la adopción de React 18 y .NET 8."
-      ]
+        "Participé en la modernización tecnológica de aplicaciones mediante la adopción de React 18 y .NET 8.",
+      ],
     },
     {
       id: "portfolio_launch",
       date: "2026-06-06",
-      title: "Lanzamiento de Portafolio macOS",
+      title: "Lanzamiento de Portafolio",
       type: "project",
       location: "Colima, México",
       company: "Juanda",
-      description: "Publicación de esta experiencia interactiva simulando un escritorio de macOS.",
+      description:
+        "Publicación de esta experiencia interactiva simulando un escritorio de macOS.",
       bullets: [
         "Simulación de ventanas arrastrables, apilamiento de z-indices y terminal.",
-        "Totalmente responsivo y localizado en inglés y español."
-      ]
-    }
-  ]
+        "Totalmente responsivo y localizado en inglés y español.",
+      ],
+    },
+  ],
 } as const;

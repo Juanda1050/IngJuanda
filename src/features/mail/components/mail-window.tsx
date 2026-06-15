@@ -33,7 +33,7 @@ import {
   EMAIL_ATTACHMENTS,
 } from "@/features/mail/constants/default-emails";
 
-export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
+export function MailWindow() {
   const { t } = useTranslation("common");
   const { isMobile, isTablet } = useDevice();
 
@@ -91,6 +91,23 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
   useEffect(() => {
     localStorage.setItem("ing_juanda_sent_mails", JSON.stringify(sentEmails));
   }, [sentEmails]);
+
+  // Received emails local storage persistence
+  const [receivedEmails, setReceivedEmails] = useState<Email[]>(() => {
+    try {
+      const saved = localStorage.getItem("ing_juanda_received_mails");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      "ing_juanda_received_mails",
+      JSON.stringify(receivedEmails),
+    );
+  }, [receivedEmails]);
 
   // Draft emails local storage persistence
   const [draftEmails, setDraftEmails] = useState<Email[]>(() => {
@@ -166,6 +183,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
   useEffect(() => {
     const visible = defaultEmails
       .map((e) => ({ ...e, defaultFolder: "inbox" }))
+      .concat(receivedEmails.map((e) => ({ ...e, defaultFolder: "inbox" })))
       .concat(sentEmails.map((e) => ({ ...e, defaultFolder: "sent" })))
       .concat(draftEmails.map((e) => ({ ...e, defaultFolder: "drafts" })))
       .filter((email) => {
@@ -175,9 +193,11 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
       });
 
     if (visible.length > 0) {
-      const firstEmail = visible[0];
-      if (firstEmail) {
-        setSelectedEmailId(firstEmail.id);
+      if (!visible.some((e) => e.id === selectedEmailId)) {
+        const firstEmail = visible[0];
+        if (firstEmail) {
+          setSelectedEmailId(firstEmail.id);
+        }
       }
     } else {
       setSelectedEmailId("");
@@ -185,6 +205,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
   }, [
     activeFolder,
     defaultEmails,
+    receivedEmails,
     sentEmails,
     draftEmails,
     emailFolderAssignments,
@@ -203,13 +224,22 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
       ...e,
       defaultFolder: "inbox",
     }));
+    const allReceived = receivedEmails.map((e) => ({
+      ...e,
+      defaultFolder: "inbox",
+    }));
     const allSents = sentEmails.map((e) => ({ ...e, defaultFolder: "sent" }));
     const allDrafts = draftEmails.map((e) => ({
       ...e,
       defaultFolder: "drafts",
     }));
 
-    const combined = [...allDefaults, ...allSents, ...allDrafts];
+    const combined = [
+      ...allDefaults,
+      ...allReceived,
+      ...allSents,
+      ...allDrafts,
+    ];
 
     return combined.filter((email) => {
       const assignedFolder = emailFolderAssignments[email.id];
@@ -221,6 +251,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
   }, [
     activeFolder,
     defaultEmails,
+    receivedEmails,
     sentEmails,
     draftEmails,
     emailFolderAssignments,
@@ -276,13 +307,20 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
 
   // Folder Counts
   const inboxUnreadCount = useMemo(() => {
-    return defaultEmails.filter(
+    const defaultUnread = defaultEmails.filter(
       (e) =>
         !readEmailIds.includes(e.id) &&
         (!emailFolderAssignments[e.id] ||
           emailFolderAssignments[e.id] === "inbox"),
     ).length;
-  }, [defaultEmails, readEmailIds, emailFolderAssignments]);
+    const receivedUnread = receivedEmails.filter(
+      (e) =>
+        !readEmailIds.includes(e.id) &&
+        (!emailFolderAssignments[e.id] ||
+          emailFolderAssignments[e.id] === "inbox"),
+    ).length;
+    return defaultUnread + receivedUnread;
+  }, [defaultEmails, receivedEmails, readEmailIds, emailFolderAssignments]);
 
   const draftEmailCount = useMemo(() => {
     return draftEmails.filter(
@@ -361,6 +399,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
       }));
       setSentEmails((prev) => prev.filter((e) => e.id !== email.id));
       setDraftEmails((prev) => prev.filter((d) => d.id !== email.id));
+      setReceivedEmails((prev) => prev.filter((e) => e.id !== email.id));
     } else {
       // Move to trash
       setEmailFolderAssignments((prev) => ({
@@ -489,15 +528,15 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
     const draftId = editingDraftId || `draft-${Date.now()}`;
     const newDraft: Email = {
       id: draftId,
-      fromName: "Draft",
-      fromEmail: "draft@juanda.dev",
+      fromName: t("mail.compose.draft", "Draft"),
+      fromEmail: t("mail.compose.draftEmail", "draft@juanda.dev"),
       date: new Date().toLocaleDateString(undefined, {
         month: "numeric",
         day: "numeric",
         year: "2-digit",
       }),
       dateTime: new Date().toLocaleString(),
-      subject: composeSubject || "(No Subject)",
+      subject: composeSubject || t("mail.compose.noSubject", "(No Subject)"),
       body: composeBody,
       unread: false,
       recipient: composeTo,
@@ -520,6 +559,17 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
     e.preventDefault();
     if (!composeTo || !composeSubject || !composeBody) return;
 
+    const realEmail = "danielalejandre1050@gmail.com";
+    if (composeTo.trim().toLowerCase() !== realEmail) {
+      alert(
+        t(
+          "mail.compose.errorOnlyRealEmail",
+          "Emails can only be sent to the owner's real email address (danielalejandre1050@gmail.com).",
+        ),
+      );
+      return;
+    }
+
     setIsSending(true);
 
     if (editingDraftId) {
@@ -534,10 +584,11 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
         year: "2-digit",
       });
 
+      const emailTimestamp = Date.now();
       const newEmail: Email = {
-        id: `sent-${Date.now()}`,
-        fromName: "You",
-        fromEmail: "visitor@juanda.dev",
+        id: `sent-${emailTimestamp}`,
+        fromName: t("mail.compose.you", "You"),
+        fromEmail: t("mail.compose.visitorEmail", "visitor@juanda.dev"),
         date: formattedDate,
         dateTime: now.toLocaleString(),
         subject: composeSubject,
@@ -546,10 +597,23 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
         recipient: composeTo,
       };
 
+      const receivedEmail: Email = {
+        id: `received-${emailTimestamp}`,
+        fromName: t("mail.compose.visitorName", "Visitor"),
+        fromEmail: t("mail.compose.visitorEmail", "visitor@juanda.dev"),
+        date: formattedDate,
+        dateTime: now.toLocaleString(),
+        subject: composeSubject,
+        body: composeBody,
+        unread: true,
+        recipient: composeTo,
+      };
+
       setUndoableEmail(newEmail);
       setShowUndoBanner(true);
 
       setSentEmails((prev) => [newEmail, ...prev]);
+      setReceivedEmails((prev) => [receivedEmail, ...prev]);
       setIsSending(false);
       setIsComposing(false);
       setEditingDraftId(null);
@@ -577,7 +641,11 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
       setUndoTimerId(null);
     }
 
+    const timestamp = undoableEmail.id.split("-")[1];
     setSentEmails((prev) => prev.filter((e) => e.id !== undoableEmail.id));
+    setReceivedEmails((prev) =>
+      prev.filter((e) => e.id !== `received-${timestamp}`),
+    );
 
     setComposeTo(undoableEmail.recipient || "");
     setComposeSubject(undoableEmail.subject);
@@ -915,9 +983,6 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
 
             {/* iCloud group */}
             <div className="space-y-0.5">
-              <span className="text-[10px] font-bold text-muted-foreground/50 px-2 uppercase tracking-wide block mb-1">
-                iCloud
-              </span>
               {icloudFolders.map((folder) => {
                 const Icon = folder.icon;
                 const isActive = activeFolder === folder.id;
@@ -1294,7 +1359,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
                   <Menu className="size-5" />
                 </button>
                 <h3 className="text-lg font-black tracking-tight capitalize">
-                  {t(`mail.sidebar.${activeFolder}`, activeFolder)} iCloud
+                  {t(`mail.sidebar.${activeFolder}`, activeFolder)}
                 </h3>
               </div>
               <div className="flex items-center gap-1.5">
@@ -1643,9 +1708,6 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
 
                   {/* iCloud folders */}
                   <div className="space-y-0.5">
-                    <span className="text-[10px] font-bold text-muted-foreground/50 px-2 uppercase tracking-wide block mb-1">
-                      iCloud
-                    </span>
                     {icloudFolders.map((folder) => {
                       const Icon = folder.icon;
                       const isActive = activeFolder === folder.id;
@@ -1758,10 +1820,6 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
                   );
                 })}
               </div>
-
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider pl-4 block select-none">
-                iCloud Mail
-              </span>
 
               <div className="bg-white dark:bg-zinc-900 rounded-xl divide-y divide-black/[0.06] dark:divide-white/[0.06] overflow-hidden border border-black/[0.04]">
                 {icloudFolders.map((folder) => {
@@ -2123,10 +2181,12 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
                   onClick={handleCancelCompose}
                   className="text-[16px] text-blue-500 font-medium active:opacity-60"
                 >
-                  Cancel
+                  {t("mail.compose.cancel", "Cancel")}
                 </button>
                 <span className="font-extrabold text-[16px] tracking-tight">
-                  {editingDraftId ? "Edit Draft" : "New Message"}
+                  {editingDraftId
+                    ? t("mail.compose.editDraft", "Edit Draft")
+                    : t("mail.compose.title", "New Message")}
                 </span>
 
                 <button
@@ -2147,7 +2207,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
               <div className="divide-y divide-black/5 dark:divide-white/5 px-4 bg-white dark:bg-[#1c1c1e] shrink-0 text-xs">
                 <div className="flex items-center py-2 text-[14px]">
                   <span className="w-16 text-gray-400 font-semibold select-none">
-                    To:
+                    {t("mail.compose.to", "To:")}
                   </span>
                   <input
                     type="email"
@@ -2159,7 +2219,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
                 </div>
                 <div className="flex items-center py-2 text-[14px]">
                   <span className="w-16 text-gray-400 font-semibold select-none">
-                    Cc/Bcc:
+                    {t("mail.compose.ccBcc", "Cc/Bcc:")}
                   </span>
                   <span className="text-gray-500 font-mono text-[12px] select-none">
                     danielalejandre1050@gmail.com
@@ -2167,7 +2227,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
                 </div>
                 <div className="flex items-center py-2 text-[14px]">
                   <span className="w-16 text-gray-400 font-semibold select-none">
-                    Subject:
+                    {t("mail.compose.subject", "Subject:")}
                   </span>
                   <input
                     type="text"
@@ -2183,7 +2243,10 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
               <div className="flex-1 bg-white dark:bg-[#1c1c1e] p-4 min-h-0 flex flex-col">
                 <textarea
                   required
-                  placeholder="Sent from my Portfolio"
+                  placeholder={t(
+                    "mail.compose.placeholder",
+                    "Sent from my Portfolio",
+                  )}
                   value={composeBody}
                   onChange={(e) => setComposeBody(e.target.value)}
                   className="w-full flex-1 bg-transparent outline-none text-black dark:text-white select-text font-sans resize-none text-[15px] leading-relaxed"
@@ -2205,7 +2268,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
           >
             <div className="flex items-center gap-2">
               <CheckCircle2 className="size-4 shrink-0" />
-              <span>Message Sent Successfully</span>
+              <span>{t("mail.messageSent", "Message Sent Successfully")}</span>
             </div>
             {showUndoBanner && (
               <button
@@ -2213,7 +2276,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
                 onClick={handleUndoSend}
                 className="bg-white/20 hover:bg-white/30 text-white px-2 py-0.5 rounded font-extrabold transition-colors active:scale-95"
               >
-                Undo
+                {t("mail.compose.undo", "Undo")}
               </button>
             )}
           </motion.div>
@@ -2233,9 +2296,14 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
       <div className="fixed inset-0 bg-black/45 dark:bg-black/65 backdrop-blur-sm z-[99999] flex items-center justify-center p-4 select-none">
         <div className="w-80 bg-white dark:bg-[#2c2c2e] rounded-xl border border-black/5 dark:border-white/10 shadow-2xl overflow-hidden text-center text-black dark:text-white animate-in zoom-in-95 duration-150">
           <div className="p-5">
-            <h4 className="font-bold text-[16px] mb-1">Save Draft?</h4>
+            <h4 className="font-bold text-[16px] mb-1">
+              {t("mail.draftPrompt.title", "Save Draft?")}
+            </h4>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              What would you like to do with this message?
+              {t(
+                "mail.draftPrompt.description",
+                "What would you like to do with this message?",
+              )}
             </p>
           </div>
           <div className="flex flex-col divide-y divide-black/5 dark:divide-white/5 border-t border-black/5 dark:border-white/5">
@@ -2243,7 +2311,7 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
               onClick={handleSaveDraft}
               className="w-full py-3 text-sm text-blue-500 font-bold hover:bg-black/5 dark:hover:bg-white/5 active:bg-black/10 transition-colors"
             >
-              Save Draft
+              {t("mail.draftPrompt.save", "Save Draft")}
             </button>
             <button
               onClick={() => {
@@ -2253,13 +2321,13 @@ export function MailWindow({ onClose: _onClose }: { onClose?: () => void }) {
               }}
               className="w-full py-3 text-sm text-red-500 font-bold hover:bg-black/5 dark:hover:bg-white/5 active:bg-black/10 transition-colors"
             >
-              Delete Draft
+              {t("mail.draftPrompt.delete", "Delete Draft")}
             </button>
             <button
               onClick={() => setShowDraftPrompt(false)}
               className="w-full py-3 text-sm text-foreground font-semibold hover:bg-black/5 dark:hover:bg-white/5 active:bg-black/10 transition-colors"
             >
-              Keep Editing
+              {t("mail.draftPrompt.keepEditing", "Keep Editing")}
             </button>
           </div>
         </div>

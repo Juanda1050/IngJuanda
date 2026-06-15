@@ -17,49 +17,61 @@ export const mailEn = {
     send: "Send",
     sending: "Sending...",
     success: "Message sent successfully!",
-    replyPrefix: "Re:"
+    replyPrefix: "Re:",
+    cancel: "Cancel",
+    you: "You",
+    visitorEmail: "visitor@juanda.dev",
+    visitorName: "Visitor",
+    draft: "Draft",
+    draftEmail: "draft@juanda.dev",
+    noSubject: "(No Subject)",
+    placeholder: "Sent from my Portfolio",
+    editDraft: "Edit Draft",
+    ccBcc: "Cc/Bcc:",
+    errorOnlyRealEmail: "Emails can only be sent to the owner's real email address (danielalejandre1050@gmail.com).",
+    undo: "Undo"
   },
   emails: [
     {
       id: "1",
-      fromName: "Recruitment Global",
-      fromEmail: "hr@techglobal.io",
+      fromName: "GitHub Notifications",
+      fromEmail: "noreply@github.com",
       date: "Today, 10:15 AM",
-      subject: "Interview Invitation - Senior Frontend Developer",
-      body: "Hi Juan Daniel,\n\nWe reviewed your portfolio and absolutely loved your macOS desktop simulator on the web. It's a great example of modular frontend code, dynamic state management, and visual polish.\n\nWe'd love to schedule a technical interview with you for our Senior Frontend Developer position. Do you have some availability this week?\n\nBest regards,\nRecruitment Global Team"
+      subject: "[GitHub] Security Alert: dependency vulnerability in package.json (CVE-2026-1234)",
+      body: "Hi Juanda,\n\nA security vulnerability has been identified in one of your repository dependencies: next-auth. We recommend upgrading to version 14.2.1 immediately to resolve this issue.\n\nRepository: Juanda1050/IngJuanda\nSeverity: High\nDependency: next-auth (v14.2.0)\nFixed in: 14.2.1\n\nTo automatically patch this vulnerability, you can run:\nnpm update next-auth\n\nFor more details, visit the GitHub Advisory Database."
     },
     {
       id: "2",
-      fromName: "Sarah Creative Studios",
-      fromEmail: "sarah@creative-studios.co",
+      fromName: "Vercel Team",
+      fromEmail: "reports@vercel.com",
       date: "Yesterday, 3:40 PM",
-      subject: "Project Inquiry - Freelance Collaboration",
-      body: "Hi Juanda,\n\nHope you are doing great. Your interactive portfolio is amazing 🚀. The volume synchronization between the Control Center and the Apple Music app, and the custom Apple Emoji rendering, are top-tier visual details.\n\nWe have a project for an international client requiring custom interactive component design and would love to collaborate with you as a Freelancer. Could we jump on a call?\n\nSarah Miller\nCreative Director"
+      subject: "Monthly Analytics Report & Invoice - May 2026",
+      body: "Hi Juan Daniel,\n\nYour monthly analytics report and usage invoice for your Vercel projects are now available.\n\nSummary for Juanda's Workspace:\n- Total Projects: 12\n- Bandwidth Used: 45.8 GB (45% of quota)\n- Serverless Function Executions: 230k (23% of quota)\n- Total Amount Due: $0.00 USD (Hobby Plan)\n\nWe have attached the PDF invoice and complete metrics breakdown to this email for your records.\n\nThank you for choosing Vercel!\nThe Vercel Team"
     },
     {
       id: "3",
-      fromName: "Dev Relations OS Labs",
-      fromEmail: "dev-relations@os-labs.org",
+      fromName: "Sentry Alerts",
+      fromEmail: "alerts@sentry.io",
       date: "June 3, 2026",
-      subject: "Collaboration Proposal - Open Source UI Library",
-      body: "Dear Juan Daniel,\n\nWe've been following your work with TailwindCSS and Storybook to create accessible UI design systems. We'd love to invite you to participate as a core contributor to our upcoming open-source component library focused on accessibility and adaptive layouts.\n\nLet us know if you're interested so we can schedule a quick brief.\n\nSincerely,\nOS Labs Team"
+      subject: "[Sentry] New Issue: TypeError: Cannot read properties of undefined (reading 'map') in products.tsx",
+      body: "Hi Juanda,\n\nA new unresolved issue has been detected in your production environment.\n\nTypeError: Cannot read properties of undefined (reading 'map')\n  at ProductsGrid (src/features/products/components/products-grid.tsx:142:18)\n  at RenderWithHooks (react-dom.development.js:15486)\n\nFirst Seen: 5 minutes ago\nTriggered by: Chrome/125.0.0.0 (Windows 11)\nOccurrence Count: 28 occurrences impacting 14 users.\n\nView details in your Sentry dashboard to inspect the full stack trace and breadcrumbs."
     }
   ],
   summaries: {
     "1": [
-      "Recruitment Global has invited Juan Daniel to a Senior Frontend Developer interview.",
-      "They noted his macOS desktop simulator is a great showcase of technical modularity.",
-      "Requested reply about his calendar availability for a videocall."
+      "GitHub has alerted Juanda to a security vulnerability in next-auth (CVE-2026-1234).",
+      "The vulnerability is rated as High severity.",
+      "Recommended action is to run 'npm update next-auth' to patch the dependency immediately."
     ],
     "2": [
-      "Sarah Miller from Creative Studios proposed a freelance collaboration.",
-      "She praised details like volume sync and native-like UI components.",
-      "Attached is a project brief document detailing client interactive design requirements."
+      "Vercel has sent the monthly usage and analytics report for May 2026.",
+      "Shows total of 12 projects on Hobby Plan with total amount due of $0.00 USD.",
+      "Attached is the usage report PDF detailing billing and performance metrics."
     ],
     "3": [
-      "Dev Relations at OS Labs invited Juanda to be a core contributor to an open-source UI design system library.",
-      "They mentioned tracking his work using Storybook and Tailwind CSS.",
-      "Suggested arranging a quick call to go over onboarding materials."
+      "Sentry has captured a new uncaught TypeError in production under src/features/products.",
+      "Impacts 14 users with 28 occurrences in Chrome/Windows 11.",
+      "Redirects to dashboard to inspect stack trace and breadcrumbs."
     ]
   },
   draftPrompt: {

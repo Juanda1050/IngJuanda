@@ -200,7 +200,7 @@ export function IosLayout() {
           </IosAppContainer>
         );
       case "mail":
-        return <MailWindow onClose={() => setActiveApp(null)} />;
+        return <MailWindow />;
       default:
         return null;
     }
@@ -210,7 +210,7 @@ export function IosLayout() {
     <button
       id={`ios-app-${app.id}`}
       onClick={() => setActiveApp(app.id as AppType)}
-      className="w-[52px] h-[52px] rounded-[11px] flex items-center justify-center shadow-sm active:opacity-70 transition-opacity overflow-hidden bg-transparent"
+      className={`w-[52px] h-[52px] rounded-[11px] flex items-center justify-center shadow-sm active:opacity-70 transition-opacity overflow-hidden ${app.id === "dashboard" ? "bg-white rounded-sm p-1" : "bg-white/5 border border-white/5"} bg-transparent`}
     >
       <img
         src={app.icon}
