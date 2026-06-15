@@ -1,5 +1,5 @@
 export const dashboardEs = {
-  title: "Juan Daniel González Alejandre",
+  title: "Dashboard",
   dockLabel: "Juanda's",
   welcome: "Juan Daniel González",
   roleShort: "Ingeniero de Software",

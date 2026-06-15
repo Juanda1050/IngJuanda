@@ -56,7 +56,7 @@ export function WifiStatus() {
         title={label}
       >
         {online ? (
-          <Wifi className={cn('size-3.5', isWifi ? 'text-foreground/85' : 'text-amber-400')} />
+          <Wifi className={cn('size-3.5', isWifi ? 'text-current' : 'text-amber-400')} />
         ) : (
           <WifiOff className="size-3.5 text-red-400" />
         )}
@@ -127,7 +127,7 @@ export function BatteryStatus() {
 
   const batteryColor = charging
     ? 'text-green-400'
-    : level > 40 ? 'text-foreground/85'
+    : level > 40 ? 'text-current'
     : level > 15 ? 'text-amber-400'
     : 'text-red-400'
 

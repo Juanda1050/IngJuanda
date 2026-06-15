@@ -159,7 +159,7 @@ function MacMenuBar() {
     >
       <div
         ref={menuBarRef}
-        className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 text-sm"
+        className="mx-auto flex max-w-[1600px] items-center justify-between gap-2 text-sm text-white"
       >
         <div className="flex min-w-0 items-center gap-0 text-[13px]">
           <button
@@ -183,8 +183,8 @@ function MacMenuBar() {
                   className={cn(
                     "rounded-md px-2 py-0.5 text-[13px] transition-colors",
                     openMenu === menu
-                      ? "bg-white/30 dark:bg-white/15 text-foreground"
-                      : "text-foreground/80 hover:bg-white/15 dark:hover:bg-white/10",
+                      ? "bg-white/30 dark:bg-white/15 text-white"
+                      : "text-white/90 hover:bg-white/15 dark:hover:bg-white/10",
                     menu === "Finder" && "font-semibold",
                   )}
                 >
@@ -239,7 +239,7 @@ function MacMenuBar() {
             ))}
           </div>
         </div>
-        <div className="flex items-center gap-1.5 text-foreground/85">
+        <div className="flex items-center gap-1.5 text-white/90">
           <div className="flex items-center gap-0.5 rounded-lg bg-white/10 px-1 dark:bg-white/5">
             <WifiStatus />
             <BatteryStatus />

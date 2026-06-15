@@ -23,9 +23,7 @@ export function WallpaperBackground({
 
   // CPU rendering optimizations: bypass filters when graphics acceleration is disabled
   const waveShadow = graphicsAcceleration ? 'url(#wave-shadow)' : undefined
-  const iosCupShadow = graphicsAcceleration ? 'url(#ios-cup-shadow)' : undefined
   const glowBlur = graphicsAcceleration ? 'url(#glow-blur)' : undefined
-  const auroraBlur2 = graphicsAcceleration ? 'url(#aurora-blur-2)' : undefined
 
   return (
     <div
@@ -79,6 +77,9 @@ export function WallpaperBackground({
           <filter id="aurora-blur-2" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation={thumbnail ? 15 : 60} />
           </filter>
+          <filter id="mesh-blur-filter" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation={thumbnail ? 50 : 200} />
+          </filter>
 
           {/* Horizontal Arc Glow Gradient (Symmetric) */}
           <linearGradient id="ios-arc-glow" x1="0" y1="0" x2="1" y2="0">
@@ -104,59 +105,236 @@ export function WallpaperBackground({
 
           {/* Radial Gradients for iOS hourglass cups */}
           <radialGradient id="ios-default-top" cx="50%" cy="10%" r="90%">
-            <stop offset="0%" stopColor="#172554" />
-            <stop offset="55%" stopColor="#020617" />
-            <stop offset="100%" stopColor="#000205" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#172554" />
+                <stop offset="55%" stopColor="#020617" />
+                <stop offset="100%" stopColor="#000205" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#e0f2fe" />
+                <stop offset="55%" stopColor="#bae6ff" />
+                <stop offset="100%" stopColor="#7dd3fc" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ios-default-bottom" cx="50%" cy="90%" r="90%">
-            <stop offset="0%" stopColor="#1e3a8a" />
-            <stop offset="55%" stopColor="#020617" />
-            <stop offset="100%" stopColor="#000205" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#1e3a8a" />
+                <stop offset="55%" stopColor="#020617" />
+                <stop offset="100%" stopColor="#000205" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#bfdbfe" />
+                <stop offset="55%" stopColor="#60a5fa" />
+                <stop offset="100%" stopColor="#2563eb" />
+              </>
+            )}
           </radialGradient>
 
           <radialGradient id="ios-monterey-top" cx="50%" cy="10%" r="90%">
-            <stop offset="0%" stopColor="#4a044e" />
-            <stop offset="55%" stopColor="#0f0714" />
-            <stop offset="100%" stopColor="#020105" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#4a044e" />
+                <stop offset="55%" stopColor="#0f0714" />
+                <stop offset="100%" stopColor="#020105" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#fdf2f8" />
+                <stop offset="55%" stopColor="#fbcfe8" />
+                <stop offset="100%" stopColor="#f472b6" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ios-monterey-bottom" cx="50%" cy="90%" r="90%">
-            <stop offset="0%" stopColor="#701a75" />
-            <stop offset="55%" stopColor="#0f0714" />
-            <stop offset="100%" stopColor="#020105" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#701a75" />
+                <stop offset="55%" stopColor="#0f0714" />
+                <stop offset="100%" stopColor="#020105" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#fae8ff" />
+                <stop offset="55%" stopColor="#f5d0fe" />
+                <stop offset="100%" stopColor="#d946ef" />
+              </>
+            )}
           </radialGradient>
 
           <radialGradient id="ios-aurora-top" cx="50%" cy="10%" r="90%">
-            <stop offset="0%" stopColor="#3b0764" />
-            <stop offset="55%" stopColor="#0a0515" />
-            <stop offset="100%" stopColor="#020005" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#3b0764" />
+                <stop offset="55%" stopColor="#0a0515" />
+                <stop offset="100%" stopColor="#020005" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#f5f3ff" />
+                <stop offset="55%" stopColor="#ddd6fe" />
+                <stop offset="100%" stopColor="#a78bfa" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ios-aurora-bottom" cx="50%" cy="90%" r="90%">
-            <stop offset="0%" stopColor="#1e1b4b" />
-            <stop offset="55%" stopColor="#0a0515" />
-            <stop offset="100%" stopColor="#020005" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#1e1b4b" />
+                <stop offset="55%" stopColor="#0a0515" />
+                <stop offset="100%" stopColor="#020005" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#e0e7ff" />
+                <stop offset="55%" stopColor="#c7d2fe" />
+                <stop offset="100%" stopColor="#818cf8" />
+              </>
+            )}
           </radialGradient>
 
           <radialGradient id="ios-sonoma-top" cx="50%" cy="10%" r="90%">
-            <stop offset="0%" stopColor="#064e3b" />
-            <stop offset="55%" stopColor="#022c22" />
-            <stop offset="100%" stopColor="#01140f" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#064e3b" />
+                <stop offset="55%" stopColor="#022c22" />
+                <stop offset="100%" stopColor="#01140f" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#f0fdf4" />
+                <stop offset="55%" stopColor="#dcfce7" />
+                <stop offset="100%" stopColor="#86efac" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ios-sonoma-bottom" cx="50%" cy="90%" r="90%">
-            <stop offset="0%" stopColor="#047857" />
-            <stop offset="55%" stopColor="#022c22" />
-            <stop offset="100%" stopColor="#01140f" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#047857" />
+                <stop offset="55%" stopColor="#022c22" />
+                <stop offset="100%" stopColor="#01140f" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#ecfdf5" />
+                <stop offset="55%" stopColor="#a7f3d0" />
+                <stop offset="100%" stopColor="#34d399" />
+              </>
+            )}
           </radialGradient>
 
           <radialGradient id="ios-midnight-top" cx="50%" cy="10%" r="90%">
-            <stop offset="0%" stopColor="#27272a" />
-            <stop offset="65%" stopColor="#09090b" />
-            <stop offset="100%" stopColor="#020202" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#27272a" />
+                <stop offset="65%" stopColor="#09090b" />
+                <stop offset="100%" stopColor="#020202" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#f4f4f5" />
+                <stop offset="65%" stopColor="#e4e4e7" />
+                <stop offset="100%" stopColor="#d4d4d8" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ios-midnight-bottom" cx="50%" cy="90%" r="90%">
-            <stop offset="0%" stopColor="#18181b" />
-            <stop offset="65%" stopColor="#09090b" />
-            <stop offset="100%" stopColor="#020202" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#18181b" />
+                <stop offset="65%" stopColor="#09090b" />
+                <stop offset="100%" stopColor="#020202" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#e4e4e7" />
+                <stop offset="65%" stopColor="#d4d4d8" />
+                <stop offset="100%" stopColor="#a1a1aa" />
+              </>
+            )}
           </radialGradient>
+          {/* Dedicated Rich/Saturated Sky Gradients for iOS & iPad */}
+          <linearGradient id="ios-ipad-sky-default" x1="0" y1="0" x2="1" y2="1">
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#030712" />
+                <stop offset="50%" stopColor="#0f172a" />
+                <stop offset="100%" stopColor="#1e293b" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#1e3a8a" />
+                <stop offset="50%" stopColor="#2563eb" />
+                <stop offset="100%" stopColor="#60a5fa" />
+              </>
+            )}
+          </linearGradient>
+
+          <linearGradient id="ios-ipad-sky-monterey" x1="0" y1="0" x2="1" y2="1">
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#1e1b4b" />
+                <stop offset="50%" stopColor="#120e36" />
+                <stop offset="100%" stopColor="#060410" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#701a75" />
+                <stop offset="50%" stopColor="#db2777" />
+                <stop offset="100%" stopColor="#f43f5e" />
+              </>
+            )}
+          </linearGradient>
+
+          <linearGradient id="ios-ipad-sky-sonoma" x1="0" y1="0" x2="1" y2="1">
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#022c22" />
+                <stop offset="100%" stopColor="#050b0a" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#064e3b" />
+                <stop offset="50%" stopColor="#047857" />
+                <stop offset="100%" stopColor="#10b981" />
+              </>
+            )}
+          </linearGradient>
+
+          <linearGradient id="ios-ipad-sky-aurora" x1="0" y1="0" x2="1" y2="1">
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#0c061a" />
+                <stop offset="100%" stopColor="#04020a" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#3b0764" />
+                <stop offset="50%" stopColor="#5b21b6" />
+                <stop offset="100%" stopColor="#7c3aed" />
+              </>
+            )}
+          </linearGradient>
+
+          <linearGradient id="ios-ipad-sky-midnight" x1="0" y1="0" x2="1" y2="1">
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#09090b" />
+                <stop offset="100%" stopColor="#000000" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#1e293b" />
+                <stop offset="50%" stopColor="#334155" />
+                <stop offset="100%" stopColor="#475569" />
+              </>
+            )}
+          </linearGradient>
 
           {/* Gradients for macOS Waves Backgrounds */}
           <linearGradient id="macos-sky-default" x1="0" y1="0" x2="1" y2="1">
@@ -227,29 +405,79 @@ export function WallpaperBackground({
 
           {/* iPad-specific Slate & Metal Gradients */}
           <radialGradient id="ipad-radial-default" cx="50%" cy="50%" r="75%">
-            <stop offset="0%" stopColor="#1e293b" />
-            <stop offset="60%" stopColor="#0f172a" />
-            <stop offset="100%" stopColor="#020617" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#1e293b" />
+                <stop offset="60%" stopColor="#0f172a" />
+                <stop offset="100%" stopColor="#020617" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#e2e8f0" />
+                <stop offset="60%" stopColor="#cbd5e1" />
+                <stop offset="100%" stopColor="#94a3b8" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ipad-radial-monterey" cx="50%" cy="50%" r="75%">
-            <stop offset="0%" stopColor="#2e1065" />
-            <stop offset="60%" stopColor="#0f052d" />
-            <stop offset="100%" stopColor="#02000d" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#2e1065" />
+                <stop offset="60%" stopColor="#0f052d" />
+                <stop offset="100%" stopColor="#02000d" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#fae8ff" />
+                <stop offset="60%" stopColor="#f5d0fe" />
+                <stop offset="100%" stopColor="#d946ef" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ipad-radial-sonoma" cx="50%" cy="50%" r="75%">
-            <stop offset="0%" stopColor="#064e3b" />
-            <stop offset="60%" stopColor="#022c22" />
-            <stop offset="100%" stopColor="#000f0b" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#064e3b" />
+                <stop offset="60%" stopColor="#022c22" />
+                <stop offset="100%" stopColor="#000f0b" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#f0fdf4" />
+                <stop offset="60%" stopColor="#dcfce7" />
+                <stop offset="100%" stopColor="#86efac" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ipad-radial-aurora" cx="50%" cy="50%" r="75%">
-            <stop offset="0%" stopColor="#172554" />
-            <stop offset="60%" stopColor="#0c1836" />
-            <stop offset="100%" stopColor="#020617" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#172554" />
+                <stop offset="60%" stopColor="#0c1836" />
+                <stop offset="100%" stopColor="#020617" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#e0f2fe" />
+                <stop offset="60%" stopColor="#bae6ff" />
+                <stop offset="100%" stopColor="#7dd3fc" />
+              </>
+            )}
           </radialGradient>
           <radialGradient id="ipad-radial-midnight" cx="50%" cy="50%" r="75%">
-            <stop offset="0%" stopColor="#18181b" />
-            <stop offset="60%" stopColor="#09090b" />
-            <stop offset="100%" stopColor="#020202" />
+            {isDark ? (
+              <>
+                <stop offset="0%" stopColor="#18181b" />
+                <stop offset="60%" stopColor="#09090b" />
+                <stop offset="100%" stopColor="#020202" />
+              </>
+            ) : (
+              <>
+                <stop offset="0%" stopColor="#f4f4f5" />
+                <stop offset="65%" stopColor="#e4e4e7" />
+                <stop offset="100%" stopColor="#d4d4d8" />
+              </>
+            )}
           </radialGradient>
 
           <linearGradient id="metal-silver-grad" x1="0" y1="0" x2="1" y2="1">
@@ -277,160 +505,125 @@ export function WallpaperBackground({
 
         {/* ======================================================== */}
         {/* iOS PORTRAIT HOURGLASS LAYOUT (viewBox="0 0 900 1440") */}
-        {/* ======================================================== */}
-        {isIos && (
+        {/* ======================================================== */}        {isIos && (
           <>
-            {/* Background Canvas */}
-            {id === 'default' && <rect width="900" height="1440" fill="url(#ios-default-bottom)" />}
-            {id === 'monterey' && <rect width="900" height="1440" fill="url(#ios-monterey-bottom)" />}
-            {id === 'aurora' && <rect width="900" height="1440" fill="url(#ios-aurora-bottom)" />}
-            {id === 'sonoma' && <rect width="900" height="1440" fill="url(#ios-sonoma-bottom)" />}
-            {id === 'midnight' && <rect width="900" height="1440" fill="url(#ios-midnight-bottom)" />}
+            {/* Background Sky Canvas */}
+            {id === 'default' && <rect width="900" height="1440" fill="url(#ios-ipad-sky-default)" />}
+            {id === 'monterey' && <rect width="900" height="1440" fill="url(#ios-ipad-sky-monterey)" />}
+            {id === 'sonoma' && <rect width="900" height="1440" fill="url(#ios-ipad-sky-sonoma)" />}
+            {id === 'aurora' && <rect width="900" height="1440" fill="url(#ios-ipad-sky-aurora)" />}
+            {id === 'midnight' && <rect width="900" height="1440" fill="url(#ios-ipad-sky-midnight)" />}
 
-            {/* Central Ambient Glow Flare (only render when graphicsAcceleration is active) */}
-            {graphicsAcceleration && (
-              <>
-                {id === 'default' && (
-                  <circle cx="450" cy="720" r="280" fill="#2563eb" opacity="0.3" filter={auroraBlur2} />
-                )}
-                {id === 'monterey' && (
-                  <circle cx="450" cy="720" r="280" fill="#db2777" opacity="0.32" filter={auroraBlur2} />
-                )}
-                {id === 'aurora' && (
-                  <circle cx="450" cy="720" r="280" fill="#7c3aed" opacity="0.35" filter={auroraBlur2} />
-                )}
-                {id === 'sonoma' && (
-                  <circle cx="450" cy="720" r="280" fill="#10b981" opacity="0.28" filter={auroraBlur2} />
-                )}
-                {id === 'midnight' && (
-                  <circle cx="450" cy="720" r="240" fill="#3f3f46" opacity="0.2" filter={auroraBlur2} />
-                )}
-              </>
-            )}
-
-            {/* Top Funnel / Cup */}
+            {/* Wave 4 */}
             <path
-              d="M-100,-100 L1000,-100 L1000,500 C750,780 150,780 -100,500 Z"
+              d="M-100,500 C150,300 750,700 1000,550 L1000,1540 L-100,1540 Z"
               fill={
-                id === 'default'
-                  ? 'url(#ios-default-top)'
-                  : id === 'monterey'
-                  ? 'url(#ios-monterey-top)'
-                  : id === 'aurora'
-                  ? 'url(#ios-aurora-top)'
-                  : id === 'sonoma'
-                  ? 'url(#ios-sonoma-top)'
-                  : 'url(#ios-midnight-top)'
+                id === 'default' ? (isDark ? '#0f172a' : '#1e3a8a') :
+                id === 'monterey' ? (isDark ? '#3b0764' : '#c084fc') :
+                id === 'sonoma' ? (isDark ? '#064e3b' : '#a7f3d0') :
+                id === 'aurora' ? (isDark ? '#1e1b4b' : '#8b5cf6') :
+                /* midnight */ (isDark ? '#18181b' : '#334155')
               }
-              filter={iosCupShadow}
+              opacity={
+                id === 'default' ? (isDark ? 0.7 : 0.2) :
+                id === 'monterey' ? (isDark ? 0.5 : 0.45) :
+                id === 'sonoma' ? (isDark ? 0.6 : 0.5) :
+                id === 'aurora' ? (isDark ? 0.55 : 0.5) :
+                /* midnight */ (isDark ? 0.7 : 0.5)
+              }
+              filter={waveShadow}
             />
 
-            {/* Bottom Funnel / Cup */}
+            {/* Wave 3 */}
             <path
-              d="M-100,1540 L1000,1540 L1000,940 C750,660 150,660 -100,940 Z"
+              d="M-100,650 C200,500 800,850 1000,720 L1000,1540 L-100,1540 Z"
               fill={
-                id === 'default'
-                  ? 'url(#ios-default-bottom)'
-                  : id === 'monterey'
-                  ? 'url(#ios-monterey-bottom)'
-                  : id === 'aurora'
-                  ? 'url(#ios-aurora-bottom)'
-                  : id === 'sonoma'
-                  ? 'url(#ios-sonoma-bottom)'
-                  : 'url(#ios-midnight-bottom)'
+                id === 'default' ? (isDark ? '#1e3a8a' : '#2563eb') :
+                id === 'monterey' ? (isDark ? '#701a75' : '#fbcfe8') :
+                id === 'sonoma' ? (isDark ? '#047857' : '#f0fdf4') :
+                id === 'aurora' ? (isDark ? '#5b21b6' : '#a78bfa') :
+                /* midnight */ (isDark ? '#27272a' : '#475569')
               }
-              filter={iosCupShadow}
+              opacity={
+                id === 'default' ? (isDark ? 0.65 : 0.4) :
+                id === 'monterey' ? (isDark ? 0.65 : 0.55) :
+                id === 'sonoma' ? (isDark ? 0.65 : 0.55) :
+                id === 'aurora' ? (isDark ? 0.65 : 0.6) :
+                /* midnight */ (isDark ? 0.65 : 0.55)
+              }
+              filter={waveShadow}
+            />
+            {/* Highlight line for Monterey/Sonoma/Aurora Wave 3 */}
+            {graphicsAcceleration && id === 'monterey' && (
+              <path
+                d="M-100,650 C200,500 800,850 1000,720"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={thumbnail ? 1 : 2.5}
+                opacity="0.3"
+                filter={glowBlur}
+              />
+            )}
+            {graphicsAcceleration && id === 'sonoma' && (
+              <path
+                d="M-100,650 C200,500 800,850 1000,720"
+                fill="none"
+                stroke="#34d399"
+                strokeWidth={thumbnail ? 1 : 2}
+                opacity="0.5"
+                filter={glowBlur}
+              />
+            )}
+            {graphicsAcceleration && id === 'aurora' && (
+              <path
+                d="M-100,650 C200,500 800,850 1000,720"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={thumbnail ? 1.5 : 4}
+                opacity="0.32"
+                filter={glowBlur}
+              />
+            )}
+
+            {/* Wave 2 */}
+            <path
+              d="M-100,800 C250,650 850,1000 1000,880 L1000,1540 L-100,1540 Z"
+              fill={
+                id === 'default' ? (isDark ? '#2563eb' : '#3b82f6') :
+                id === 'monterey' ? (isDark ? '#9f1239' : '#f43f5e') :
+                id === 'sonoma' ? (isDark ? '#059669' : '#d1fae5') :
+                id === 'aurora' ? (isDark ? '#701a75' : '#c084fc') :
+                /* midnight */ (isDark ? '#3f3f46' : '#64748b')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.6 : 0.5) :
+                id === 'monterey' ? (isDark ? 0.7 : 0.65) :
+                id === 'sonoma' ? (isDark ? 0.7 : 0.6) :
+                id === 'aurora' ? (isDark ? 0.72 : 0.65) :
+                /* midnight */ (isDark ? 0.6 : 0.6)
+              }
+              filter={waveShadow}
             />
 
-            {/* Top Glowing Arc (only render when graphicsAcceleration is active) */}
-            {graphicsAcceleration && (
-              <>
-                <path
-                  d="M-100,500 C150,780 750,780 1000,500"
-                  fill="none"
-                  stroke="url(#ios-arc-glow)"
-                  strokeWidth={thumbnail ? 4.5 : 14}
-                  opacity="0.3"
-                  filter={glowBlur}
-                  style={{
-                    '--glow-color':
-                      id === 'default'
-                        ? '#38bdf8'
-                        : id === 'monterey'
-                        ? '#f472b6'
-                        : id === 'aurora'
-                        ? '#c084fc'
-                        : id === 'sonoma'
-                        ? '#10b981'
-                        : '#ffffff',
-                  } as React.CSSProperties}
-                />
-                <path
-                  d="M-100,500 C150,780 750,780 1000,500"
-                  fill="none"
-                  stroke="url(#ios-arc-glow)"
-                  strokeWidth={thumbnail ? 1.25 : 3.5}
-                  opacity="0.9"
-                  style={{
-                    '--glow-color':
-                      id === 'default'
-                        ? '#e0f2fe'
-                        : id === 'monterey'
-                        ? '#fdf2f8'
-                        : id === 'aurora'
-                        ? '#f5f3ff'
-                        : id === 'sonoma'
-                        ? '#d1fae5'
-                        : '#ffffff',
-                  } as React.CSSProperties}
-                />
-              </>
-            )}
-
-            {/* Bottom Glowing Arc (only render when graphicsAcceleration is active) */}
-            {graphicsAcceleration && (
-              <>
-                <path
-                  d="M-100,940 C150,660 750,660 1000,940"
-                  fill="none"
-                  stroke="url(#ios-arc-glow)"
-                  strokeWidth={thumbnail ? 4.5 : 14}
-                  opacity="0.28"
-                  filter={glowBlur}
-                  style={{
-                    '--glow-color':
-                      id === 'default'
-                        ? '#60a5fa'
-                        : id === 'monterey'
-                        ? '#a855f7'
-                        : id === 'aurora'
-                        ? '#818cf8'
-                        : id === 'sonoma'
-                        ? '#059669'
-                        : '#71717a',
-                  } as React.CSSProperties}
-                />
-                <path
-                  d="M-100,940 C150,660 750,660 1000,940"
-                  fill="none"
-                  stroke="url(#ios-arc-glow)"
-                  strokeWidth={thumbnail ? 1.25 : 3.5}
-                  opacity="0.85"
-                  style={{
-                    '--glow-color':
-                      id === 'default'
-                        ? '#dbeafe'
-                        : id === 'monterey'
-                        ? '#ddd6fe'
-                        : id === 'aurora'
-                        ? '#e0e7ff'
-                        : id === 'sonoma'
-                        ? '#ecfdf5'
-                        : '#e4e4e7',
-                  } as React.CSSProperties}
-                />
-              </>
-            )}
+            {/* Wave 1 */}
+            <path
+              d="M-100,950 C300,800 900,1150 1000,1020 L1000,1540 L-100,1540 Z"
+              fill={
+                id === 'default' ? (isDark ? '#3b82f6' : '#60a5fa') :
+                id === 'monterey' ? (isDark ? '#881337' : '#be123c') :
+                id === 'sonoma' ? (isDark ? '#065f46' : '#ffffff') :
+                id === 'aurora' ? (isDark ? '#3b0764' : '#86198f') :
+                /* midnight */ (isDark ? '#52525b' : '#94a3b8')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.75 : 0.6) :
+                id === 'monterey' ? (isDark ? 0.85 : 0.75) :
+                id === 'sonoma' ? (isDark ? 0.85 : 0.7) :
+                id === 'aurora' ? (isDark ? 0.85 : 0.75) :
+                /* midnight */ (isDark ? 0.75 : 0.7)
+              }
+              filter={waveShadow}
+            />
           </>
         )}
 
@@ -439,90 +632,122 @@ export function WallpaperBackground({
         {/* ======================================================== */}
         {layout === 'ipad' && (
           <>
-            {/* Background Canvas */}
-            {id === 'default' && <rect width="1366" height="1024" fill="url(#ipad-radial-default)" />}
-            {id === 'monterey' && <rect width="1366" height="1024" fill="url(#ipad-radial-monterey)" />}
-            {id === 'sonoma' && <rect width="1366" height="1024" fill="url(#ipad-radial-sonoma)" />}
-            {id === 'aurora' && <rect width="1366" height="1024" fill="url(#ipad-radial-aurora)" />}
-            {id === 'midnight' && <rect width="1366" height="1024" fill="url(#ipad-radial-midnight)" />}
+            {/* Background Sky Canvas */}
+            {id === 'default' && <rect width="1366" height="1024" fill="url(#ios-ipad-sky-default)" />}
+            {id === 'monterey' && <rect width="1366" height="1024" fill="url(#ios-ipad-sky-monterey)" />}
+            {id === 'sonoma' && <rect width="1366" height="1024" fill="url(#ios-ipad-sky-sonoma)" />}
+            {id === 'aurora' && <rect width="1366" height="1024" fill="url(#ios-ipad-sky-aurora)" />}
+            {id === 'midnight' && <rect width="1366" height="1024" fill="url(#ios-ipad-sky-midnight)" />}
 
-            {/* Central Glow (if graphicsAcceleration is active) */}
-            {graphicsAcceleration && (
-              <>
-                {id === 'default' && <circle cx="683" cy="512" r="400" fill="#475569" opacity="0.15" filter="url(#glow-blur)" />}
-                {id === 'monterey' && <circle cx="683" cy="512" r="400" fill="#701a75" opacity="0.12" filter="url(#glow-blur)" />}
-                {id === 'sonoma' && <circle cx="683" cy="512" r="400" fill="#064e3b" opacity="0.12" filter="url(#glow-blur)" />}
-                {id === 'aurora' && <circle cx="683" cy="512" r="400" fill="#1e3b8a" opacity="0.15" filter="url(#glow-blur)" />}
-                {id === 'midnight' && <circle cx="683" cy="512" r="400" fill="#27272a" opacity="0.1" filter="url(#glow-blur)" />}
-              </>
+            {/* Wave 4 */}
+            <path
+              d="M-100,200 C250,70 700,430 1500,250 L1500,1100 L-100,1100 Z"
+              fill={
+                id === 'default' ? (isDark ? '#0f172a' : '#1e3a8a') :
+                id === 'monterey' ? (isDark ? '#3b0764' : '#c084fc') :
+                id === 'sonoma' ? (isDark ? '#064e3b' : '#a7f3d0') :
+                id === 'aurora' ? (isDark ? '#1e1b4b' : '#8b5cf6') :
+                /* midnight */ (isDark ? '#18181b' : '#334155')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.7 : 0.2) :
+                id === 'monterey' ? (isDark ? 0.5 : 0.45) :
+                id === 'sonoma' ? (isDark ? 0.6 : 0.5) :
+                id === 'aurora' ? (isDark ? 0.55 : 0.5) :
+                /* midnight */ (isDark ? 0.7 : 0.5)
+              }
+              filter={waveShadow}
+            />
+
+            {/* Wave 3 */}
+            <path
+              d="M-100,320 C350,220 750,530 1500,360 L1500,1100 L-100,1100 Z"
+              fill={
+                id === 'default' ? (isDark ? '#1e3a8a' : '#2563eb') :
+                id === 'monterey' ? (isDark ? '#701a75' : '#fbcfe8') :
+                id === 'sonoma' ? (isDark ? '#047857' : '#f0fdf4') :
+                id === 'aurora' ? (isDark ? '#5b21b6' : '#a78bfa') :
+                /* midnight */ (isDark ? '#27272a' : '#475569')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.65 : 0.4) :
+                id === 'monterey' ? (isDark ? 0.65 : 0.55) :
+                id === 'sonoma' ? (isDark ? 0.65 : 0.55) :
+                id === 'aurora' ? (isDark ? 0.65 : 0.6) :
+                /* midnight */ (isDark ? 0.65 : 0.55)
+              }
+              filter={waveShadow}
+            />
+            {/* Highlight line for Monterey/Sonoma/Aurora Wave 3 */}
+            {graphicsAcceleration && id === 'monterey' && (
+              <path
+                d="M-100,320 C350,220 750,530 1500,360"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={thumbnail ? 1 : 2.5}
+                opacity="0.3"
+                filter={glowBlur}
+              />
+            )}
+            {graphicsAcceleration && id === 'sonoma' && (
+              <path
+                d="M-100,320 C350,220 750,530 1500,360"
+                fill="none"
+                stroke="#34d399"
+                strokeWidth={thumbnail ? 1 : 2}
+                opacity="0.5"
+                filter={glowBlur}
+              />
+            )}
+            {graphicsAcceleration && id === 'aurora' && (
+              <path
+                d="M-100,320 C350,220 750,530 1500,360"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={thumbnail ? 1.5 : 4}
+                opacity="0.32"
+                filter={glowBlur}
+              />
             )}
 
-            {/* Overlapping Curved Metallic Sheets/Waves */}
-            {/* Wave 3 (Back) */}
+            {/* Wave 2 */}
             <path
-              d="M -100,350 C 300,150 900,600 1500,300 L 1500,1100 L -100,1100 Z"
+              d="M-100,440 C400,340 800,630 1500,480 L1500,1100 L-100,1100 Z"
               fill={
-                id === 'default' ? '#0f172a' :
-                id === 'monterey' ? '#120720' :
-                id === 'sonoma' ? '#011c16' :
-                id === 'aurora' ? '#08112b' : '#09090b'
+                id === 'default' ? (isDark ? '#2563eb' : '#3b82f6') :
+                id === 'monterey' ? (isDark ? '#9f1239' : '#f43f5e') :
+                id === 'sonoma' ? (isDark ? '#059669' : '#d1fae5') :
+                id === 'aurora' ? (isDark ? '#701a75' : '#c084fc') :
+                /* midnight */ (isDark ? '#3f3f46' : '#64748b')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.6 : 0.5) :
+                id === 'monterey' ? (isDark ? 0.7 : 0.65) :
+                id === 'sonoma' ? (isDark ? 0.7 : 0.6) :
+                id === 'aurora' ? (isDark ? 0.72 : 0.65) :
+                /* midnight */ (isDark ? 0.6 : 0.6)
               }
               filter={waveShadow}
-            />
-            <path
-              d="M -100,350 C 300,150 900,600 1500,300"
-              fill="none"
-              stroke={
-                id === 'default' ? 'url(#metal-silver-grad)' :
-                id === 'monterey' ? '#7c3aed' :
-                id === 'sonoma' ? '#10b981' :
-                id === 'aurora' ? '#3b82f6' : '#52525b'
-              }
-              strokeWidth={thumbnail ? 2.5 : 5}
-              opacity="0.8"
             />
 
-            {/* Wave 2 (Middle) */}
+            {/* Wave 1 */}
             <path
-              d="M -100,550 C 400,650 800,350 1500,600 L 1500,1100 L -100,1100 Z"
+              d="M-100,560 C450,480 850,750 1500,610 L1500,1100 L-100,1100 Z"
               fill={
-                id === 'default' ? '#1e293b' :
-                id === 'monterey' ? '#1e113a' :
-                id === 'sonoma' ? '#022c22' :
-                id === 'aurora' ? '#0c1f4e' : '#18181b'
+                id === 'default' ? (isDark ? '#3b82f6' : '#60a5fa') :
+                id === 'monterey' ? (isDark ? '#881337' : '#be123c') :
+                id === 'sonoma' ? (isDark ? '#065f46' : '#ffffff') :
+                id === 'aurora' ? (isDark ? '#3b0764' : '#86198f') :
+                /* midnight */ (isDark ? '#52525b' : '#94a3b8')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.75 : 0.6) :
+                id === 'monterey' ? (isDark ? 0.85 : 0.75) :
+                id === 'sonoma' ? (isDark ? 0.85 : 0.7) :
+                id === 'aurora' ? (isDark ? 0.85 : 0.75) :
+                /* midnight */ (isDark ? 0.75 : 0.7)
               }
               filter={waveShadow}
-            />
-            <path
-              d="M -100,550 C 400,650 800,350 1500,600"
-              fill="none"
-              stroke="url(#metal-chrome-grad)"
-              strokeWidth={thumbnail ? 3 : 6}
-              opacity="0.9"
-            />
-
-            {/* Wave 1 (Front) */}
-            <path
-              d="M -100,750 C 350,650 1000,850 1500,700 L 1500,1100 L -100,1100 Z"
-              fill={
-                id === 'default' ? '#090d16' :
-                id === 'monterey' ? '#090412' :
-                id === 'sonoma' ? '#000c09' :
-                id === 'aurora' ? '#020718' : '#020202'
-              }
-              filter={waveShadow}
-            />
-            <path
-              d="M -100,750 C 350,650 1000,850 1500,700"
-              fill="none"
-              stroke={
-                id === 'default' ? 'url(#metal-silver-grad)' :
-                id === 'monterey' ? '#db2777' :
-                id === 'sonoma' ? '#34d399' :
-                id === 'aurora' ? '#60a5fa' : '#a1a1aa'
-              }
-              strokeWidth={thumbnail ? 2 : 4}
-              opacity="0.85"
             />
           </>
         )}
@@ -533,228 +758,124 @@ export function WallpaperBackground({
         {layout === 'macos' && (
           <>
             {/* Background Sky */}
-            {id === 'default' && <rect width="1440" height="900" fill="url(#macos-sky-default)" />}
-            {id === 'monterey' && <rect width="1440" height="900" fill="url(#macos-sky-monterey)" />}
-            {id === 'sonoma' && <rect width="1440" height="900" fill="url(#macos-sky-sonoma)" />}
-            {id === 'aurora' && <rect width="1440" height="900" fill="url(#macos-sky-aurora)" />}
-            {id === 'midnight' && <rect width="1440" height="900" fill="url(#macos-sky-midnight)" />}
+            {id === 'default' && <rect width="1440" height="900" fill="url(#ios-ipad-sky-default)" />}
+            {id === 'monterey' && <rect width="1440" height="900" fill="url(#ios-ipad-sky-monterey)" />}
+            {id === 'sonoma' && <rect width="1440" height="900" fill="url(#ios-ipad-sky-sonoma)" />}
+            {id === 'aurora' && <rect width="1440" height="900" fill="url(#ios-ipad-sky-aurora)" />}
+            {id === 'midnight' && <rect width="1440" height="900" fill="url(#ios-ipad-sky-midnight)" />}
 
             {/* --- macOS Wave Shapes --- */}
 
-            {id === 'default' && (
-              <>
-                {/* Wave 4 */}
-                <path
-                  d="M-100,180 C300,50 850,380 1600,220 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#0f172a' : '#1e3a8a'}
-                  opacity={isDark ? 0.7 : 0.2}
-                  filter={waveShadow}
-                />
-                {/* Wave 3 */}
-                <path
-                  d="M-100,280 C400,190 900,470 1600,320 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#1e3a8a' : '#2563eb'}
-                  opacity={isDark ? 0.65 : 0.4}
-                  filter={waveShadow}
-                />
-                {/* Wave 2 */}
-                <path
-                  d="M-100,380 C450,300 950,560 1600,420 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#2563eb' : '#3b82f6'}
-                  opacity={isDark ? 0.6 : 0.5}
-                  filter={waveShadow}
-                />
-                {/* Wave 1 */}
-                <path
-                  d="M-100,490 C500,420 1000,660 1600,540 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#3b82f6' : '#60a5fa'}
-                  opacity={isDark ? 0.75 : 0.6}
-                  filter={waveShadow}
-                />
-              </>
+            {/* Wave 4 */}
+            <path
+              d="M-100,180 C300,50 850,380 1600,220 L1600,1000 L-100,1000 Z"
+              fill={
+                id === 'default' ? (isDark ? '#0f172a' : '#1e3a8a') :
+                id === 'monterey' ? (isDark ? '#3b0764' : '#701a75') :
+                id === 'sonoma' ? (isDark ? '#064e3b' : '#047857') :
+                id === 'aurora' ? (isDark ? '#1e1b4b' : '#3b0764') :
+                /* midnight */ (isDark ? '#18181b' : '#334155')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.7 : 0.5) :
+                id === 'monterey' ? (isDark ? 0.5 : 0.5) :
+                id === 'sonoma' ? (isDark ? 0.6 : 0.5) :
+                id === 'aurora' ? (isDark ? 0.55 : 0.5) :
+                /* midnight */ (isDark ? 0.7 : 0.5)
+              }
+              filter={waveShadow}
+            />
+
+            {/* Wave 3 */}
+            <path
+              d="M-100,280 C400,190 900,470 1600,320 L1600,1000 L-100,1000 Z"
+              fill={
+                id === 'default' ? (isDark ? '#1e3a8a' : '#2563eb') :
+                id === 'monterey' ? (isDark ? '#701a75' : '#9d174d') :
+                id === 'sonoma' ? (isDark ? '#047857' : '#059669') :
+                id === 'aurora' ? (isDark ? '#5b21b6' : '#4f46e5') :
+                /* midnight */ (isDark ? '#27272a' : '#475569')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.65 : 0.55) :
+                id === 'monterey' ? (isDark ? 0.65 : 0.55) :
+                id === 'sonoma' ? (isDark ? 0.65 : 0.55) :
+                id === 'aurora' ? (isDark ? 0.65 : 0.55) :
+                /* midnight */ (isDark ? 0.65 : 0.55)
+              }
+              filter={waveShadow}
+            />
+            {/* Highlight line for Monterey/Sonoma/Aurora Wave 3 */}
+            {graphicsAcceleration && id === 'monterey' && (
+              <path
+                d="M-100,250 C400,180 900,460 1600,310"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={thumbnail ? 1 : 2.5}
+                opacity="0.3"
+                filter={glowBlur}
+              />
+            )}
+            {graphicsAcceleration && id === 'sonoma' && (
+              <path
+                d="M-100,330 C300,200 850,480 1600,370"
+                fill="none"
+                stroke="#34d399"
+                strokeWidth={thumbnail ? 1 : 2}
+                opacity="0.5"
+                filter={glowBlur}
+              />
+            )}
+            {graphicsAcceleration && id === 'aurora' && (
+              <path
+                d="M-100,250 C400,180 900,460 1600,310"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth={thumbnail ? 1.5 : 4}
+                opacity="0.32"
+                filter={glowBlur}
+              />
             )}
 
-            {id === 'monterey' && (
-              <>
-                {/* Pure Red/Pink/Magenta Sunset Waves */}
-                {/* Wave 4 */}
-                <path
-                  d="M-100,160 C350,50 850,380 1600,220 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#3b0764' : '#c084fc'}
-                  opacity={isDark ? 0.5 : 0.45}
-                  filter={waveShadow}
-                />
-                {/* Wave 3 */}
-                <path
-                  d="M-100,250 C400,180 900,460 1600,310 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#701a75' : '#fbcfe8'}
-                  opacity={isDark ? 0.65 : 0.55}
-                  filter={waveShadow}
-                />
-                {/* Wave 2 */}
-                <path
-                  d="M-100,330 C450,270 950,530 1600,390 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#9f1239' : '#f43f5e'}
-                  opacity={isDark ? 0.7 : 0.65}
-                  filter={waveShadow}
-                />
-                {/* Wave 1 */}
-                <path
-                  d="M-100,420 C500,370 1000,610 1600,510 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#881337' : '#be123c'}
-                  opacity={isDark ? 0.85 : 0.75}
-                  filter={waveShadow}
-                />
-                {/* Highlight line */}
-                {graphicsAcceleration && (
-                  <path
-                    d="M-100,250 C400,180 900,460 1600,310"
-                    fill="none"
-                    stroke="#ffffff"
-                    strokeWidth={thumbnail ? 1 : 2.5}
-                    opacity="0.3"
-                    filter={glowBlur}
-                  />
-                )}
-              </>
-            )}
+            {/* Wave 2 */}
+            <path
+              d="M-100,380 C450,300 950,560 1600,420 L1600,1000 L-100,1000 Z"
+              fill={
+                id === 'default' ? (isDark ? '#2563eb' : '#3b82f6') :
+                id === 'monterey' ? (isDark ? '#9f1239' : '#c026d3') :
+                id === 'sonoma' ? (isDark ? '#059669' : '#10b981') :
+                id === 'aurora' ? (isDark ? '#701a75' : '#6366f1') :
+                /* midnight */ (isDark ? '#3f3f46' : '#64748b')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.6 : 0.6) :
+                id === 'monterey' ? (isDark ? 0.7 : 0.6) :
+                id === 'sonoma' ? (isDark ? 0.7 : 0.6) :
+                id === 'aurora' ? (isDark ? 0.72 : 0.6) :
+                /* midnight */ (isDark ? 0.6 : 0.6)
+              }
+              filter={waveShadow}
+            />
 
-            {id === 'sonoma' && (
-              <>
-                {/* Premium Emerald & Mint Green Wave Theme */}
-                {/* Wave 4 */}
-                <path
-                  d="M-100,180 C250,80 800,350 1600,240 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#064e3b' : '#a7f3d0'}
-                  opacity={isDark ? 0.6 : 0.5}
-                  filter={waveShadow}
-                />
-                {/* Wave 3 */}
-                <path
-                  d="M-100,330 C300,200 850,480 1600,370 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#047857' : '#f0fdf4'}
-                  opacity={isDark ? 0.65 : 0.55}
-                  filter={waveShadow}
-                />
-                {/* Wave 2 */}
-                <path
-                  d="M-100,480 C350,320 900,580 1600,490 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#059669' : '#d1fae5'}
-                  opacity={isDark ? 0.7 : 0.6}
-                  filter={waveShadow}
-                />
-                {/* Wave 1 */}
-                <path
-                  d="M-100,620 C400,450 950,700 1600,600 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#065f46' : '#ffffff'}
-                  opacity={isDark ? 0.85 : 0.7}
-                  filter={waveShadow}
-                />
-                {/* Emerald Highlight reflection */}
-                {graphicsAcceleration && (
-                  <path
-                    d="M-100,330 C300,200 850,480 1600,370"
-                    fill="none"
-                    stroke="#34d399"
-                    strokeWidth={thumbnail ? 1 : 2}
-                    opacity="0.5"
-                    filter={glowBlur}
-                  />
-                )}
-              </>
-            )}
-
-            {id === 'aurora' && (
-              <>
-                {/* Deep Purple/Violet Wave Canyons */}
-                {/* Wave 4 */}
-                <path
-                  d="M-100,160 C350,50 850,380 1600,220 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#1e1b4b' : '#8b5cf6'}
-                  opacity={isDark ? 0.55 : 0.5}
-                  filter={waveShadow}
-                />
-                {/* Wave 3 */}
-                <path
-                  d="M-100,250 C400,180 900,460 1600,310 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#5b21b6' : '#a78bfa'}
-                  opacity={isDark ? 0.65 : 0.6}
-                  filter={waveShadow}
-                />
-                {/* Wave 2 */}
-                <path
-                  d="M-100,340 C450,280 950,540 1600,400 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#701a75' : '#c084fc'}
-                  opacity={isDark ? 0.72 : 0.65}
-                  filter={waveShadow}
-                />
-                {/* Wave 1 */}
-                <path
-                  d="M-100,440 C500,380 1000,640 1600,530 L1600,1000 L-100,1000 Z"
-                  fill={isDark ? '#3b0764' : '#86198f'}
-                  opacity={isDark ? 0.85 : 0.75}
-                  filter={waveShadow}
-                />
-                {/* Glowing arc highlights */}
-                {graphicsAcceleration && (
-                  <path
-                    d="M-100,250 C400,180 900,460 1600,310"
-                    fill="none"
-                    stroke="#ffffff"
-                    strokeWidth={thumbnail ? 1.5 : 4}
-                    opacity="0.32"
-                    filter={glowBlur}
-                  />
-                )}
-              </>
-            )}
-
-            {id === 'midnight' && (
-              <>
-                {/* macOS Midnight Folds / Metallic Curves */}
-                {/* Plate 3 (Back) */}
-                <path
-                  d="M-100,200 C300,500 1140,500 1640,200 L1640,1000 L-100,1000 Z"
-                  fill="url(#ios-midnight-top)"
-                  filter={waveShadow}
-                />
-                <path
-                  d="M-100,200 C300,500 1140,500 1640,200"
-                  fill="none"
-                  stroke="url(#metallic-blue)"
-                  strokeWidth={thumbnail ? 1.5 : 3.5}
-                  opacity="0.95"
-                />
-
-                {/* Plate 2 */}
-                <path
-                  d="M-100,450 C300,750 1140,750 1640,450 L1640,1000 L-100,1000 Z"
-                  fill="url(#ios-midnight-bottom)"
-                  filter={waveShadow}
-                />
-                <path
-                  d="M-100,450 C300,750 1140,750 1640,450"
-                  fill="none"
-                  stroke="url(#metallic-gold)"
-                  strokeWidth={thumbnail ? 1.5 : 3.5}
-                  opacity="0.95"
-                />
-
-                {/* Plate 1 (Front) */}
-                <path
-                  d="M-100,700 C300,1000 1140,1000 1640,700 L1640,1000 L-100,1000 Z"
-                  fill="url(#ios-midnight-top)"
-                  filter={waveShadow}
-                />
-                <path
-                  d="M-100,700 C300,1000 1140,1000 1640,700"
-                  fill="none"
-                  stroke="#ffffff"
-                  strokeWidth={thumbnail ? 1 : 2}
-                  opacity="0.8"
-                />
-              </>
-            )}
+            {/* Wave 1 */}
+            <path
+              d="M-100,490 C500,420 1000,660 1600,540 L1600,1000 L-100,1000 Z"
+              fill={
+                id === 'default' ? (isDark ? '#3b82f6' : '#60a5fa') :
+                id === 'monterey' ? (isDark ? '#881337' : '#db2777') :
+                id === 'sonoma' ? (isDark ? '#065f46' : '#34d399') :
+                id === 'aurora' ? (isDark ? '#3b0764' : '#818cf8') :
+                /* midnight */ (isDark ? '#52525b' : '#94a3b8')
+              }
+              opacity={
+                id === 'default' ? (isDark ? 0.75 : 0.7) :
+                id === 'monterey' ? (isDark ? 0.85 : 0.7) :
+                id === 'sonoma' ? (isDark ? 0.85 : 0.7) :
+                id === 'aurora' ? (isDark ? 0.85 : 0.7) :
+                /* midnight */ (isDark ? 0.75 : 0.7)
+              }
+              filter={waveShadow}
+            />
           </>
         )}
 
