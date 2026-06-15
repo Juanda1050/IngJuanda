@@ -59,7 +59,7 @@ import {
   TooltipTrigger,
 } from "@/shared/ui";
 import { cn } from "@/lib/utils";
-import { formatWithAppleEmojis } from "@/components/apple-emoji";
+import { formatWithAppleEmojis } from "@/components/apple-emoji-utils";
 import { TutorialTour } from "@/components/tutorial-tour";
 import { MacSystemOverlays } from "@/components/mac-system-overlays";
 import {

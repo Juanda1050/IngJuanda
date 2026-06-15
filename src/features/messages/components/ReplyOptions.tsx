@@ -1,5 +1,5 @@
 import React from "react";
-import { formatWithAppleEmojis } from "../../../components/apple-emoji";
+import { formatWithAppleEmojis } from "../../../components/apple-emoji-utils";
 import type { DialogOption } from "../types";
 
 interface ReplyOptionsProps {

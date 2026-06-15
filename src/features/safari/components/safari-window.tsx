@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight, RotateCw, Globe, ArrowUpRight, Mail } from '
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
 import { Badge } from '@/shared/ui'
 import { type ExperienceItem, type ProjectItem, type ContactItem } from '@/types/portfolio'
-import { formatWithAppleEmojis } from '@/components/apple-emoji'
+import { formatWithAppleEmojis } from '@/components/apple-emoji-utils'
 
 export function SafariWindow() {
   const { t } = useTranslation('common')

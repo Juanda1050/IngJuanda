@@ -10,57 +10,34 @@ export const notesEs = {
       title: "Sobre Juan Daniel",
       date: "Hoy, 12:00 PM",
       category: "Perfil",
-      content: `Soy un Ingeniero de Software Fullstack apasionado con más de 4 años de experiencia construyendo productos digitales y aplicaciones empresariales.
-
-Áreas de enfoque:
-• Migraciones tecnológicas modernas (React 18, .NET 8)
-• Bibliotecas de componentes UI reutilizables y diseño UX/UI (Figma)
-• Domain-Driven Design (DDD) y microservicios en .NET
-
-Pasatiempos e Intereses:
-• Programar proyectos personales y explorar nuevas APIs
-• Jugar videojuegos y leer ciencia ficción
-• Entusiasta del café de especialidad`
+      content: `🎵 Traigo los audífonos puestos casi todo el día. Escucho principalmente a Tyler, The Creator, Drake, Bad Bunny, Joan, Camilo Séptimo y Luis Miguel.
+🐶 Mi perro se llama Tyler por Tyler, The Creator.
+🎮 Juego American Truck Simulator, FIFA o Fortnite cuando tengo tiempo.
+📚 Leo novelas de misterio, mi saga favorita es Arsène Lupin. También escribo de vez en cuando.
+🏋️‍♂️ Voy al gimnasio.
+🍕 Me gusta la pizza hawaiana.`,
     },
     {
       id: "career_path",
       title: "Trayectoria Profesional",
       date: "Ayer, 4:30 PM",
       category: "Experiencia",
-      content: `Axosnet (Mar 2024 - Actualidad)
-Puesto: Software Engineer
-Logros Clave:
-• Liderazgo del rediseño integral de Axosmoney (Figma, funcional y desarrollo).
-• Diseño y mantenimiento de la librería corporativa Axosnet Components.
-• Modernización tecnológica adoptando React 18 y .NET 8.
+      content: `Como desarrollador, me gusta ir más allá de solo escribir código. Me enfoco en crear productos que realmente sirvan, que tengan una buena experiencia de usuario y que resuelvan problemas de forma sencilla. Siempre estoy buscando aprender cosas nuevas para mejorar lo que construyo.
 
-Axsis Tecnología S.A. de C.V. (Jul 2022 - Mar 2024)
-Puesto: Software Engineer
-Logros Clave:
-• Diseño e implementación de microservicios en .NET con enfoque DDD.
-• Gestión de estado con MobX y automatización de reportes (PDF/Excel) y XML fiscales.
-• Refactorización de frontend monolítico hacia arquitectura limpia y modular.
+Mi experiencia más reciente ha sido en Axosnet, donde he aprendido mucho sobre cómo liderar un rediseño completo, desde sentarme a planear el UX/UI en Figma hasta coordinar el desarrollo de Axosmoney. También le agarré mucho gusto a la creación de librerías de componentes reutilizables para ayudar a otros equipos a programar de forma más rápida y consistente.
 
-Educación:
-• Ingeniería en Tecnología de Software - Facultad de Ingeniería Mecánica y Eléctrica (FIME) (Graduado en 2023)`
+Antes de eso estuve en Axsis Tecnología, que fue la base de mi carrera porque ahí fue donde inicié como profesional. Me metí de lleno en el desarrollo de microservicios con .NET y arquitectura DDD, y aprendí a valorar el código limpio refactorizando módulos pesados y automatizando procesos complicados de datos y reportes.`,
     },
     {
       id: "tech_stack",
       title: "Tecnologías y Configuración",
       date: "3 de junio de 2026",
       category: "Técnico",
-      content: `Tecnologías Principales:
-• Lenguajes: JavaScript, TypeScript, C# (.NET), SQL, HTML, CSS
-• Frameworks: React, Next.js, Node.js
-• Herramientas: Git, Figma, AWS, Open AI, ESLint
-• Librerías: MobX, Zustand, Redux, TailwindCSS
-• Arquitectura: Domain-Driven Design (DDD), Microservices, APIs REST
+      content: `Si tuviera que platicar sobre lo que uso en el día a día, mi stack favorito es definitivamente React o Next.js para el frontend, junto con Node.js o NestJS para el backend (que es lo que ando aprendiendo y usando bastante ahorita). También uso TypeScript para evitar dolores de cabeza con los tipos y estructurar mejor el código.
 
-Entorno de Desarrollo:
-• SO: macOS / Windows
-• Editor: VS Code / Figma
-• Terminal: Zsh con Oh-My-Zsh y prompt Starship
-• Hardware: Laptop + Monitor Ultra-wide`
-    }
-  ]
+Para la base de datos y backend rápido me gusta usar Supabase, y si el proyecto es más tradicional o empresarial, C# con .NET es mi opción para armar arquitecturas sólidas como microservicios o DDD. El diseño lo suelo trabajar en Figma y de ahí me paso a TailwindCSS para maquetar rápido.
+
+Siempre ando armando proyectos personales para seguir aprendiendo cosas nuevas, y últimamente me estoy enfocando no solo en lo técnico, sino también en aprender a ser un mejor líder de equipo.`,
+    },
+  ],
 } as const;

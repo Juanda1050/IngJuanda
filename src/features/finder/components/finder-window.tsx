@@ -3,7 +3,7 @@ import { Folder, FileText, Download, Clock, HardDrive } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useUiStore } from '@/store/ui-store'
 import { cn } from '@/lib/utils'
-import { formatWithAppleEmojis } from '@/components/apple-emoji'
+import { formatWithAppleEmojis } from '@/components/apple-emoji-utils'
 
 interface FileItem {
   name: string

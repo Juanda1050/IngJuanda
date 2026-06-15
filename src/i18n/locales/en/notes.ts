@@ -10,57 +10,34 @@ export const notesEn = {
       title: "About Juan Daniel",
       date: "Today, 12:00 PM",
       category: "Profile",
-      content: `I am a passionate Fullstack Software Engineer with 4+ years of experience building digital products and enterprise applications.
-
-Focus areas:
-• Modern technology migrations (React 18, .NET 8)
-• Reusable UI component libraries & UX/UI design (Figma)
-• Domain-Driven Design (DDD) & microservices in .NET
-
-Hobbies & Interests:
-• Building side projects & hacking APIs
-• Gaming & science-fiction reading
-• Specialty coffee enthusiast`
+      content: `🎵 I have my headphones on pretty much all day. I mostly listen to Tyler, The Creator, Drake, Bad Bunny, Joan, Camilo Séptimo, and Luis Miguel.
+🐶 My dog is named Tyler after Tyler, The Creator.
+🎮 I play American Truck Simulator, FIFA, or Fortnite when I have some free time.
+📚 I read mystery novels—my favorite series is Arsène Lupin. I also write from time to time.
+🏋️‍♂️ I go to the gym.
+🍕 I like Hawaiian pizza.`,
     },
     {
       id: "career_path",
       title: "Professional Background",
       date: "Yesterday, 4:30 PM",
       category: "Experience",
-      content: `Axosnet (Mar 2024 - Present)
-Position: Software Engineer
-Core Achievements:
-• Led the complete redesign of Axosmoney, UX/UI in Figma, and development.
-• Designed and maintain Axosnet Components library.
-• Modernized applications adopting React 18 and .NET 8.
+      content: `As a developer, I focus on more than just writing code. I care about building products that are genuinely useful, feel great to use, and solve problems simply. I'm always learning new things to improve what I build.
 
-Axsis Tecnología S.A. de C.V. (Jul 2022 - Mar 2024)
-Position: Software Engineer
-Core Achievements:
-• Designed and implemented .NET microservices applying DDD.
-• Implemented MobX state management and built XML processing pipelines.
-• Refactored monolithic frontend applications to clean, modular code.
+My most recent experience has been at Axosnet, where I've learned a lot about leading a complete redesign from scratch, from mapping out the UX/UI in Figma to coordinating the development of Axosmoney. I also grew to love building reusable component libraries to help other teams code faster and more consistently.
 
-Education:
-• B.S. in Software Engineering - Facultad de Ingeniería Mecánica y Eléctrica (FIME) (Graduated 2023)`
+Before that, I was at Axsis Tecnología, which was the foundation of my career since that's where I started as a professional. I dove deep into building .NET microservices with DDD, and learned the value of clean code through refactoring heavy modules and automating complex data and reporting pipelines.`,
     },
     {
       id: "tech_stack",
       title: "Tech Stack & Setup",
       date: "June 3, 2026",
       category: "Technical",
-      content: `Core Technologies:
-• Languages: JavaScript, TypeScript, C# (.NET), SQL, HTML, CSS
-• Frameworks: React, Next.js, Node.js
-• Tooling: Git, Figma, AWS, Open AI, ESLint
-• Libraries: MobX, Zustand, Redux, TailwindCSS
-• Architecture: Domain-Driven Design (DDD), Microservices, REST APIs
+      content: `If I had to talk about what I use day-to-day, my favorite stack is definitely React or Next.js for the frontend, along with Node.js or NestJS for the backend (which is what I'm currently learning and using a lot right now). I also use TypeScript to keep things structured and save myself from type-related headaches.
 
-Development Environment:
-• OS: macOS / Windows
-• Editor: VS Code / Figma
-• Terminal: Zsh with Oh-My-Zsh & Starship prompt
-• Hardware: Laptop + Ultra-wide monitor`
-    }
-  ]
+For a database and quick backend, I like using Supabase, but for more traditional or enterprise projects, C# with .NET is my go-to for building solid architectures like microservices or DDD. I usually do the design work in Figma and then move to TailwindCSS to code it up quickly.
+
+I'm always working on side projects to keep learning new things, and lately I've also been focusing on how to become a better team leader.`,
+    },
+  ],
 } as const;

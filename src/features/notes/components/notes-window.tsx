@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Search, FileText, Calendar, AlignLeft, ChevronLeft } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatWithAppleEmojis } from '@/components/apple-emoji'
+import { formatWithAppleEmojis } from '@/components/apple-emoji-utils'
 import { motion, useDragControls, useMotionValue, animate } from 'framer-motion'
 
 interface NoteItem {

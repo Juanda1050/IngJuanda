@@ -2,7 +2,7 @@ import React from "react";
 import { CheckCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { formatWithAppleEmojis } from "@/components/apple-emoji";
+import { formatWithAppleEmojis } from "@/components/apple-emoji-utils";
 import type { Message } from "../types";
 
 interface MessageThreadProps {

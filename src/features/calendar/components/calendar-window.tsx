@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info, MapPin, Cloc
 import { cn } from '@/lib/utils'
 import { Badge } from '@/shared/ui'
 import { motion, AnimatePresence } from 'framer-motion'
-import { formatWithAppleEmojis } from '@/components/apple-emoji'
+import { formatWithAppleEmojis } from '@/components/apple-emoji-utils'
 import { useMobile } from '@/hooks/use-mobile'
 
 interface MilestoneEvent {
