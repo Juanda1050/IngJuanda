@@ -5,6 +5,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import { type SectionId } from "@/types/portfolio";
 import { DesktopWindow } from "@/components/desktop-window";
 import {
   Command,
@@ -91,8 +92,8 @@ function SidebarContent({
   t,
   compact = false,
 }: {
-  activeFile: string;
-  setActiveFile: (file: any) => void;
+  activeFile: SectionId;
+  setActiveFile: (file: SectionId) => void;
   t: (key: string) => string;
   compact?: boolean;
 }) {

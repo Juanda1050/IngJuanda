@@ -2,30 +2,40 @@ export const sectionsEn = {
   about: {
     title: "About",
     focus:
-      "Fullstack Developer focused on migration, optimization, and scalable web solutions.",
+      "Fullstack Software Engineer with over 4 years of experience building digital products and enterprise applications.",
     aboutMe:
-      "I'm a Fullstack Developer with over 4 years of experience in tech modernization and web development. I am specialized in leading migration projects, system optimization, and building innovative solutions under scrum methodologies. Known for a proactive, collaborative, and improvement-driven approach.",
+      "I'm a Full Stack Software Engineer with over 4 years of experience building digital products and enterprise applications using React, Next.js, and .NET technologies. Experienced in technology modernization initiatives, scalable software architecture design, and technical leadership of strategic projects. Proven ability to collaborate with cross-functional teams in agile environments to deliver high-quality software solutions aligned with business objectives.",
   },
   experience: {
     title: "Experience",
     items: [
       {
-        role: "Senior Frontend Developer",
-        company: "Tech Studio",
-        period: "2022 - Present",
+        role: "Software Engineer",
+        company: "Axosnet",
+        period: "Mar 2024 - Present",
         bullets: [
-          "Led architecture for multi-product frontend platform.",
-          "Defined component standards, testing strategy, and CI quality gates.",
-          "Improved Core Web Vitals and reduced bundle size by 28%.",
+          "Led the complete redesign of Axosmoney, participating in product definition, UX/UI design in Figma, and development coordination.",
+          "Designed and maintain Axosnet Components, a corporate component library that standardizes user interfaces and accelerates development across teams.",
+          "Contributed to the modernization of enterprise applications through the adoption of React 18 and .NET 8.",
+          "Implemented strategic product features, including user self-registration processes and customer experience improvements.",
+          "Participated in the integration of a corporate rewards platform connected with Amazon Business.",
+          "Supported production deployments, third-level support operations, and critical incident resolution.",
+          "Promoted initiatives focused on maintainability, scalability, and code quality improvements.",
         ],
       },
       {
-        role: "Frontend Engineer",
-        company: "Digital Labs",
-        period: "2019 - 2022",
+        role: "Software Engineer",
+        company: "Axsis Tecnología S.A. de C.V.",
+        period: "Jul 2022 - Mar 2024",
         bullets: [
-          "Built modular React applications with TypeScript.",
-          "Collaborated with design and backend teams in agile delivery cycles.",
+          "Designed and implemented .NET microservices following Domain Driven Design (DDD) principles.",
+          "Implemented MobX in React applications to improve state management and frontend architecture.",
+          "Developed automated reporting solutions in PDF and Excel using MigraDoc and ClosedXML.",
+          "Optimized data access and processing workflows through LINQ and BulkExtensions.",
+          "Developed APIs and enterprise integrations to automate operational and invoicing processes.",
+          "Implemented XML processing workflows for tax and fiscal information automation.",
+          "Integrated transactional messaging and email services using SendGrid.",
+          "Refactored monolithic frontend applications into modular architectures following Clean Code principles.",
         ],
       },
     ],
@@ -34,17 +44,17 @@ export const sectionsEn = {
     title: "Projects",
     items: [
       {
-        name: "Design System Enterprise",
+        name: "Axosmoney",
         description:
-          "Reusable UI platform with tokens, documentation and accessibility.",
-        stack: ["React", "TypeScript", "Storybook", "TailwindCSS"],
-        href: "https://github.com/Juanda1050",
+          "Fintech platform redesigned completely, optimizing self-registration flows and integrating an Amazon Business rewards program.",
+        stack: ["React", "TypeScript", ".NET", "Figma"],
+        href: "https://www.ing-juanda.com.mx",
       },
       {
-        name: "Analytics Dashboard",
+        name: "Axosnet Components",
         description:
-          "Real-time dashboard with advanced charts and role-based modules.",
-        stack: ["React", "Zustand", "Framer Motion"],
+          "Reusable corporate UI library created to standardize interface design and speed up cross-team development.",
+        stack: ["React", "TypeScript", "TailwindCSS", "Figma"],
         href: "https://github.com/Juanda1050",
       },
     ],
@@ -52,21 +62,22 @@ export const sectionsEn = {
   skills: {
     title: "Skills",
     groups: {
-      frontend: [
-        "React",
-        "TypeScript",
-        "Next.js",
-        "TailwindCSS",
-        "Framer Motion",
+      technologies: [
+        "React.js / Next.js",
+        "Javascript / Typescript",
+        "Node.js",
+        "C# (.NET / Entity Framework)",
+        "SQL",
+        "UX / UI Design",
       ],
       architecture: [
-        "SOLID",
-        "Modular Frontend",
-        "Design Systems",
-        "DX",
-        "Performance",
+        "Domain-Driven Design (DDD)",
+        "Microservices",
+        "REST APIs",
       ],
-      tooling: ["Vite", "ESLint", "CI/CD", "Vitest", "GitHub Actions"],
+      tools: ["AWS", "Git", "Figma", "Open AI"],
+      methodologies: ["Scrum", "Agile"],
+      languages: ["English (Advanced)", "Spanish (Native)"],
     },
   },
   contact: {

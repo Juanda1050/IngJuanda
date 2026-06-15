@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { motion, AnimatePresence, type MotionStyle } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { X, ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
 import { useUiStore } from "@/store/ui-store";
+import { type AppType } from "../hooks/use-ipados-layout";
 
 interface TourStep {
   targetId?: string;
@@ -12,11 +13,9 @@ interface TourStep {
 }
 
 export function IpadosTutorial({
-  activeApp: _activeApp,
   setActiveApp,
 }: {
-  activeApp: string | null;
-  setActiveApp?: (app: any) => void;
+  setActiveApp?: (app: AppType) => void;
 }) {
   const { t } = useTranslation("common");
   const isMobileTutorialActive = useUiStore(
@@ -25,11 +24,30 @@ export function IpadosTutorial({
   const setMobileTutorialActive = useUiStore(
     (state) => state.setMobileTutorialActive,
   );
-  const [isVisible, setIsVisible] = useState(false);
   const [step, setStep] = useState(0);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
+  const [isRestart, setIsRestart] = useState<boolean>(false);
 
-  const steps: TourStep[] = [
+  // Synchronously adjust step, targetRect and isRestart during render when active state changes
+  const [prevMobileTutorialActive, setPrevMobileTutorialActive] = useState(isMobileTutorialActive);
+  if (isMobileTutorialActive !== prevMobileTutorialActive) {
+    setPrevMobileTutorialActive(isMobileTutorialActive);
+    if (isMobileTutorialActive) {
+      setStep(0);
+      setTargetRect(null);
+      setIsRestart(localStorage.getItem("ipad-tutorial-seen") === "true");
+    }
+  }
+
+  // Reset rect immediately on step change so the mask collapses instead of
+  // spring-travelling across the screen to the new element position
+  const [prevStep, setPrevStep] = useState(step);
+  if (step !== prevStep) {
+    setPrevStep(step);
+    setTargetRect(null);
+  }
+
+  const steps: TourStep[] = useMemo(() => [
     {
       title: t("tutorial.ipad.step1.title", "Welcome to iPadOS UI 📱"),
       description: t(
@@ -91,7 +109,7 @@ export function IpadosTutorial({
       ),
       placement: "center",
     },
-  ];
+  ], [t]);
 
   useEffect(() => {
     if (localStorage.getItem("ipad-tutorial-seen") === "true") return;
@@ -101,21 +119,10 @@ export function IpadosTutorial({
     return () => clearTimeout(timer);
   }, [setMobileTutorialActive]);
 
-  useEffect(() => {
-    if (isMobileTutorialActive) {
-      setIsVisible(true);
-      setStep(0);
-    } else {
-      setIsVisible(false);
-    }
-  }, [isMobileTutorialActive]);
+  // Spotlight tracking and timing effects below
 
   useEffect(() => {
-    setTargetRect(null);
-  }, [step]);
-
-  useEffect(() => {
-    if (!isVisible) return;
+    if (!isMobileTutorialActive) return;
 
     const targetId = steps[step]?.targetId;
     let rafId: number;
@@ -147,31 +154,30 @@ export function IpadosTutorial({
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", handleResize);
     };
-  }, [step, isVisible]);
+  }, [step, isMobileTutorialActive, steps]);
 
-  const handleDismiss = () => {
-    setIsVisible(false);
+  const handleDismiss = useCallback(() => {
     setMobileTutorialActive(false);
     localStorage.setItem("ipad-tutorial-seen", "true");
-  };
+  }, [setMobileTutorialActive]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
       handleDismiss();
     }
-  };
+  }, [step, steps.length, handleDismiss]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     if (step > 0) {
       setStep(step - 1);
     }
-  };
+  }, [step]);
 
   // Keyboard navigation
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isMobileTutorialActive) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -187,21 +193,13 @@ export function IpadosTutorial({
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isVisible, step]);
+  }, [isMobileTutorialActive, handleDismiss, handleNext, handleBack]);
 
   const prevStepRef = useRef<number>(step);
   const stepSyncedRef = useRef<boolean>(false);
-  const isRestart = useRef<boolean>(false);
-
-  useEffect(() => {
-    if (isVisible) {
-      isRestart.current = localStorage.getItem("ipad-tutorial-seen") === "true";
-    }
-  }, [isVisible]);
-
   // Sync activeApp layout based on tutorial step
   useEffect(() => {
-    if (!isVisible || !setActiveApp || isRestart.current) return;
+    if (!isMobileTutorialActive || !setActiveApp || isRestart) return;
 
     const prevStep = prevStepRef.current;
     prevStepRef.current = step;
@@ -213,9 +211,9 @@ export function IpadosTutorial({
       stepSyncedRef.current = true;
       setActiveApp(null);
     }
-  }, [step, isVisible, setActiveApp]);
+  }, [step, isMobileTutorialActive, setActiveApp, isRestart]);
 
-  if (!isVisible) return null;
+  if (!isMobileTutorialActive) return null;
 
   const currentStepObj = steps[step]!;
   const padding = 8;
@@ -331,11 +329,11 @@ export function IpadosTutorial({
             height: maskH,
             borderRadius: maskRx,
             zIndex: 100001,
-            pointerEvents: isRestart.current && step === 2 ? "none" : "auto",
-            cursor: isRestart.current && step === 2 ? "default" : "pointer",
+            pointerEvents: isRestart && step === 2 ? "none" : "auto",
+            cursor: isRestart && step === 2 ? "default" : "pointer",
           }}
           onClick={() => {
-            if (isRestart.current && step === 2) return;
+            if (isRestart && step === 2) return;
             const el = document.getElementById(currentStepObj.targetId!);
             el?.click();
           }}
@@ -346,7 +344,7 @@ export function IpadosTutorial({
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
-          style={getCardStyle() as any}
+          style={getCardStyle() as MotionStyle}
           initial={{ opacity: 0, scale: 0.95, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 15 }}

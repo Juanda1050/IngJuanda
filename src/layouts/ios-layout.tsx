@@ -268,7 +268,7 @@ export function IosLayout() {
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.18 }}
               className="absolute inset-0 pt-16 flex flex-col justify-between"
             >
               <div
@@ -339,7 +339,7 @@ export function IosLayout() {
         />
       )}
 
-      <IosTutorial activeApp={activeApp} setActiveApp={setActiveApp} />
+      <IosTutorial setActiveApp={setActiveApp} />
     </div>
   );
 }

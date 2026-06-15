@@ -41,9 +41,9 @@ export function AppWrapper({
       exit={{ scale: 0.2, y: 380, opacity: 0, borderRadius: "40px" }}
       transition={{
         type: "spring",
-        damping: 30,
-        stiffness: 300,
-        opacity: { duration: 0.2 },
+        damping: 38,
+        stiffness: 480,
+        opacity: { duration: 0.15 },
       }}
       style={motionStyle}
       className="absolute inset-0 bg-[#f2f2f7] dark:bg-black z-20 overflow-hidden"

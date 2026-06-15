@@ -17,68 +17,45 @@ export const calendarEs = {
   },
   milestones: [
     {
-      id: "graduation",
-      date: "2018-12-10",
+      id: "education_uanl",
+      date: "2023-12-12",
       title: "Graduación Universitaria",
       type: "education",
-      location: "Colima, México",
-      company: "Universidad de Colima",
-      description: "Graduado como Ingeniero en Sistemas Computacionales.",
+      location: "Nuevo León, México",
+      company: "Facultad de Ingeniería Mecánica y Eléctrica (FIME)",
+      description: "Graduado de la carrera de Ingeniería en Tecnología de Software.",
       bullets: [
-        "Especializado en ingeniería de software y desarrollo web.",
-        "Reconocimiento a la excelencia académica en proyectos terminales."
+        "Plan de estudios enfocado en diseño de software y desarrollo full-stack.",
+        "Graduado de la Facultad de Ingeniería Mecánica y Eléctrica (FIME)."
       ]
     },
     {
-      id: "digital_labs_join",
-      date: "2019-01-15",
-      title: "Ingreso a Digital Labs",
+      id: "axsis_join",
+      date: "2022-07-07",
+      title: "Ingreso a Axsis Tecnología",
       type: "work",
-      location: "Guadalajara, México",
-      company: "Digital Labs",
-      description: "Inicio de labores como Frontend Engineer en desarrollo de productos web.",
+      location: "México",
+      company: "Axsis Tecnología S.A. de C.V.",
+      description: "Inicio de labores como Ingeniero de Software Fullstack.",
       bullets: [
-        "Construcción de aplicaciones dinámicas en React y TypeScript.",
-        "Colaboración con equipos de diseño y backend en ciclos Scrum."
+        "Diseñé e implementé microservicios en .NET aplicando principios de Domain-Driven Design (DDD).",
+        "Implementé MobX en aplicaciones React para mejorar la gestión de estado.",
+        "Desarrollé APIs e integraciones empresariales para automatizar procesos de facturación.",
+        "Refactoricé aplicaciones frontend monolíticas hacia arquitecturas modulares bajo principios de Clean Code."
       ]
     },
     {
-      id: "legacy_migration_lead",
-      date: "2021-10-20",
-      title: "Líder de Migración Legacy",
+      id: "axosnet_join",
+      date: "2024-03-04",
+      title: "Ingreso a Axosnet",
       type: "work",
-      location: "Guadalajara, México",
-      company: "Digital Labs",
-      description: "Dirección del refactoring y migración de sistemas legacy críticos a arquitectura React SPA.",
+      location: "México",
+      company: "Axosnet",
+      description: "Contratado como Ingeniero de Software Fullstack.",
       bullets: [
-        "Mejora de tiempos de carga e indicadores clave de rendimiento en un 35%.",
-        "Implementación de suites de prueba usando Jest y React Testing Library."
-      ]
-    },
-    {
-      id: "tech_studio_join",
-      date: "2022-03-01",
-      title: "Ingreso a Tech Studio",
-      type: "work",
-      location: "Remoto, México",
-      company: "Tech Studio",
-      description: "Contratado como Senior Frontend Developer, especializándome en plataformas multi-producto.",
-      bullets: [
-        "Definición e implementación de arquitectura frontend empresarial.",
-        "Configuración de linters, calidad de código y pipelines de CI automatizados."
-      ]
-    },
-    {
-      id: "design_system_launch",
-      date: "2023-06-15",
-      title: "Sistema de Diseño Enterprise",
-      type: "project",
-      location: "Remoto, México",
-      company: "Tech Studio",
-      description: "Diseño e implementación de biblioteca de componentes UI empresarial con TailwindCSS y Storybook.",
-      bullets: [
-        "Utilizado por múltiples equipos de desarrollo, reduciendo time-to-market en 40%.",
-        "Cumplimiento de estándares de accesibilidad WCAG y pruebas visuales interactivas."
+        "Lideré el rediseño integral de Axosmoney, participando en la definición funcional, diseño UX/UI en Figma y desarrollo.",
+        "Diseñé y mantengo Axosnet Components, una librería corporativa de componentes reutilizables.",
+        "Participé en la modernización tecnológica de aplicaciones mediante la adopción de React 18 y .NET 8."
       ]
     },
     {
@@ -87,10 +64,10 @@ export const calendarEs = {
       title: "Lanzamiento de Portafolio macOS",
       type: "project",
       location: "Colima, México",
-      company: "IngJuanda Corp",
+      company: "Juanda",
       description: "Publicación de esta experiencia interactiva simulando un escritorio de macOS.",
       bullets: [
-        "Simulación de ventanas arrastrables, apilamiento de z-indices, compilación de terminal y sincronización multi-idioma.",
+        "Simulación de ventanas arrastrables, apilamiento de z-indices y terminal.",
         "Totalmente responsivo y localizado en inglés y español."
       ]
     }

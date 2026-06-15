@@ -2,34 +2,35 @@ export const safariEs = {
   title: "Safari",
   browserPlaceholder: "Buscar o introducir sitio web",
   cv: {
-    name: "Juan Gonzalez",
-    role: "Senior Fullstack Developer",
+    name: "Juan Daniel González Alejandre",
+    role: "Software Engineer",
     location: "México",
     focus:
-      "Fullstack Developer enfocado en migraciones, optimización de sistemas y soluciones web escalables.",
+      "Ingeniero de Software Fullstack con más de 4 años de experiencia desarrollando productos digitales y aplicaciones empresariales.",
     aboutTitle: "Sobre mí",
     aboutText:
-      "Soy Fullstack Developer con más de 4 años de experiencia en modernización tecnológica y desarrollo web. Me especializo en liderar proyectos de migración, optimización de sistemas y creación de soluciones innovadoras bajo metodologías Scrum. Me caracterizo por un enfoque proactivo, colaborativo y orientado a la mejora continua.",
+      "Soy Ingeniero de Software Fullstack con más de 4 años de experiencia desarrollando productos digitales y aplicaciones empresariales utilizando React, Next.js y .NET. He participado en iniciativas de modernización tecnológica, diseño de arquitecturas escalables y liderazgo técnico de proyectos estratégicos, colaborando con equipos multidisciplinarios bajo metodologías ágiles.",
 
     experienceTitle: "Experiencia Laboral",
     experienceItems: [
       {
-        role: "Senior Frontend Developer",
-        company: "Tech Studio",
-        period: "2022 - Actualidad",
+        role: "Software Engineer",
+        company: "Axosnet",
+        period: "Mar 2024 - Actualidad",
         bullets: [
-          "Lideré la arquitectura de una plataforma frontend multi-producto.",
-          "Definí estándares de componentes, estrategia de testing y quality gates en CI/CD.",
-          "Mejoré Core Web Vitals y reduje el tamaño del bundle en un 28%.",
+          "Lideré el rediseño integral de Axosmoney, participando en la definición funcional, diseño UX/UI en Figma y coordinación de su desarrollo.",
+          "Diseñé y mantengo Axosnet Components, una librería corporativa de componentes reutilizables que permite estandarizar interfaces y acelerar el desarrollo entre equipos.",
+          "Participé en la modernización tecnológica de aplicaciones empresariales mediante la adopción de React 18 y .NET 8.",
         ],
       },
       {
-        role: "Frontend Engineer",
-        company: "Digital Labs",
-        period: "2019 - 2022",
+        role: "Software Engineer",
+        company: "Axsis Tecnología S.A. de C.V.",
+        period: "Jul 2022 - Mar 2024",
         bullets: [
-          "Construí aplicaciones modulares en React con TypeScript.",
-          "Colaboré de cerca con equipos de diseño y backend en ciclos ágiles de entrega.",
+          "Diseñé e implementé microservicios en .NET aplicando principios de Domain-Driven Design (DDD).",
+          "Implementé MobX en aplicaciones React para mejorar la gestión de estado y la organización del frontend.",
+          "Refactoricé aplicaciones frontend monolíticas hacia arquitecturas modulares basadas en principios de Clean Code.",
         ],
       },
     ],
@@ -37,52 +38,56 @@ export const safariEs = {
     projectsTitle: "Proyectos y Código",
     projectsItems: [
       {
-        name: "Design System Enterprise",
+        name: "Axosmoney",
         description:
-          "Plataforma UI reutilizable con tokens de diseño, documentación interactiva y accesibilidad.",
-        stack: ["React", "TypeScript", "Storybook", "TailwindCSS"],
-        href: "https://github.com/Juanda1050",
+          "Plataforma financiera rediseñada integralmente, optimizando el flujo de registro y conectando recompensas con Amazon Business.",
+        stack: ["React", "TypeScript", ".NET", "Figma"],
+        href: "https://www.ing-juanda.com.mx",
       },
       {
-        name: "Analytics Dashboard",
+        name: "Axosnet Components",
         description:
-          "Dashboard en tiempo real con gráficas avanzadas, análisis de métricas y módulos basados en roles.",
-        stack: ["React", "Zustand", "Framer Motion", "Recharts"],
+          "Biblioteca de componentes UI corporativa y reutilizable construida para estandarizar interfaces y acelerar el desarrollo.",
+        stack: ["React", "TypeScript", "TailwindCSS", "Figma"],
         href: "https://github.com/Juanda1050",
       },
     ],
 
     skillsTitle: "Habilidades Técnicas",
     skillsGroups: {
-      frontend: "Frontend Core",
-      architecture: "Arquitectura & Buenas Prácticas",
-      tooling: "Herramientas & DevOps",
+      technologies: "Tecnologías",
+      architecture: "Arquitectura",
+      tools: "Herramientas",
+      methodologies: "Metodologías",
+      languages: "Idiomas",
     },
     skillsData: {
-      frontend: [
-        "React",
-        "TypeScript",
-        "Next.js",
-        "TailwindCSS",
-        "Framer Motion",
-        "Zustand",
-        "Redux",
+      technologies: [
+        "React.js / Next.js",
+        "Javascript / Typescript",
+        "Node.js",
+        "C# (.NET / Entity Framework)",
+        "SQL",
+        "Diseño UX / UI",
       ],
       architecture: [
-        "SOLID",
-        "Frontend Modular",
-        "Design Systems",
-        "DX (Developer Experience)",
-        "Performance",
+        "Domain-Driven Design (DDD)",
+        "Microservicios",
+        "APIs REST",
       ],
-      tooling: [
-        "Vite",
-        "ESLint",
-        "CI/CD",
-        "Vitest",
-        "GitHub Actions",
-        "Docker",
+      tools: [
+        "AWS",
         "Git",
+        "Figma",
+        "Open AI",
+      ],
+      methodologies: [
+        "Scrum",
+        "Agile",
+      ],
+      languages: [
+        "Inglés (Avanzado)",
+        "Español (Nativo)",
       ],
     },
 

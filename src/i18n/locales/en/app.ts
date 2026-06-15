@@ -1,6 +1,6 @@
 export const appEn = {
   title: "Portfolio",
-  subtitle: "Senior Frontend Developer",
+  subtitle: "Software Engineer",
   status: "Ready",
   branch: "main",
   language: "Language",

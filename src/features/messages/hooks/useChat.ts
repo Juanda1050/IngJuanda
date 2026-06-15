@@ -129,13 +129,6 @@ export const useChat = () => {
       ) {
         responseText =
           dialogOptions.find((d) => d.key === "contact")?.response || "";
-      } else if (
-        lowerText.includes("chiste") ||
-        lowerText.includes("joke") ||
-        lowerText.includes("funny")
-      ) {
-        responseText =
-          dialogOptions.find((d) => d.key === "joke")?.response || "";
       } else {
         responseText = t("messages.fallbackResponse");
       }

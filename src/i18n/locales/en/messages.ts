@@ -10,25 +10,19 @@ export const messagesEn = {
       key: "experience",
       label: "💼 Experience",
       prompt: "Can you tell me about your experience?",
-      response: "Juan Daniel has 4+ years of professional experience as a Fullstack Developer. He specializes in React, TypeScript, Next.js, and Zustand. He currently works at Tech Studio, where he led a multi-product architecture, improved performance, and optimized code delivery pipelines. Prior to that, at Digital Labs, he directed legacy code refactoring and migrated multiple SPAs from Javascript to modern TypeScript."
+      response: "Juan Daniel has 4+ years of professional experience as a Fullstack Software Engineer. He specializes in React, TypeScript, Next.js, and .NET. He currently works at Axosnet, where he led the redesign of Axosmoney and designed the corporate component library Axosnet Components. Previously, at Axsis Tecnología, he designed and implemented .NET microservices following DDD and modernized frontend systems using React and MobX."
     },
     {
       key: "skills",
       label: "⚡ Skills & Stack",
       prompt: "What is your technology stack?",
-      response: "His primary stack focuses on modern React, Next.js, TypeScript, and TailwindCSS for frontend UI, combined with Node.js and Express for backend services. He uses Zustand, Redux, and Context API for state management. For DX and tooling, he uses Vite, ESLint, Vitest, Cypress, Git, Docker, and GitHub Actions for CI/CD pipelines."
+      response: "His primary stack focuses on React, Next.js, TypeScript, and TailwindCSS/Figma for UX/UI, combined with C# (.NET) and SQL for backend services. He uses MobX, Zustand, and Redux for state management. For architecture and tools, he works with Domain-Driven Design (DDD), microservices, REST APIs, AWS, Git, and OpenAI integrations."
     },
     {
       key: "contact",
       label: "✉️ Contact Details",
       prompt: "How can I contact you?",
       response: "You can reach Juan Daniel directly via email at danielalejandre1050@gmail.com. You can also view his professional networks on LinkedIn (linkedin.com/in/daniel-alejandre) or explore his active open-source projects on GitHub (github.com/Juanda1050). All of these links are also accessible inside the Safari browser on the desktop!"
-    },
-    {
-      key: "joke",
-      label: "🎈 Programmer Joke",
-      prompt: "Tell me a developer joke!",
-      response: "Why do programmers prefer dark mode? Because light attracts bugs! 💻🐛😂"
     }
   ]
 } as const;

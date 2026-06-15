@@ -8,7 +8,8 @@ import {
   MotionValue,
 } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useUiStore } from "@/store/ui-store";
+import { type TFunction } from "i18next";
+import { useUiStore, type AppId } from "@/store/ui-store";
 import { useBattery } from "@/hooks/use-system-info";
 
 export type AppType =
@@ -30,7 +31,7 @@ interface DragInfo {
 }
 
 interface UseIpadosLayoutReturn {
-  t: any;
+  t: TFunction;
   currentTime: Date;
   activeApp: AppType;
   setActiveApp: (app: AppType) => void;
@@ -80,6 +81,21 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
     [-150, -100, 0],
     [0, 1, 1],
   );
+
+  const openApp = useUiStore((state) => state.openApp);
+  const closeApp = useUiStore((state) => state.closeApp);
+
+  // Sync activeApp with uiStore for store-tracked apps
+  useEffect(() => {
+    if (activeApp && activeApp !== "phone") {
+      openApp(activeApp as AppId);
+    }
+    return () => {
+      if (activeApp && activeApp !== "phone") {
+        closeApp(activeApp as AppId);
+      }
+    };
+  }, [activeApp, openApp, closeApp]);
 
   // Reset dragValues cuando cambia activeApp
   useEffect(() => {

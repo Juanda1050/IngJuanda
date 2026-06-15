@@ -139,7 +139,7 @@ export function IpadosLayout() {
               initial={{ scale: 1.05, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.18 }}
               className="absolute inset-0 pt-10 flex flex-col justify-between"
             >
               {/* Spaced grid of apps */}
@@ -208,7 +208,7 @@ export function IpadosLayout() {
       )}
 
       {/* Adapted Tutorial Spotlight */}
-      <IpadosTutorial activeApp={activeApp} setActiveApp={setActiveApp} />
+      <IpadosTutorial setActiveApp={setActiveApp} />
     </div>
   );
 }
