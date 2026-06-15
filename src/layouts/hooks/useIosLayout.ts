@@ -56,7 +56,7 @@ interface UseIosLayoutReturn {
 export function useIosLayout(): UseIosLayoutReturn {
   const { t } = useTranslation("common");
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
-  const [activeApp, setActiveApp] = useState<AppType>("dashboard");
+  const [activeApp, _setActiveApp] = useState<AppType>("dashboard");
   const wallpaper = useUiStore((state) => state.wallpaper);
   const { level, charging } = useBattery();
 
@@ -88,17 +88,26 @@ export function useIosLayout(): UseIosLayoutReturn {
   const openApp = useUiStore((state) => state.openApp);
   const closeApp = useUiStore((state) => state.closeApp);
 
-  // Sync activeApp with uiStore for store-tracked apps
+  const setActiveApp = useCallback((nextApp: AppType) => {
+    _setActiveApp((prevApp) => {
+      if (prevApp !== nextApp) {
+        if (prevApp && prevApp !== "phone") {
+          closeApp(prevApp as AppId);
+        }
+        if (nextApp && nextApp !== "phone") {
+          openApp(nextApp as AppId);
+        }
+      }
+      return nextApp;
+    });
+  }, [openApp, closeApp]);
+
+  // Open the initial active app in the store on mount
   useEffect(() => {
     if (activeApp && activeApp !== "phone") {
       openApp(activeApp as AppId);
     }
-    return () => {
-      if (activeApp && activeApp !== "phone") {
-        closeApp(activeApp as AppId);
-      }
-    };
-  }, [activeApp, openApp, closeApp]);
+  }, [openApp]);
 
   // Reset dragValues cuando cambia activeApp
   useEffect(() => {

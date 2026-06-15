@@ -363,6 +363,11 @@ export function useVscodeLayout() {
     return () => window.removeEventListener("resize", updateOffset);
   }, []);
 
+  // Open the dashboard by default when macOS layout mounts
+  useEffect(() => {
+    openApp("dashboard");
+  }, [openApp]);
+
   const dockItems = useMemo(
     () => [
       {
