@@ -9,6 +9,7 @@ export const useChat = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [typedMessage, setTypedMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [usedOptionKeys, setUsedOptionKeys] = useState<Set<string>>(new Set());
   const [messages, setMessages] = useState<Message[]>([]);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -61,6 +62,7 @@ export const useChat = () => {
 
     setMessages((prev) => [...prev, userMsg]);
     setIsTyping(true);
+    setUsedOptionKeys(prev => new Set(prev).add(option.key));
 
     setTimeout(() => {
       const botMsg: Message = {
@@ -177,5 +179,6 @@ export const useChat = () => {
     handleOptionClick,
     handleSendMessage,
     t,
+    usedOptionKeys,
   };
 };

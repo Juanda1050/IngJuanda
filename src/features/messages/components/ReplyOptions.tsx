@@ -6,12 +6,14 @@ interface ReplyOptionsProps {
   dialogOptions: DialogOption[];
   isTyping: boolean;
   onOptionClick: (option: DialogOption) => void;
+  usedOptionKeys: Set<string>;
 }
 
 export const ReplyOptions: React.FC<ReplyOptionsProps> = ({
   dialogOptions,
   isTyping,
   onOptionClick,
+  usedOptionKeys,
 }) => {
   if (dialogOptions.length === 0) return null;
 
@@ -21,7 +23,7 @@ export const ReplyOptions: React.FC<ReplyOptionsProps> = ({
         {dialogOptions.map((opt) => (
           <button
             key={opt.key}
-            disabled={isTyping}
+            disabled={isTyping || usedOptionKeys.has(opt.key)}
             onClick={() => onOptionClick(opt)}
             className="shrink-0 rounded-full border border-border bg-background hover:bg-black/5 dark:hover:bg-white/5 active:scale-95 disabled:opacity-40 disabled:scale-100 transition-all px-3 py-1.5 text-xs font-semibold text-foreground flex items-center gap-1 cursor-pointer"
           >

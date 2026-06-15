@@ -19,6 +19,7 @@ export function MessagesWindow() {
     chatEndRef,
     handleOptionClick,
     handleSendMessage,
+    usedOptionKeys,
     t,
   } = useChat();
 
@@ -52,6 +53,7 @@ export function MessagesWindow() {
             dialogOptions={dialogOptions}
             isTyping={isTyping}
             onOptionClick={handleOptionClick}
+            usedOptionKeys={usedOptionKeys}
           />
 
           <InputForm
