@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { X, ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
 import { useUiStore } from "@/store/ui-store";
 import { type AppType } from "../hooks/use-ipados-layout";
+import { formatWithAppleEmojis } from "@/components/apple-emoji-utils";
 
 interface TourStep {
   targetId?: string;
@@ -229,9 +230,12 @@ export function IpadosTutorial({
     if (!currentStepObj.targetId || !targetRect) {
       return {
         position: "fixed",
-        left: "50%",
-        top: "35%",
-        transform: "translate(-50%, -50%)",
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        margin: "auto",
+        height: "fit-content",
         zIndex: 100000,
       };
     }
@@ -242,16 +246,18 @@ export function IpadosTutorial({
     if (elementCenterY < screenMidY) {
       return {
         position: "fixed",
-        left: "50%",
-        transform: "translateX(-50%)",
+        left: 0,
+        right: 0,
+        margin: "0 auto",
         bottom: "40px",
         zIndex: 100000,
       };
     } else {
       return {
         position: "fixed",
-        left: "50%",
-        transform: "translateX(-50%)",
+        left: 0,
+        right: 0,
+        margin: "0 auto",
         top: "70px",
         zIndex: 100000,
       };
@@ -262,7 +268,7 @@ export function IpadosTutorial({
   const hasTarget = !!targetRect && !!currentStepObj.targetId;
 
   return (
-    <div className="fixed inset-0 z-[99999] select-none pointer-events-none font-sans">
+    <div className="fixed inset-0 z-[99999] select-none pointer-events-none font-sans" style={{ fontFamily: "system-ui, -apple-system, 'Apple Color Emoji', sans-serif" }}>
       {/* 4-panel spotlight background overlay */}
       {!hasTarget ? (
         <div
@@ -373,10 +379,10 @@ export function IpadosTutorial({
           {/* Body */}
           <div className="space-y-1.5 mb-5">
             <h3 className="text-base font-bold tracking-tight text-white">
-              {currentStepObj.title}
+              {formatWithAppleEmojis(currentStepObj.title)}
             </h3>
             <p className="text-xs leading-relaxed text-white/80">
-              {currentStepObj.description}
+              {formatWithAppleEmojis(currentStepObj.description)}
             </p>
           </div>
 

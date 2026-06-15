@@ -13,19 +13,6 @@ export function PhoneWindow() {
   );
   const [callSeconds, setCallSeconds] = useState(0);
 
-  // Timer for active call
-  useEffect(() => {
-    let timer: any;
-    if (callState === "connected") {
-      timer = setInterval(() => {
-        setCallSeconds((prev) => prev + 1);
-      }, 1000);
-    } else {
-      setCallSeconds(0);
-    }
-    return () => clearInterval(timer);
-  }, [callState]);
-
   const formatTime = (totalSeconds: number) => {
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
@@ -45,6 +32,7 @@ export function PhoneWindow() {
   const startCall = (numberToCall: string) => {
     if (!numberToCall.trim()) return;
     setCallState("calling");
+    setCallSeconds(0);
     // Simulate connection after 1.5 seconds
     setTimeout(() => {
       setCallState("connected");
@@ -53,7 +41,58 @@ export function PhoneWindow() {
 
   const endCall = () => {
     setCallState("idle");
+    setCallSeconds(0);
   };
+
+  // Timer for active call
+  useEffect(() => {
+    if (callState !== "connected") return;
+    const timer = setInterval(() => {
+      setCallSeconds((prev) => prev + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [callState]);
+
+  // Handle keyboard entry for dialed numbers
+  useEffect(() => {
+    if (activeTab !== "keypad" || callState !== "idle") return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        document.activeElement?.tagName === "INPUT" ||
+        document.activeElement?.tagName === "TEXTAREA"
+      ) {
+        return;
+      }
+
+      if (/^[0-9*#]$/.test(e.key)) {
+        e.preventDefault();
+        if (dialedNumber.length < 15) {
+          setDialedNumber((prev) => prev + e.key);
+        }
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        setDialedNumber((prev) => prev.slice(0, -1));
+      } else if (e.key === "Enter" && dialedNumber) {
+        e.preventDefault();
+        startCall(dialedNumber);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeTab, callState, dialedNumber]);
+
+  // Handle secret code commands/easter eggs
+  useEffect(() => {
+    if (dialedNumber === "*#06#") {
+      alert("JuandaBook Pro\nSerial Number: JD-2026-PORTFOLIO\nIMEI: 358294/10/508291/4\nOS version: iOS/iPadOS 19.4");
+      setTimeout(() => setDialedNumber(""), 0);
+    } else if (dialedNumber === "*#777#") {
+      alert("System Diagnostics:\nAll systems functional.\nConnection quality: Excellent\nBattery status: 100% (Charging)\nLocation: Mexico 🇲🇽");
+      setTimeout(() => setDialedNumber(""), 0);
+    }
+  }, [dialedNumber]);
 
   const keypadButtons = [
     { num: "1", letters: " " },

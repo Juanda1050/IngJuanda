@@ -64,13 +64,13 @@ export function FinderWindow() {
             {t('finder.sidebar.favorites')}
           </p>
           {[
-            { id: 'desktop', label: t('finder.sidebar.desktop'), icon: <Clock className="size-4 text-blue-500" /> },
-            { id: 'documents', label: t('finder.sidebar.documents'), icon: <Folder className="size-4 text-blue-500" /> },
-            { id: 'downloads', label: t('finder.sidebar.downloads'), icon: <Download className="size-4 text-blue-500" /> },
+            { id: 'desktop' as const, label: t('finder.sidebar.desktop'), icon: <Clock className="size-4 text-blue-500" /> },
+            { id: 'documents' as const, label: t('finder.sidebar.documents'), icon: <Folder className="size-4 text-blue-500" /> },
+            { id: 'downloads' as const, label: t('finder.sidebar.downloads'), icon: <Download className="size-4 text-blue-500" /> },
           ].map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id)}
               className={cn(
                 'flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors text-left',
                 activeTab === tab.id

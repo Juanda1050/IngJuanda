@@ -40,16 +40,14 @@ export const safariEs = {
       {
         name: "Axosmoney",
         description:
-          "Plataforma financiera rediseñada integralmente, optimizando el flujo de registro y conectando recompensas con Amazon Business.",
-        stack: ["React", "TypeScript", ".NET", "Figma"],
-        href: "https://www.ing-juanda.com.mx",
+          "Aplicación integral para la carga de recibos, la posibilidad de gestionar a tus proveedores, toda su facturación, servicios de terceros con SAP Concur y el programa de rewards con Amazon Business.",
+        stack: ["Next.js", "TypeScript", ".NET", "Figma"],
       },
       {
         name: "Axosnet Components",
         description:
           "Biblioteca de componentes UI corporativa y reutilizable construida para estandarizar interfaces y acelerar el desarrollo.",
-        stack: ["React", "TypeScript", "TailwindCSS", "Figma"],
-        href: "https://github.com/Juanda1050",
+        stack: ["React 19", "TypeScript", "Storybook", "TailwindCSS", "shadcn", "Figma"],
       },
     ],
 

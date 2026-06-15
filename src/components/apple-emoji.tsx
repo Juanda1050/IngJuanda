@@ -12,8 +12,10 @@ export const AppleEmoji: React.FC<AppleEmojiProps> = ({ emoji, className = '' })
     return <span className={className}>{emoji}</span>
   }
 
-  // Emojicdn requires raw emoji character. We encode it for URLs.
-  const encodedEmoji = encodeURIComponent(emoji)
+  // Emojicdn requires raw emoji character. We encode it for URLs and clean variation selectors like \uFE0F.
+  // However, ZWJ emoji sequences (which contain \u200D) rely on \uFE0F internally to resolve correctly on the CDN.
+  const cleanEmoji = emoji.includes('\u200D') ? emoji : emoji.replace(/\uFE0F/g, '')
+  const encodedEmoji = encodeURIComponent(cleanEmoji)
   
   return (
     <img

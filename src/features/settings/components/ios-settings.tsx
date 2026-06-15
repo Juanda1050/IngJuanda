@@ -150,26 +150,39 @@ export function IosSettings({ onClose, layout = "ios" }: { onClose?: () => void;
           <span className="text-xs font-medium text-gray-500 uppercase ml-4">
             {t("settings.performance.title", "Performance")}
           </span>
-          <div className="bg-white dark:bg-[#1c1c1e] rounded-xl p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-md bg-orange-500 text-white flex items-center justify-center">
-                <Monitor size={16} />
+          <div className="bg-white dark:bg-[#1c1c1e] rounded-xl overflow-hidden divide-y divide-gray-200 dark:divide-white/10">
+            <div className="w-full flex items-center justify-between px-4 py-3">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-md bg-orange-500 text-white flex items-center justify-center shrink-0">
+                  <Monitor size={16} />
+                </div>
+                <div className="flex flex-col text-left">
+                  <span className="text-[17px] leading-tight text-foreground">
+                    {t("settings.displays.gfxAccel")}
+                  </span>
+                  <span className="text-[12px] text-gray-500 max-w-none leading-tight mt-0.5">
+                    {t("settings.displays.gfxAccelDesc")}
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col text-left">
-                <span className="text-[17px] font-medium leading-tight text-foreground">
-                  {t("settings.displays.gfxAccel")}
-                </span>
-                <span className="text-[12px] text-gray-500 max-w-[200px] leading-tight mt-0.5">
-                  {t("settings.displays.gfxAccelDesc")}
-                </span>
-              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={graphicsAcceleration}
+                onClick={() => setGraphicsAcceleration(!graphicsAcceleration)}
+                className={cn(
+                  "relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none",
+                  graphicsAcceleration ? "bg-[#34c759]" : "bg-[#e9e9ea] dark:bg-[#39393d]"
+                )}
+              >
+                <span
+                  className={cn(
+                    "pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out",
+                    graphicsAcceleration ? "translate-x-5" : "translate-x-0"
+                  )}
+                />
+              </button>
             </div>
-            <input
-              type="checkbox"
-              checked={graphicsAcceleration}
-              onChange={(e) => setGraphicsAcceleration(e.target.checked)}
-              className="size-5 rounded-md border-gray-300 accent-blue-500 cursor-pointer"
-            />
           </div>
         </div>
 

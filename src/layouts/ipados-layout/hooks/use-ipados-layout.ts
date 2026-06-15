@@ -56,7 +56,7 @@ interface UseIpadosLayoutReturn {
 export function useIpadosLayout(): UseIpadosLayoutReturn {
   const { t } = useTranslation("common");
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
-  const [activeApp, setActiveApp] = useState<AppType>(null);
+  const [activeApp, setActiveApp] = useState<AppType>("dashboard");
   const wallpaper = useUiStore((state) => state.wallpaper);
   const { level, charging } = useBattery();
 

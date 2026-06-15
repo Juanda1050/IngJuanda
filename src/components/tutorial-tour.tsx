@@ -1,10 +1,11 @@
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
+import { useEffect, useState, useRef, useLayoutEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type MotionStyle } from "framer-motion";
 import { useUiStore } from "@/store/ui-store";
 import { Button } from "@/shared/ui/button";
 import { useDevice } from "@/hooks/use-device";
 import { X, ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
+import { formatWithAppleEmojis } from "@/components/apple-emoji-utils";
 
 interface TourStep {
   targetId?: string;
@@ -187,39 +188,39 @@ export function TutorialTour() {
   }, [currentStep, isTutorialActive]);
 
   // Handle step actions
-  const handleNext = () => {
+  const handleSkip = useCallback(() => {
+    if (activeTutorialType === "system") {
+      localStorage.setItem("portfolio_system_tutorial_completed", "true");
+    } else if (activeTutorialType === "vscode") {
+      localStorage.setItem("portfolio_vscode_tutorial_completed", "true");
+    }
+    setTutorialActive(false);
+    setActiveTutorialType(null);
+  }, [activeTutorialType, setTutorialActive, setActiveTutorialType]);
+
+  const handleComplete = useCallback(() => {
+    if (activeTutorialType === "system") {
+      localStorage.setItem("portfolio_system_tutorial_completed", "true");
+    } else if (activeTutorialType === "vscode") {
+      localStorage.setItem("portfolio_vscode_tutorial_completed", "true");
+    }
+    setTutorialActive(false);
+    setActiveTutorialType(null);
+  }, [activeTutorialType, setTutorialActive, setActiveTutorialType]);
+
+  const handleNext = useCallback(() => {
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
       handleComplete();
     }
-  };
+  }, [currentStep, steps.length, setCurrentStep, handleComplete]);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     if (currentStep > 0) {
       setCurrentStep(currentStep - 1);
     }
-  };
-
-  const handleSkip = () => {
-    if (activeTutorialType === "system") {
-      localStorage.setItem("portfolio_system_tutorial_completed", "true");
-    } else if (activeTutorialType === "vscode") {
-      localStorage.setItem("portfolio_vscode_tutorial_completed", "true");
-    }
-    setTutorialActive(false);
-    setActiveTutorialType(null);
-  };
-
-  const handleComplete = () => {
-    if (activeTutorialType === "system") {
-      localStorage.setItem("portfolio_system_tutorial_completed", "true");
-    } else if (activeTutorialType === "vscode") {
-      localStorage.setItem("portfolio_vscode_tutorial_completed", "true");
-    }
-    setTutorialActive(false);
-    setActiveTutorialType(null);
-  };
+  }, [currentStep, setCurrentStep]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -239,7 +240,7 @@ export function TutorialTour() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isTutorialActive, currentStep, steps]);
+  }, [isTutorialActive, handleSkip, handleNext, handleBack]);
 
   if (!isTutorialActive || systemState !== "normal") return null;
 
@@ -309,7 +310,7 @@ export function TutorialTour() {
   };
 
   return (
-    <div className="fixed inset-0 z-[99999] overflow-hidden select-none">
+    <div className="fixed inset-0 z-[99999] overflow-hidden select-none" style={{ fontFamily: "system-ui, -apple-system, 'Apple Color Emoji', sans-serif" }}>
       {/* SVG Dark Backdrop Mask */}
       <svg className="absolute inset-0 size-full pointer-events-none">
         <defs>
@@ -344,7 +345,7 @@ export function TutorialTour() {
         <motion.div
           key={currentStep}
           ref={cardRef}
-          style={getCardStyle() as any}
+          style={getCardStyle() as MotionStyle}
           initial={{ opacity: 0, scale: 0.95, y: isMobile ? 20 : 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: isMobile ? 20 : 10 }}
@@ -375,10 +376,10 @@ export function TutorialTour() {
           {/* Card Body */}
           <div className="space-y-2 mb-5">
             <h3 className="text-[16px] font-bold tracking-tight text-foreground">
-              {t(currentStepObj.titleKey)}
+              {formatWithAppleEmojis(t(currentStepObj.titleKey))}
             </h3>
             <p className="text-[13px] leading-relaxed text-muted-foreground dark:text-foreground/80">
-              {t(currentStepObj.descKey)}
+              {formatWithAppleEmojis(t(currentStepObj.descKey))}
             </p>
           </div>
 

@@ -21,7 +21,7 @@ export interface ProjectItem {
   name: string
   description: string
   stack: string[]
-  href: string
+  href?: string
 }
 
 export interface ContactItem {

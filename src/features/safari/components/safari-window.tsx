@@ -63,8 +63,8 @@ export function SafariWindow() {
         {/* Hero Banner */}
         <div className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-6 md:p-8 text-white shadow-md">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-extrabold tracking-tight md:text-4xl">
+            <div className="space-y-2 min-w-0">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold tracking-tight whitespace-nowrap truncate">
                 Juan Daniel González Alejandre
               </h1>
               <p className="text-lg font-medium text-blue-100">
@@ -78,7 +78,7 @@ export function SafariWindow() {
               <img 
                 src="/profile.jpg" 
                 alt="Juan Daniel" 
-                className="size-24 rounded-full border-4 border-white/20 object-cover shadow-lg"
+                className="size-24 sm:size-28 md:size-32 lg:size-36 rounded-full border-4 border-white/20 object-cover shadow-lg"
               />
             </div>
           </div>
@@ -110,9 +110,9 @@ export function SafariWindow() {
                     <div className="absolute -left-[21px] top-1.5 size-3 rounded-full border-2 border-blue-500 bg-background" />
                     
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <h3 className="font-bold text-sm">{formatWithAppleEmojis(item.role)}</h3>
+                      <h3 className="font-bold text-sm">{formatWithAppleEmojis(item.company)}</h3>
                       <Badge variant="secondary" className="w-fit text-[10px] font-semibold">
-                        {formatWithAppleEmojis(item.company)} | {formatWithAppleEmojis(item.period)}
+                        {formatWithAppleEmojis(item.period)}
                       </Badge>
                     </div>
                     <ul className="list-disc list-inside space-y-1 text-xs text-muted-foreground pl-1">

@@ -77,7 +77,9 @@ export function SearchSidebar({ compact = false }: { compact?: boolean }) {
         projLines.push(`      "${tech}",`)
       })
       projLines.push(`    ],`)
-      projLines.push(`    href: "${project.href}"`)
+      if (project.href) {
+        projLines.push(`    href: "${project.href}"`)
+      }
       projLines.push(`  },`)
     })
     projLines.push(`];`)

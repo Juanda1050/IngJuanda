@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 function IpadosSignalIcon() {
   return (
@@ -114,8 +115,11 @@ export function IpadosStatusBar({
   charging: boolean;
   activeApp: string | null;
 }) {
+  const { i18n } = useTranslation("common");
+  const locale = i18n.language.startsWith("es") ? "es-ES" : "en-US";
+
   // Format Date for iPadOS top bar (e.g. "Sun Jun 14 9:59 AM")
-  const dateStr = currentTime.toLocaleDateString(undefined, {
+  const dateStr = currentTime.toLocaleDateString(locale, {
     weekday: "short",
     month: "short",
     day: "numeric",

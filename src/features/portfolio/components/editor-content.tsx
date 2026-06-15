@@ -127,9 +127,11 @@ function ProjectsSection() {
             </CodeLine>
           ))}
           <CodeLine indent={2}>],</CodeLine>
-          <CodeLine indent={2}>
-            <span className={codeColor.property}>href</span>: <span className={codeColor.string}>{toCodeString(project.href)}</span>,
-          </CodeLine>
+          {project.href && (
+            <CodeLine indent={2}>
+              <span className={codeColor.property}>href</span>: <span className={codeColor.string}>{toCodeString(project.href)}</span>,
+            </CodeLine>
+          )}
           <CodeLine indent={1}>
             {'}'}
             {projectIndex < items.length - 1 ? ',' : ''}

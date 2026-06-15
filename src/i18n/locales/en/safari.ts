@@ -37,15 +37,13 @@ export const safariEn = {
     projectsItems: [
       {
         name: "Axosmoney",
-        description: "Fintech platform redesigned completely, optimizing self-registration flows and integrating an Amazon Business rewards program.",
-        stack: ["React", "TypeScript", ".NET", "Figma"],
-        href: "https://www.ing-juanda.com.mx"
+        description: "A comprehensive application for uploading receipts, managing suppliers, invoicing, integrating third-party services with SAP Concur, and a rewards program with Amazon Business.",
+        stack: ["Next.js", "TypeScript", ".NET", "Figma"],
       },
       {
         name: "Axosnet Components",
         description: "Reusable corporate UI library created to standardize interface design and speed up cross-team development.",
-        stack: ["React", "TypeScript", "TailwindCSS", "Figma"],
-        href: "https://github.com/Juanda1050"
+        stack: ["React 19", "TypeScript", "Storybook", "TailwindCSS", "shadcn", "Figma"],
       }
     ],
 

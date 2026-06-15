@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { X, ChevronRight, ChevronLeft, Sparkles } from "lucide-react";
 import { useUiStore } from "@/store/ui-store";
 import { type AppType } from "@/layouts/hooks/useIosLayout";
+import { formatWithAppleEmojis } from "@/components/apple-emoji-utils";
 
 interface TourStep {
   targetId?: string;
@@ -276,7 +277,7 @@ export function IosTutorial({
   const hasTarget = !!targetRect && !!currentStepObj.targetId;
 
   return (
-    <div className="fixed inset-0 z-[99999] select-none pointer-events-none">
+    <div className="fixed inset-0 z-[99999] select-none pointer-events-none" style={{ fontFamily: "system-ui, -apple-system, 'Apple Color Emoji', sans-serif" }}>
       {/* ── 4-panel spotlight backdrop ── */}
       {!hasTarget ? (
         /* Full-screen dark for center steps (welcome / finish) */
@@ -400,10 +401,10 @@ export function IosTutorial({
           {/* Card Body */}
           <div className="space-y-1.5 mb-5">
             <h3 className="text-base font-bold tracking-tight text-white">
-              {currentStepObj.title}
+              {formatWithAppleEmojis(currentStepObj.title)}
             </h3>
             <p className="text-xs leading-relaxed text-white/80">
-              {currentStepObj.description}
+              {formatWithAppleEmojis(currentStepObj.description)}
             </p>
           </div>
 
