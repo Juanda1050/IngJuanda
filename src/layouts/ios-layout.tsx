@@ -13,7 +13,8 @@ import { PhoneWindow } from "@/features/phone/components/phone-window";
 import { WallpaperBackground } from "@/components/wallpaper-background";
 import { DashboardWindow } from "@/features/dashboard/components/dashboard-window";
 import { IOS_APPS, IOS_DOCK_APPS } from "../constants/ios-layout.constants";
-import { useIosLayout } from "./hooks/useIosLayout";
+import { useIosLayout, type AppType } from "./hooks/useIosLayout";
+import { AppWrapper } from "@/components/app-wrapper";
 
 function IosSignalIcon() {
   return (
@@ -208,7 +209,7 @@ export function IosLayout() {
   const renderIcon = (app: { id: string; name: string; icon: string }) => (
     <button
       id={`ios-app-${app.id}`}
-      onClick={() => setActiveApp(app.id)}
+      onClick={() => setActiveApp(app.id as AppType)}
       className="w-[52px] h-[52px] rounded-[11px] flex items-center justify-center shadow-sm active:opacity-70 transition-opacity overflow-hidden bg-transparent"
     >
       <img
@@ -249,25 +250,18 @@ export function IosLayout() {
       </div>
 
       <div className="relative z-10 flex-1 w-full overflow-hidden flex flex-col justify-between pb-8">
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {activeApp ? (
-            <motion.div
-              key="active-app"
-              initial={{ scale: 0.2, y: 350, opacity: 0, borderRadius: "40px" }}
-              animate={{ scale: 1, y: 0, opacity: 1, borderRadius: "0px" }}
-              exit={{ scale: 0.2, y: 350, opacity: 0, borderRadius: "40px" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              style={{
-                x: edgeDragX,
-                y: appY,
-                scale: appScale,
-                borderRadius: appBorderRadius,
-                opacity: appOpacity,
-              }}
-              className="absolute inset-0 bg-[#f2f2f7] dark:bg-black z-20 overflow-hidden"
+            <AppWrapper
+              layoutKey={`active-app-${activeApp}`}
+              edgeDragX={edgeDragX}
+              appY={appY}
+              appScale={appScale}
+              appBorderRadius={appBorderRadius}
+              appOpacity={appOpacity}
             >
               {renderApp()}
-            </motion.div>
+            </AppWrapper>
           ) : (
             <motion.div
               key="home-screen"

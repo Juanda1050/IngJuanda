@@ -9,7 +9,8 @@ import { DashboardWindow } from "@/features/dashboard/components/dashboard-windo
 import { IosSettings } from "@/features/settings/components/ios-settings";
 import { cn } from "@/lib/utils";
 
-import { useIpadosLayout } from "./hooks/use-ipados-layout";
+import { useIpadosLayout, type AppType } from "./hooks/use-ipados-layout";
+import { AppWrapper } from "@/components/app-wrapper";
 import { WallpaperBackground } from "@/components/wallpaper-background";
 import { IpadosStatusBar } from "./components/ipados-status-bar";
 import { IpadosAppGrid } from "./components/ipados-app-grid";
@@ -62,7 +63,7 @@ export function IpadosLayout() {
     switch (activeApp) {
       case "dashboard":
         return (
-          <IpadosAppContainer title={t("dashboard.dockLabel", "Juanda's")}>
+          <IpadosAppContainer title={t("dashboard.dockLabel")}>
             <DashboardWindow />
           </IpadosAppContainer>
         );
@@ -120,26 +121,18 @@ export function IpadosLayout() {
 
       {/* Main workspace container */}
       <div className="relative z-10 flex-1 w-full overflow-hidden flex flex-col justify-between pt-7 pb-8">
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {activeApp ? (
-            <motion.div
-              key="active-app-ipad"
-              initial={{ scale: 0.2, y: 400, opacity: 0, borderRadius: "40px" }}
-              animate={{ scale: 1, y: 0, opacity: 1, borderRadius: "0px" }}
-              exit={{ scale: 0.2, y: 400, opacity: 0, borderRadius: "40px" }}
-              transition={{ type: "spring", damping: 32, stiffness: 280 }}
-              style={{
-                x: edgeDragX,
-                y: appY,
-                scale: appScale,
-                borderRadius: appBorderRadius,
-                opacity: appOpacity,
-                willChange: "transform, opacity",
-              }}
-              className="absolute inset-0 bg-[#f2f2f7] dark:bg-black z-20 overflow-hidden"
+            <AppWrapper
+              layoutKey={`active-app-ipad-${activeApp}`}
+              edgeDragX={edgeDragX}
+              appY={appY}
+              appScale={appScale}
+              appBorderRadius={appBorderRadius}
+              appOpacity={appOpacity}
             >
               {renderApp()}
-            </motion.div>
+            </AppWrapper>
           ) : (
             <motion.div
               key="home-screen-ipad"
@@ -153,7 +146,7 @@ export function IpadosLayout() {
               <div className="flex-1 pt-12 px-12 md:px-24">
                 <IpadosAppGrid
                   apps={IPADOS_APPS}
-                  onAppClick={setActiveApp}
+                  onAppClick={(id) => setActiveApp(id as AppType)}
                   getAppLabel={getAppLabel}
                 />
               </div>
@@ -161,7 +154,7 @@ export function IpadosLayout() {
               {/* Centered wide dock */}
               <IpadosDock
                 apps={IPADOS_DOCK_APPS}
-                onAppClick={setActiveApp}
+                onAppClick={(id) => setActiveApp(id as AppType)}
                 activeApp={activeApp}
               />
             </motion.div>

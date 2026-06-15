@@ -16,7 +16,7 @@ export function IpadosTutorial({
   setActiveApp,
 }: {
   activeApp: string | null;
-  setActiveApp?: (app: string | null) => void;
+  setActiveApp?: (app: any) => void;
 }) {
   const { t } = useTranslation("common");
   const isMobileTutorialActive = useUiStore(
@@ -331,8 +331,8 @@ export function IpadosTutorial({
             height: maskH,
             borderRadius: maskRx,
             zIndex: 100001,
-            pointerEvents: (isRestart.current && step === 2) ? "none" : "auto",
-            cursor: (isRestart.current && step === 2) ? "default" : "pointer",
+            pointerEvents: isRestart.current && step === 2 ? "none" : "auto",
+            cursor: isRestart.current && step === 2 ? "default" : "pointer",
           }}
           onClick={() => {
             if (isRestart.current && step === 2) return;
@@ -436,9 +436,7 @@ export function IpadosTutorial({
                 }}
                 className="text-xs rounded-lg px-3 py-1.5 flex items-center gap-1 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white transition-all font-semibold shadow-md shrink-0"
               >
-                <span>
-                  {step === steps.length - 1 ? "Got it" : "Next"}
-                </span>
+                <span>{step === steps.length - 1 ? "Got it" : "Next"}</span>
                 {step < steps.length - 1 && (
                   <ChevronRight className="w-3.5 h-3.5" />
                 )}

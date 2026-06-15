@@ -16,7 +16,7 @@ export function IosTutorial({
   setActiveApp,
 }: {
   activeApp: string | null;
-  setActiveApp?: (app: string | null) => void;
+  setActiveApp?: (app: any) => void;
 }) {
   const { t } = useTranslation("common");
   const isMobileTutorialActive = useUiStore(
