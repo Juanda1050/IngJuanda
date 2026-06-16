@@ -76,15 +76,15 @@ export const settingsEs = {
   about: {
     title: "Información del Sistema",
     chip: "Chip",
-    chipVal: "Juan Daniel M3 Max (Brain Edition)",
+    chipVal: "M5 Max",
     memory: "Memoria",
     memoryVal: "32 GB RAM (Multi-threaded Logic)",
     storage: "Disco de arranque",
     storageVal: "Macintosh HD (512 GB SSD)",
     osVersion: "Versión de macOS",
-    osVersionVal: "macOS Juanda (Versión 10.5)",
+    osVersionVal: "macOS (Version 10.5)",
     serial: "Número de serie",
-    serialVal: "JDA1050DANIELMX"
+    serialVal: "JDGAMX1050"
   },
   tutorial: {
     title: "Tutorial de Bienvenida",

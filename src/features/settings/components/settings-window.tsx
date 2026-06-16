@@ -158,7 +158,7 @@ export function SettingsWindow() {
             />
             <div className="min-w-0 flex-1">
               <p className="text-[12.5px] font-bold truncate leading-tight">
-                Juan Gonzalez
+                Daniel Alejandre
               </p>
               <p
                 className={cn(
@@ -657,7 +657,7 @@ export function SettingsWindow() {
                   </span>
                   <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
                     <Wifi className="size-3.5 text-green-500" />{" "}
-                    Juanda_Home_WiFi
+                    Home_WiFi
                   </span>
                 </div>
                 <div className="flex justify-between py-2.5">
@@ -701,7 +701,7 @@ export function SettingsWindow() {
                 <Laptop className="size-9 animate-pulse" />
               </div>
               <h3 className="text-lg font-black tracking-tight text-foreground mt-2">
-                JuandaBook Pro 16"
+                Juanda's MacBook Pro
               </h3>
               <p className="text-[11px] text-muted-foreground font-mono select-none">
                 2026 Developer Edition
@@ -752,7 +752,7 @@ export function SettingsWindow() {
             </div>
 
             <div className="text-[10px] text-muted-foreground/60 select-none leading-relaxed">
-              ™ and © 2026 Juan Daniel Gonzalez. All rights reserved.
+              ™ and © 2026 Juan Daniel Gonzalez Alejandre. All rights reserved.
               <br />
               Custom engineering, design layout, and interactive logic modules.
             </div>

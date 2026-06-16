@@ -3,13 +3,13 @@ export const toolbarEn = {
     finder: {
       title: "Finder",
       about: "About This Mac",
-      settings: "System Settings...",
-      forceQuit: "Force Quit...",
+      settings: "System Settings",
+      forceQuit: "Force Quit",
       sleep: "Sleep",
-      restart: "Restart...",
-      shutDown: "Shut Down...",
+      restart: "Restart",
+      shutDown: "Shut Down",
       lockScreen: "Lock Screen",
-      logOut: "Log Out Juan Gonzalez..."
+      logOut: "Log Out"
     },
     file: {
       title: "File",
@@ -58,7 +58,7 @@ export const toolbarEn = {
   },
   profile: {
     title: "User Profile",
-    name: "Juan Gonzalez",
+    name: "Daniel Alejandre",
     email: "danielalejandre1050@gmail.com",
     sendMessage: "Send a message",
     scheduleMeeting: "Schedule a meeting",

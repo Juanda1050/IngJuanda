@@ -266,15 +266,14 @@ function MacMenuBar() {
           <div className="relative" onMouseLeave={() => setShowProfile(false)}>
             <button
               id="profile-avatar"
-              className="rounded-full ring-2 ring-transparent hover:ring-white/50 transition-all active:scale-95"
+              className="rounded-full mt-1 ring-2 ring-transparent hover:ring-white/50 transition-all active:scale-95"
               onClick={() => setShowProfile(!showProfile)}
-              onMouseEnter={() => setShowProfile(true)}
               aria-label="Profile"
             >
               <Avatar className="size-6 cursor-pointer">
                 <AvatarImage src="/profile.jpg" alt="Profile" />
                 <AvatarFallback className="bg-primary/30 text-[10px] font-semibold text-primary">
-                  JG
+                  DA
                 </AvatarFallback>
               </Avatar>
             </button>

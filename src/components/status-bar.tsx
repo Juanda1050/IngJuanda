@@ -43,7 +43,7 @@ export function WifiStatus() {
   const isWifi = type === 'wifi' || type === 'unknown' || type === 'other'
   const label = online
     ? isWifi ? 'Wi-Fi' : type.toUpperCase()
-    : t('wifi.disconnected')
+    : t('toolbar.wifi.disconnected')
 
   return (
     <div ref={ref} className="relative">
@@ -72,27 +72,27 @@ export function WifiStatus() {
             className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-black/10 dark:border-white/10 bg-[#f0f0f0]/95 dark:bg-[#1f1f1f]/95 backdrop-blur-2xl shadow-2xl py-2 px-3 z-[9999]"
           >
             <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
-              {t('wifi.title')}
+              {t('toolbar.wifi.title')}
             </p>
             <div className="flex items-center gap-2.5 py-1">
               <div className={cn('size-6 rounded-full flex items-center justify-center', online ? 'bg-green-500/20' : 'bg-red-500/20')}>
                 {online ? <Wifi className="size-3 text-green-500" /> : <WifiOff className="size-3 text-red-400" />}
               </div>
               <div>
-                <p className="text-[13px] font-semibold text-foreground">{online ? label : t('wifi.disconnected')}</p>
+                <p className="text-[13px] font-semibold text-foreground">{online ? label : t('toolbar.wifi.disconnected')}</p>
                 {online && downlink !== undefined && (
                   <p className="text-[11px] text-muted-foreground">{downlink} Mbps</p>
                 )}
                 {!online && (
-                  <p className="text-[11px] text-muted-foreground">{t('wifi.disconnected')}</p>
+                  <p className="text-[11px] text-muted-foreground">{t('toolbar.wifi.disconnected')}</p>
                 )}
               </div>
             </div>
             <div className="mt-2 pt-2 border-t border-black/10 dark:border-white/10">
               <div className="flex items-center justify-between text-[12px] text-muted-foreground">
-                <span>{t('wifi.type')}</span>
+                <span>{t('toolbar.wifi.type')}</span>
                 <span className={cn('font-semibold', online ? 'text-green-500' : 'text-red-400')}>
-                  {online ? t('wifi.connected') : t('wifi.disconnected')}
+                  {online ? t('toolbar.wifi.connected') : t('toolbar.wifi.disconnected')}
                 </span>
               </div>
             </div>
@@ -139,7 +139,7 @@ export function BatteryStatus() {
           'flex size-7 items-center justify-center rounded-md transition-colors',
           open ? 'bg-white/30 dark:bg-white/15' : 'hover:bg-white/20 dark:hover:bg-white/10'
         )}
-        title={supported ? `${level}% ${charging ? `(${t('battery.charging')})` : ''}` : t('battery.title')}
+        title={supported ? `${level}% ${charging ? `(${t('toolbar.battery.charging')})` : ''}` : t('toolbar.battery.title')}
       >
         <BatteryIcon className={cn('size-3.5', batteryColor)} />
       </button>
@@ -154,7 +154,7 @@ export function BatteryStatus() {
             className="absolute right-0 top-full mt-2 w-56 rounded-xl border border-black/10 dark:border-white/10 bg-[#f0f0f0]/95 dark:bg-[#1f1f1f]/95 backdrop-blur-2xl shadow-2xl py-2 px-3 z-[9999]"
           >
             <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
-              {t('battery.title')}
+              {t('toolbar.battery.title')}
             </p>
             {supported ? (
               <>
@@ -167,7 +167,7 @@ export function BatteryStatus() {
                       <p className="text-[13px] font-semibold text-foreground">{level}%</p>
                       {charging && (
                         <span className="text-[10px] font-bold text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded-full">
-                          {t('battery.charging')}
+                          {t('toolbar.battery.charging')}
                         </span>
                       )}
                     </div>
@@ -184,7 +184,7 @@ export function BatteryStatus() {
                 </div>
               </>
             ) : (
-              <p className="text-[12px] text-muted-foreground py-1">{t('battery.notSupported')}</p>
+              <p className="text-[12px] text-muted-foreground py-1">{t('toolbar.battery.notSupported')}</p>
             )}
           </motion.div>
         )}

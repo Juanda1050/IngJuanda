@@ -3,13 +3,13 @@ export const toolbarEs = {
     finder: {
       title: "Finder",
       about: "Acerca de esta Mac",
-      settings: "Ajustes del Sistema...",
-      forceQuit: "Forzar salida...",
+      settings: "Ajustes del Sistema",
+      forceQuit: "Forzar salida",
       sleep: "Reposo",
-      restart: "Reiniciar...",
-      shutDown: "Apagar equipo...",
+      restart: "Reiniciar",
+      shutDown: "Apagar equipo",
       lockScreen: "Bloquear pantalla",
-      logOut: "Cerrar sesión de Juan Gonzalez..."
+      logOut: "Cerrar sesión"
     },
     file: {
       title: "Archivo",
@@ -58,7 +58,7 @@ export const toolbarEs = {
   },
   profile: {
     title: "Perfil de Usuario",
-    name: "Juan Gonzalez",
+    name: "Daniel Alejandre",
     email: "danielalejandre1050@gmail.com",
     sendMessage: "Enviar mensaje",
     scheduleMeeting: "Agendar reunión",

@@ -222,12 +222,12 @@ export function MacSystemOverlays() {
             >
               {/* User Portrait */}
               <div className="size-20 rounded-full border border-white/20 shadow-2xl overflow-hidden mb-3.5 bg-white/10 flex items-center justify-center text-white/80">
-                <img src="/profile.jpg" alt="Juan Gonzalez" className="size-full object-cover animate-fade-in" />
+                <img src="/profile.jpg" alt="Daniel Alejandre" className="size-full object-cover animate-fade-in" />
               </div>
 
               {/* Username */}
               <h2 className="text-[16px] font-bold text-white mb-4.5 drop-shadow-sm">
-                Juan Gonzalez
+                Daniel Alejandre
               </h2>
 
               {/* Login Button Container */}
