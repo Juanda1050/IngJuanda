@@ -36,7 +36,6 @@ interface SoftSkill {
 export function DashboardWindow() {
   const { t } = useTranslation("common");
   const openApp = useUiStore((state) => state.openApp);
-  const closeApp = useUiStore((state) => state.closeApp);
   const setPreviewPdfUrl = useUiStore((state) => state.setPreviewPdfUrl);
 
   const [hoveredTech, setHoveredTech] = useState<string | null>(null);

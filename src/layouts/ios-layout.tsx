@@ -17,6 +17,7 @@ import { WallpaperBackground } from "@/components/wallpaper-background";
 import { DashboardWindow } from "@/features/dashboard/components/dashboard-window";
 import { IOS_APPS, IOS_DOCK_APPS } from "../constants/ios-layout.constants";
 import { useIosLayout, type AppType } from "./hooks/useIosLayout";
+import { useUiStore } from "@/store/ui-store";
 import { AppWrapper } from "@/components/app-wrapper";
 
 function IosSignalIcon() {
