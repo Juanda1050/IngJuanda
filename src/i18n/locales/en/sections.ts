@@ -1,4 +1,9 @@
 export const sectionsEn = {
+  safari: {
+    title: "Safari",
+    description:
+      "Explore my portfolio, experience, and skills in a format inspired by the Safari browser. Navigate through different sections to learn more about my background and projects.",
+  },
   about: {
     title: "About",
     focus:
@@ -53,7 +58,14 @@ export const sectionsEn = {
         name: "Axosnet Components",
         description:
           "Reusable corporate UI library created to standardize interface design and speed up cross-team development.",
-        stack: ["React 19", "TypeScript", "Storybook", "TailwindCSS", "shadcn", "Figma"],
+        stack: [
+          "React 19",
+          "TypeScript",
+          "Storybook",
+          "TailwindCSS",
+          "shadcn",
+          "Figma",
+        ],
       },
     ],
   },
@@ -73,7 +85,7 @@ export const sectionsEn = {
         "Microservices",
         "REST APIs",
       ],
-      tools: ["AWS", "Git", "Figma", "Open AI"],
+      tools: ["AWS", "Git", "Figma", "Open AI", "Jira"],
       methodologies: ["Scrum", "Agile"],
       languages: ["English (Advanced)", "Spanish (Native)"],
     },

@@ -379,7 +379,7 @@ export function useVscodeLayout() {
       },
       {
         id: "safari",
-        label: t("safari.title"),
+        label: t("sections.safari.title"),
         iconSrc: "/dock-icons/safari.svg",
         active: apps.safari.state !== "closed",
         onClick: () => openApp("safari"),

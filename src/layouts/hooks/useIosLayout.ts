@@ -99,7 +99,7 @@ export function useIosLayout(): UseIosLayoutReturn {
       "calendar",
       "safari",
       "messages",
-      "mail"
+      "mail",
     ];
     if (storeActiveApp && validApps.includes(storeActiveApp as AppType)) {
       return storeActiveApp as AppType;
@@ -107,15 +107,18 @@ export function useIosLayout(): UseIosLayoutReturn {
     return null;
   }, [storeActiveApp]);
 
-  const setActiveApp = useCallback((nextApp: AppType) => {
-    if (nextApp === null) {
-      if (activeApp) {
-        closeApp(activeApp as AppId);
+  const setActiveApp = useCallback(
+    (nextApp: AppType) => {
+      if (nextApp === null) {
+        if (activeApp) {
+          closeApp(activeApp as AppId);
+        }
+      } else {
+        openApp(nextApp as AppId);
       }
-    } else {
-      openApp(nextApp as AppId);
-    }
-  }, [openApp, closeApp, activeApp]);
+    },
+    [openApp, closeApp, activeApp],
+  );
 
   // Reset dragValues cuando cambia activeApp
   useEffect(() => {
@@ -176,7 +179,6 @@ export function useIosLayout(): UseIosLayoutReturn {
     [edgeDragX, handleSwipeBack],
   );
 
-  // Obtener label traducido de la app
   const getAppLabel = useCallback(
     (appId: string, appName: string): string => {
       const labels: Record<string, string> = {
@@ -184,11 +186,11 @@ export function useIosLayout(): UseIosLayoutReturn {
         settings: t("settings.title"),
         calendar: t("calendar.title"),
         notes: t("notes.title"),
-        finder: t("finder.mobileTitle") || "Files",
-        preview: t("finder.preview.title") || "Preview",
-        safari: t("safari.title") || "Safari",
-        messages: t("messages.title") || "Messages",
-        mail: t("mail.title") || "Mail",
+        finder: t("finder.mobileTitle"),
+        preview: t("finder.preview.title"),
+        safari: t("sections..title"),
+        messages: t("messages.title"),
+        mail: t("mail.title"),
       };
       return labels[appId] ?? appName;
     },

@@ -1,6 +1,5 @@
 import { appEn } from './app'
 import { toolbarEn } from './toolbar'
-import { safariEn } from './safari'
 import { finderEn } from './finder'
 import { calendarEn } from './calendar'
 import { notesEn } from './notes'
@@ -14,7 +13,6 @@ import { dashboardEn } from './dashboard'
 export const enCommon = {
   app: appEn,
   toolbar: toolbarEn,
-  safari: safariEn,
   finder: finderEn,
   calendar: calendarEn,
   notes: notesEn,

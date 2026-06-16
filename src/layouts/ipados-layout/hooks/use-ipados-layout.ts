@@ -96,7 +96,7 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
       "calendar",
       "safari",
       "messages",
-      "mail"
+      "mail",
     ];
     if (storeActiveApp && validApps.includes(storeActiveApp as AppType)) {
       return storeActiveApp as AppType;
@@ -104,15 +104,18 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
     return null;
   }, [storeActiveApp]);
 
-  const setActiveApp = useCallback((nextApp: AppType) => {
-    if (nextApp === null) {
-      if (activeApp) {
-        closeApp(activeApp as AppId);
+  const setActiveApp = useCallback(
+    (nextApp: AppType) => {
+      if (nextApp === null) {
+        if (activeApp) {
+          closeApp(activeApp as AppId);
+        }
+      } else {
+        openApp(nextApp as AppId);
       }
-    } else {
-      openApp(nextApp as AppId);
-    }
-  }, [openApp, closeApp, activeApp]);
+    },
+    [openApp, closeApp, activeApp],
+  );
 
   // Reset dragValues cuando cambia activeApp
   useEffect(() => {
@@ -139,10 +142,8 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
         damping: 30,
       });
     }
-  }, [edgeDragX]);
+  }, [edgeDragX, setActiveApp]);
 
-  // Handler: Drag del home indicator (abrir/cerrar app)
-  // Para iPad, umbral más alto porque la pantalla es más grande
   const handleHomeDragEnd = useCallback(
     (_: unknown, info: DragInfo) => {
       if (info.offset.y < -80 || info.velocity.y < -400) {
@@ -174,7 +175,6 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
     [edgeDragX, handleSwipeBack],
   );
 
-  // Obtener label traducido de la app
   const getAppLabel = useCallback(
     (appId: string, appName: string): string => {
       const labels: Record<string, string> = {
@@ -182,11 +182,11 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
         settings: t("settings.title"),
         calendar: t("calendar.title"),
         notes: t("notes.title"),
-        finder: t("finder.mobileTitle") || "Files",
-        preview: t("finder.preview.title") || "Preview",
-        safari: t("safari.title") || "Safari",
-        messages: t("messages.title") || "Messages",
-        mail: t("mail.title") || "Mail",
+        finder: t("finder.mobileTitle"),
+        preview: t("finder.preview.title"),
+        safari: t("sections.afari.title"),
+        messages: t("messages.title"),
+        mail: t("mail.title"),
       };
       return labels[appId] ?? appName;
     },
@@ -216,6 +216,7 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
       t,
       currentTime,
       activeApp,
+      setActiveApp,
       wallpaper,
       level,
       charging,
@@ -231,25 +232,3 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
     ],
   );
 }
-
-/**
- * DIFERENCIAS CON iOS:
- *
- * 1. **Umbrales de gesto ajustados para iPad**:
- *    - homeDrag: -80px (vs -60px en iOS)
- *    - edgeDrag: 100px (vs 80px en iOS)
- *    - Velocidades más altas también
- *    - iPad tiene pantalla más grande, gestos requieren distancias mayores
- *
- * 2. **Transiciones más sutiles**:
- *    - appScale: 0.9 en lugar de 0.85
- *    - appBorderRadius: 32px en lugar de 40px
- *    - appY: -80px en lugar de -100px
- *    - Refleja la experiencia visual esperada en iPad
- *
- * 3. **Event names específicos**:
- *    - "ipados-swipe-back" en lugar de "ios-swipe-back"
- *    - Permite handlers diferentes por plataforma si es necesario
- *
- * TODO LO DEMÁS (tipos, useCallback, useMemo) es igual al hook de iOS
- */

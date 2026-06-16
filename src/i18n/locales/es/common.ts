@@ -1,6 +1,5 @@
 import { appEs } from './app'
 import { toolbarEs } from './toolbar'
-import { safariEs } from './safari'
 import { finderEs } from './finder'
 import { calendarEs } from './calendar'
 import { notesEs } from './notes'
@@ -14,7 +13,6 @@ import { dashboardEs } from './dashboard'
 export const esCommon = {
   app: appEs,
   toolbar: toolbarEs,
-  safari: safariEs,
   finder: finderEs,
   calendar: calendarEs,
   notes: notesEs,

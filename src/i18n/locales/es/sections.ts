@@ -73,7 +73,7 @@ export const sectionsEs = {
         "Microservicios",
         "APIs REST",
       ],
-      herramientas: ["AWS", "Git", "Figma", "Open AI"],
+      herramientas: ["AWS", "Git", "Figma", "Open AI", "Jira"],
       metodologias: ["Scrum", "Agile"],
       idiomas: ["Inglés (Avanzado)", "Español (Nativo)"],
     },

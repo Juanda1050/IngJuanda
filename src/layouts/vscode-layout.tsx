@@ -892,7 +892,7 @@ export function VscodeLayout() {
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <DesktopWindow
                     appId="safari"
-                    title={t("safari.title")}
+                    title={t("sections.safari.title")}
                     defaultSizeClass="w-[min(90vw,1100px)] h-[75vh] min-h-[550px]"
                   >
                     <SafariWindow />
