@@ -1,5 +1,6 @@
 export const finderEn = {
   title: "Finder",
+  mobileTitle: "Files",
   sidebar: {
     favorites: "Favorites",
     recents: "Recents",
@@ -20,12 +21,12 @@ export const finderEn = {
   files: {
     cvEs: {
       name: "CV_Juan_Daniel_Gonzalez_ES.pdf",
-      size: "2.2 MB",
+      size: "344 KB",
       date: "Today, 10:45 AM"
     },
     cvEn: {
       name: "Resume_Juan_Daniel_Gonzalez_EN.pdf",
-      size: "2.2 MB",
+      size: "340 KB",
       date: "Yesterday, 3:20 PM"
     }
   },
@@ -35,6 +36,9 @@ export const finderEn = {
     zoomIn: "Zoom In",
     zoomOut: "Zoom Out",
     noDocument: "No document selected",
-    instructions: "Click a PDF file in Finder to view it here."
+    instructions: "Click a PDF file in Finder to view it here.",
+    openPdf: "Open Full PDF",
+    downloadPdf: "Download PDF",
+    mobileInstructions: "This PDF file will open in a new tab for optimal viewing on iOS/iPadOS devices."
   }
 } as const;

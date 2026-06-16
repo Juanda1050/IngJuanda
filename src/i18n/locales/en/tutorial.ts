@@ -80,7 +80,7 @@ export const tutorialEn = {
     },
     dock: {
       title: "App Dock 📥",
-      desc: "Quick access to Phone, Safari, Messages, and Mail."
+      desc: "Quick access to Files, Safari, Messages, and Mail."
     },
     step2: {
       title: "Settings App ⚙️",

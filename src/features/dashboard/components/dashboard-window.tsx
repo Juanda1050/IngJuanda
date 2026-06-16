@@ -144,12 +144,11 @@ export function DashboardWindow() {
   const handleViewResume = (lang: "ES" | "EN") => {
     const resumePath =
       lang === "ES"
-        ? "/profile/CV Juan Daniel González Alejandre.pdf"
-        : "/profile/Resume Juan Daniel González Alejandre.pdf";
+        ? "/profile/CV_Juan_Daniel_Gonzalez_ES.pdf"
+        : "/profile/Resume_Juan_Daniel_Gonzalez_EN.pdf";
 
     setPreviewPdfUrl(resumePath);
     openApp("preview");
-    closeApp("dashboard");
   };
 
   return (

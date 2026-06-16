@@ -9,7 +9,10 @@ import { MailWindow } from "@/features/mail/components/mail-window";
 import { cn } from "@/lib/utils";
 import { IosTutorial } from "@/components/ios-tutorial";
 import { IosSettings } from "@/features/settings/components/ios-settings";
-import { PhoneWindow } from "@/features/phone/components/phone-window";
+import { FinderWindow } from "@/features/finder/components/finder-window";
+import { PreviewWindow } from "@/features/preview/components/preview-window";
+import { useTranslation } from "react-i18next";
+import { ChevronLeft } from "lucide-react";
 import { WallpaperBackground } from "@/components/wallpaper-background";
 import { DashboardWindow } from "@/features/dashboard/components/dashboard-window";
 import { IOS_APPS, IOS_DOCK_APPS } from "../constants/ios-layout.constants";
@@ -121,14 +124,27 @@ function IosBatteryIcon({
 function IosAppContainer({
   title,
   children,
+  onBack,
 }: {
   title: string;
   children: React.ReactNode;
+  onBack?: () => void;
 }) {
+  const { t } = useTranslation("common");
   return (
     <div className="flex flex-col h-full w-full bg-[#f2f2f7] dark:bg-black text-black dark:text-white font-sans overflow-hidden select-none pb-6">
       <div className="flex items-center justify-between px-4 h-[88px] bg-[#f2f2f7]/80 dark:bg-[#1c1c1e]/80 backdrop-blur-md border-b border-black/10 dark:border-white/10 z-10 pt-[44px] shrink-0">
-        <div className="w-[60px]" />
+        <div className="w-[60px] flex items-center justify-start">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="flex items-center text-blue-500 hover:opacity-75 active:opacity-50 text-sm font-semibold select-none cursor-pointer"
+            >
+              <ChevronLeft className="size-5 shrink-0" />
+              <span>{t("actions.close") || "Back"}</span>
+            </button>
+          )}
+        </div>
         <span className="font-semibold text-base md:text-lg truncate max-w-[150px]">
           {title}
         </span>
@@ -169,10 +185,19 @@ export function IosLayout() {
         );
       case "settings":
         return <IosSettings onClose={() => setActiveApp(null)} />;
-      case "phone":
+      case "finder":
         return (
-          <IosAppContainer title="Phone">
-            <PhoneWindow />
+          <IosAppContainer title={t("finder.mobileTitle") || "Files"}>
+            <FinderWindow />
+          </IosAppContainer>
+        );
+      case "preview":
+        return (
+          <IosAppContainer
+            title={t("finder.preview.title") || "Preview"}
+            onBack={() => setActiveApp(null)}
+          >
+            <PreviewWindow />
           </IosAppContainer>
         );
       case "notes":
@@ -312,7 +337,7 @@ export function IosLayout() {
         style={{ y: homeDragY }}
         onDragEnd={handleHomeDragEnd}
         onClick={() => {
-          if (activeApp) setActiveApp(null);
+          if (activeApp) useUiStore.setState({ activeApp: null });
         }}
         className="absolute bottom-0 left-0 right-0 h-8 flex items-end justify-center pb-2 z-30 cursor-pointer outline-none border-none bg-transparent"
         aria-label="Home"

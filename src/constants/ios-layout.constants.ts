@@ -24,10 +24,10 @@ export const IOS_APPS: IosApp[] = [
 
 export const IOS_DOCK_APPS: IosApp[] = [
   {
-    id: "phone",
-    name: "Phone",
-    icon: "/dock-icons/phone.svg",
-    color: "#34C759",
+    id: "finder",
+    name: "Files",
+    icon: "/dock-icons/files.svg",
+    color: "#fff",
   },
   {
     id: "safari",

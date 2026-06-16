@@ -240,16 +240,20 @@ export function SettingsWindow() {
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <a
-                  href="/profile/CV Juan Daniel González Alejandre.pdf"
-                  download
+                  href="/profile/CV_Juan_Daniel_Gonzalez_ES.pdf"
+                  download="CV_Juan_Daniel_Gonzalez_ES.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center justify-between rounded-xl border border-border bg-background p-3 text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 hover:translate-y-[-1px] transition-all"
                 >
                   <span>{t("settings.profile.downloadEs")}</span>
                   <ArrowUpRight className="size-4 text-blue-500" />
                 </a>
                 <a
-                  href="/profile/Resume Juan Daniel González Alejandre.pdf"
-                  download
+                  href="/profile/Resume_Juan_Daniel_Gonzalez_EN.pdf"
+                  download="Resume_Juan_Daniel_Gonzalez_EN.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center justify-between rounded-xl border border-border bg-background p-3 text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/5 hover:translate-y-[-1px] transition-all"
                 >
                   <span>{t("settings.profile.downloadEn")}</span>

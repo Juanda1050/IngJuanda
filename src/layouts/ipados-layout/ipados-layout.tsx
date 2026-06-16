@@ -1,13 +1,17 @@
 import { motion, AnimatePresence } from "framer-motion";
+import { useUiStore } from "@/store/ui-store";
 import { CalendarWindow } from "@/features/calendar/components/calendar-window";
 import { NotesWindow } from "@/features/notes/components/notes-window";
 import { SafariWindow } from "@/features/safari/components/safari-window";
 import { MessagesWindow } from "@/features/messages/messages-window";
 import { MailWindow } from "@/features/mail/components/mail-window";
-import { PhoneWindow } from "@/features/phone/components/phone-window";
+import { FinderWindow } from "@/features/finder/components/finder-window";
+import { PreviewWindow } from "@/features/preview/components/preview-window";
 import { DashboardWindow } from "@/features/dashboard/components/dashboard-window";
 import { IosSettings } from "@/features/settings/components/ios-settings";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import { ChevronLeft } from "lucide-react";
 
 import { useIpadosLayout, type AppType } from "./hooks/use-ipados-layout";
 import { AppWrapper } from "@/components/app-wrapper";
@@ -21,18 +25,31 @@ import { IPADOS_APPS, IPADOS_DOCK_APPS } from "./constants/ipados-apps";
 function IpadosAppContainer({
   title,
   children,
+  onBack,
 }: {
   title: string;
   children: React.ReactNode;
+  onBack?: () => void;
 }) {
+  const { t } = useTranslation("common");
   return (
     <div className="flex flex-col h-full w-full bg-[#f2f2f7] dark:bg-black text-black dark:text-white font-sans overflow-hidden select-none pb-6">
       <div className="flex items-center justify-between px-6 h-[80px] bg-[#f2f2f7]/80 dark:bg-[#1c1c1e]/80 backdrop-blur-md border-b border-black/10 dark:border-white/10 z-10 pt-[28px] shrink-0">
-        <div className="w-[60px]" />
+        <div className="w-[80px] flex items-center justify-start">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="flex items-center text-blue-500 hover:opacity-75 active:opacity-50 text-sm font-semibold select-none cursor-pointer"
+            >
+              <ChevronLeft className="size-5 shrink-0" />
+              <span>{t("actions.close") || "Back"}</span>
+            </button>
+          )}
+        </div>
         <span className="font-bold text-base md:text-lg tracking-wide truncate max-w-[200px]">
           {title}
         </span>
-        <div className="w-[60px]" />
+        <div className="w-[80px]" />
       </div>
       <div className="flex-1 overflow-hidden relative">{children}</div>
     </div>
@@ -69,10 +86,19 @@ export function IpadosLayout() {
         );
       case "settings":
         return <IosSettings onClose={() => setActiveApp(null)} layout="ipad" />;
-      case "phone":
+      case "finder":
         return (
-          <IpadosAppContainer title="Phone">
-            <PhoneWindow />
+          <IpadosAppContainer title={t("finder.mobileTitle") || "Files"}>
+            <FinderWindow />
+          </IpadosAppContainer>
+        );
+      case "preview":
+        return (
+          <IpadosAppContainer
+            title={t("finder.preview.title") || "Preview"}
+            onBack={() => setActiveApp(null)}
+          >
+            <PreviewWindow />
           </IpadosAppContainer>
         );
       case "notes":
@@ -172,10 +198,10 @@ export function IpadosLayout() {
         style={{ y: homeDragY }}
         onDragEnd={handleHomeDragEnd}
         onTap={() => {
-          if (activeApp) setActiveApp(null);
+          if (activeApp) useUiStore.setState({ activeApp: null });
         }}
         onClick={() => {
-          if (activeApp) setActiveApp(null);
+          if (activeApp) useUiStore.setState({ activeApp: null });
         }}
         className="absolute bottom-0 left-0 right-0 h-8 flex items-end justify-center pb-2 z-30 cursor-pointer outline-none border-none bg-transparent"
         aria-label="Home"
@@ -185,7 +211,7 @@ export function IpadosLayout() {
           whileTap={{ scale: 0.95 }}
           onClick={(e) => {
             e.stopPropagation();
-            if (activeApp) setActiveApp(null);
+            if (activeApp) useUiStore.setState({ activeApp: null });
           }}
           className={cn(
             "w-[180px] h-1.5 rounded-full shadow-sm transition-colors duration-200",

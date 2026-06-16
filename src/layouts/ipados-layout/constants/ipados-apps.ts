@@ -29,10 +29,10 @@ export const IPADOS_APPS: IpadosApp[] = [
 
 export const IPADOS_DOCK_APPS: IpadosApp[] = [
   {
-    id: "phone",
-    name: "Phone",
-    icon: "/dock-icons/phone.svg",
-    color: "#34C759",
+    id: "finder",
+    name: "Files",
+    icon: "/dock-icons/files.svg",
+    color: "#fff",
   },
   {
     id: "safari",

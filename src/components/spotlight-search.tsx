@@ -100,7 +100,7 @@ export function SpotlightSearch() {
       desc: 'PDF Reader',
       icon: FileText,
       action: () => {
-        setPreviewPdfUrl('/profile/CV Juan Daniel González Alejandre.pdf')
+        setPreviewPdfUrl('/profile/CV_Juan_Daniel_Gonzalez_ES.pdf')
         openApp('preview')
       },
     },
@@ -109,7 +109,7 @@ export function SpotlightSearch() {
       desc: 'PDF Reader',
       icon: FileText,
       action: () => {
-        setPreviewPdfUrl('/profile/Resume Juan Daniel González Alejandre.pdf')
+        setPreviewPdfUrl('/profile/Resume_Juan_Daniel_Gonzalez_EN.pdf')
         openApp('preview')
       },
     },

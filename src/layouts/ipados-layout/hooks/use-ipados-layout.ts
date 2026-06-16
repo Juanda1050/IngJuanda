@@ -15,7 +15,8 @@ import { useBattery } from "@/hooks/use-system-info";
 export type AppType =
   | "dashboard"
   | "settings"
-  | "phone"
+  | "finder"
+  | "preview"
   | "notes"
   | "calendar"
   | "safari"
@@ -56,7 +57,6 @@ interface UseIpadosLayoutReturn {
 export function useIpadosLayout(): UseIpadosLayoutReturn {
   const { t } = useTranslation("common");
   const [currentTime, setCurrentTime] = useState<Date>(new Date());
-  const [activeApp, _setActiveApp] = useState<AppType>("dashboard");
   const wallpaper = useUiStore((state) => state.wallpaper);
   const { level, charging } = useBattery();
 
@@ -82,29 +82,37 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
     [0, 1, 1],
   );
 
+  const storeActiveApp = useUiStore((state) => state.activeApp);
   const openApp = useUiStore((state) => state.openApp);
   const closeApp = useUiStore((state) => state.closeApp);
 
-  const setActiveApp = useCallback((nextApp: AppType) => {
-    _setActiveApp((prevApp) => {
-      if (prevApp !== nextApp) {
-        if (prevApp && prevApp !== "phone") {
-          closeApp(prevApp as AppId);
-        }
-        if (nextApp && nextApp !== "phone") {
-          openApp(nextApp as AppId);
-        }
-      }
-      return nextApp;
-    });
-  }, [openApp, closeApp]);
-
-  // Open the initial active app in the store on mount
-  useEffect(() => {
-    if (activeApp && activeApp !== "phone") {
-      openApp(activeApp as AppId);
+  const activeApp = useMemo(() => {
+    const validApps: AppType[] = [
+      "dashboard",
+      "settings",
+      "finder",
+      "preview",
+      "notes",
+      "calendar",
+      "safari",
+      "messages",
+      "mail"
+    ];
+    if (storeActiveApp && validApps.includes(storeActiveApp as AppType)) {
+      return storeActiveApp as AppType;
     }
-  }, [openApp]);
+    return null;
+  }, [storeActiveApp]);
+
+  const setActiveApp = useCallback((nextApp: AppType) => {
+    if (nextApp === null) {
+      if (activeApp) {
+        closeApp(activeApp as AppId);
+      }
+    } else {
+      openApp(nextApp as AppId);
+    }
+  }, [openApp, closeApp, activeApp]);
 
   // Reset dragValues cuando cambia activeApp
   useEffect(() => {
@@ -138,7 +146,7 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
   const handleHomeDragEnd = useCallback(
     (_: unknown, info: DragInfo) => {
       if (info.offset.y < -80 || info.velocity.y < -400) {
-        setActiveApp(null);
+        useUiStore.setState({ activeApp: null });
       } else {
         animate(homeDragY, 0, {
           type: "spring",
@@ -174,7 +182,8 @@ export function useIpadosLayout(): UseIpadosLayoutReturn {
         settings: t("settings.title"),
         calendar: t("calendar.title"),
         notes: t("notes.title"),
-        phone: t("phone.title") || "Phone",
+        finder: t("finder.mobileTitle") || "Files",
+        preview: t("finder.preview.title") || "Preview",
         safari: t("safari.title") || "Safari",
         messages: t("messages.title") || "Messages",
         mail: t("mail.title") || "Mail",

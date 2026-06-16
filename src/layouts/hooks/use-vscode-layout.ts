@@ -119,7 +119,7 @@ export function useMacMenuBar() {
         {
           label: t("toolbar.profile.viewResume") + " (Spanish)",
           action: () => {
-            setPreviewPdfUrl("/profile/CV Juan Daniel González Alejandre.pdf");
+            setPreviewPdfUrl("/profile/CV_Juan_Daniel_Gonzalez_ES.pdf");
             openApp("preview");
           },
         },
@@ -127,7 +127,7 @@ export function useMacMenuBar() {
           label: t("toolbar.profile.viewResume") + " (English)",
           action: () => {
             setPreviewPdfUrl(
-              "/profile/Resume Juan Daniel González Alejandre.pdf",
+              "/profile/Resume_Juan_Daniel_Gonzalez_EN.pdf",
             );
             openApp("preview");
           },

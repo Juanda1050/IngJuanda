@@ -10,7 +10,17 @@ export const useChat = () => {
   const [typedMessage, setTypedMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [usedOptionKeys, setUsedOptionKeys] = useState<Set<string>>(new Set());
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => [
+    {
+      id: "welcome",
+      sender: "bot",
+      text: t("messages.welcome"),
+      timestamp: new Date().toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    },
+  ]);
 
   const chatEndRef = useRef<HTMLDivElement>(null);
 
@@ -19,22 +29,7 @@ export const useChat = () => {
     return Array.isArray(options) ? (options as DialogOption[]) : [];
   }, [t]);
 
-  useEffect(() => {
-    setMessages((prev) => {
-      if (prev.length > 0) return prev;
-      return [
-        {
-          id: "welcome",
-          sender: "bot",
-          text: t("messages.welcome"),
-          timestamp: new Date().toLocaleTimeString(undefined, {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-        },
-      ];
-    });
-  }, [t]);
+
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -102,38 +97,39 @@ export const useChat = () => {
 
     setTimeout(() => {
       const lowerText = userText.toLowerCase();
-      let responseText = "";
 
-      if (
-        lowerText.includes("experiencia") ||
-        lowerText.includes("trabaj") ||
-        lowerText.includes("experience") ||
-        lowerText.includes("career") ||
-        lowerText.includes("job")
-      ) {
-        responseText =
-          dialogOptions.find((d) => d.key === "experience")?.response || "";
-      } else if (
-        lowerText.includes("tecnolog") ||
-        lowerText.includes("stack") ||
-        lowerText.includes("skill") ||
-        lowerText.includes("habilidad") ||
-        lowerText.includes("herramienta")
-      ) {
-        responseText =
-          dialogOptions.find((d) => d.key === "skills")?.response || "";
-      } else if (
-        lowerText.includes("contact") ||
-        lowerText.includes("correo") ||
-        lowerText.includes("email") ||
-        lowerText.includes("linkedin") ||
-        lowerText.includes("telefono")
-      ) {
-        responseText =
-          dialogOptions.find((d) => d.key === "contact")?.response || "";
-      } else {
-        responseText = t("messages.fallbackResponse");
-      }
+      const getResponseText = (): string => {
+        if (
+          lowerText.includes("experiencia") ||
+          lowerText.includes("trabaj") ||
+          lowerText.includes("experience") ||
+          lowerText.includes("career") ||
+          lowerText.includes("job")
+        ) {
+          return dialogOptions.find((d) => d.key === "experience")?.response ?? "";
+        }
+        if (
+          lowerText.includes("tecnolog") ||
+          lowerText.includes("stack") ||
+          lowerText.includes("skill") ||
+          lowerText.includes("habilidad") ||
+          lowerText.includes("herramienta")
+        ) {
+          return dialogOptions.find((d) => d.key === "skills")?.response ?? "";
+        }
+        if (
+          lowerText.includes("contact") ||
+          lowerText.includes("correo") ||
+          lowerText.includes("email") ||
+          lowerText.includes("linkedin") ||
+          lowerText.includes("telefono")
+        ) {
+          return dialogOptions.find((d) => d.key === "contact")?.response ?? "";
+        }
+        return t("messages.fallbackResponse");
+      };
+
+      const responseText = getResponseText();
 
       const botMsg: Message = {
         id: `bot-${Date.now()}`,
