@@ -8,14 +8,14 @@ export const settingsEs = {
     sound: "Sonido",
     battery: "Batería",
     wifi: "Wi-Fi",
-    about: "Acerca de este Mac"
+    about: "Acerca de este Mac",
   },
   profile: {
     title: "Perfil de Usuario",
     subtitle: "Tarjeta de Contacto Profesional",
     downloadEs: "Descargar CV (Español)",
     downloadEn: "Descargar Resume (Inglés)",
-    linksTitle: "Enlaces Sociales"
+    linksTitle: "Enlaces Sociales",
   },
   appearance: {
     title: "Aspecto del Sistema",
@@ -25,9 +25,10 @@ export const settingsEs = {
     system: "Auto / Sistema",
     finderTitle: "Finder",
     finderClickToOpen: "Abrir archivos con",
-    finderClickToOpenDesc: "Elige si deseas abrir archivos con un solo clic o doble clic.",
+    finderClickToOpenDesc:
+      "Elige si deseas abrir archivos con un solo clic o doble clic.",
     singleClick: "Un solo clic",
-    doubleClick: "Doble clic"
+    doubleClick: "Doble clic",
   },
   desktop: {
     title: "Fondos de Pantalla",
@@ -37,33 +38,44 @@ export const settingsEs = {
       monterey: "Olas de Monterey",
       sonoma: "Sonoma Horizonte",
       aurora: "Aurora Boreal",
-      midnight: "Curvas de Medianoche"
-    }
+      midnight: "Curvas de Medianoche",
+    },
   },
   displays: {
     title: "Ajustes de Pantalla",
     brightness: "Brillo",
     nightShift: "Night Shift",
-    nightShiftDesc: "Night Shift cambia los colores de la pantalla a tonos más cálidos tras el anochecer para reducir la fatiga visual.",
+    nightShiftDesc:
+      "Night Shift cambia los colores de la pantalla a tonos más cálidos tras el anochecer para reducir la fatiga visual.",
     gfxAccel: "Aceleración gráfica",
-    gfxAccelDesc: "Desactiva la aceleración gráfica para optimizar el rendimiento en entornos renderizados por CPU (ej. máquinas virtuales o equipos antiguos). Esto desactiva desenfoques de fondo, filtros SVG y animaciones."
+    gfxAccelDesc:
+      "Desactiva la aceleración gráfica para optimizar el rendimiento en entornos renderizados por CPU (ej. máquinas virtuales o equipos antiguos). Esto desactiva desenfoques de fondo, filtros SVG y animaciones.",
   },
   performance: {
-    title: "Rendimiento"
+    title: "Rendimiento",
   },
   sound: {
     title: "Ajustes de Sonido",
     masterVolume: "Volumen principal",
-    mute: "Silenciar audio"
+    mute: "Silenciar audio",
   },
   battery: {
-    title: "Condición de la Batería",
-    health: "Condición de batería",
-    healthDesc: "Normal (Capacidad Máxima 98%)",
-    cycles: "Ciclos de carga",
-    cyclesDesc: "184 ciclos",
-    energySaver: "Modo ahorrar energía",
-    energySaverDesc: "Reduce el consumo energético al optimizar recursos de red y animaciones."
+    title: "Batería",
+    health: "Estado de la batería",
+    charging: "Cargando",
+    onBatteryPower: "Usando batería",
+    calculating: "Calculando...",
+    timeRemaining: "Tiempo restante",
+    timeUntilFull: "Tiempo estimado para carga completa",
+    usageTime: "Tiempo de uso estimado",
+    fullyCharged: "Carga completa",
+    hoursAndMins: "{{hrs}} h {{mins}} min",
+    onlyMins: "{{mins}} min",
+    cycles: "Fuente de energía",
+    cyclesDesc: "Suministro de energía actual",
+    energySaver: "Modo de bajo consumo",
+    energySaverDesc:
+      "Reduce el uso de energía para aumentar la duración de la batería.",
   },
   wifi: {
     title: "Estado de Conexión",
@@ -71,7 +83,7 @@ export const settingsEs = {
     ipAddress: "Dirección IP",
     connectionQuality: "Calidad de red",
     speed: "Velocidad de descarga",
-    secProtocol: "Protocolo de seguridad"
+    secProtocol: "Protocolo de seguridad",
   },
   about: {
     title: "Información del Sistema",
@@ -84,10 +96,10 @@ export const settingsEs = {
     osVersion: "Versión de macOS",
     osVersionVal: "macOS (Version 10.5)",
     serial: "Número de serie",
-    serialVal: "JDGAMX1050"
+    serialVal: "JDGAMX1050",
   },
   tutorial: {
     title: "Tutorial de Bienvenida",
-    restart: "Volver a ver el tutorial"
-  }
+    restart: "Volver a ver el tutorial",
+  },
 } as const;

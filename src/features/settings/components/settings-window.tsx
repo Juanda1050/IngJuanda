@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "next-themes";
 import {
@@ -13,12 +13,34 @@ import {
   Moon,
   Sun,
   ArrowUpRight,
+  BatteryCharging,
 } from "lucide-react";
 import { useUiStore } from "@/store/ui-store";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/shared/ui";
 import { SiApple } from "react-icons/si";
 import { WallpaperBackground } from "@/components/wallpaper-background";
+import type { TFunction } from "i18next";
+
+interface BatteryManager extends EventTarget {
+  charging: boolean;
+  level: number;
+  chargingTime: number;
+  dischargingTime: number;
+}
+
+interface NetworkInformation extends EventTarget {
+  downlink?: number;
+  effectiveType?: string;
+  type?: string;
+}
+
+interface ExtendedNavigator extends Navigator {
+  getBattery?: () => Promise<BatteryManager>;
+  connection?: NetworkInformation;
+  mozConnection?: NetworkInformation;
+  webkitConnection?: NetworkInformation;
+}
 
 type TabId =
   | "profile"
@@ -48,12 +70,34 @@ function ToggleIcon({ className }: { className?: string }) {
   );
 }
 
+function formatBatteryTime(seconds: number | null, t: TFunction): string {
+  if (
+    seconds === null ||
+    seconds === Infinity ||
+    isNaN(seconds) ||
+    seconds === 0
+  ) {
+    return t("settings.battery.calculating");
+  }
+
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+
+  if (hrs > 0) {
+    return t("settings.battery.hoursAndMins", {
+      hrs,
+      mins,
+    });
+  }
+
+  return t("settings.battery.onlyMins", { mins });
+}
+
 export function SettingsWindow() {
   const { t } = useTranslation("common");
   const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<TabId>("profile");
 
-  // Global settings states from Zustand store
   const volume = useUiStore((state) => state.volume);
   const setVolume = useUiStore((state) => state.setVolume);
   const muted = useUiStore((state) => state.muted);
@@ -68,16 +112,74 @@ export function SettingsWindow() {
   const nightShift = useUiStore((state) => state.nightShift);
   const setNightShift = useUiStore((state) => state.setNightShift);
 
-  const graphicsAcceleration = useUiStore((state) => state.graphicsAcceleration);
-  const setGraphicsAcceleration = useUiStore((state) => state.setGraphicsAcceleration);
+  const graphicsAcceleration = useUiStore(
+    (state) => state.graphicsAcceleration,
+  );
+  const setGraphicsAcceleration = useUiStore(
+    (state) => state.setGraphicsAcceleration,
+  );
 
   const finderClickMode = useUiStore((state) => state.finderClickMode);
   const setFinderClickMode = useUiStore((state) => state.setFinderClickMode);
 
-  // Local settings states
   const [energySaver, setEnergySaver] = useState(false);
 
-  // Sidebar navigation options
+  // Hardware Real States
+  const [batteryLevel, setBatteryLevel] = useState<number | null>(null);
+  const [isCharging, setIsCharging] = useState<boolean>(false);
+  const [chargingTime, setChargingTime] = useState<number | null>(null);
+  const [dischargingTime, setDischargingTime] = useState<number | null>(null);
+
+  const [networkType, setNetworkType] = useState<string>("Wi-Fi");
+  const [downlink, setDownlink] = useState<number | null>(null);
+  const [effectiveType, setEffectiveType] = useState<string>("");
+
+  useEffect(() => {
+    const nav = navigator as ExtendedNavigator;
+
+    if (nav.getBattery) {
+      nav.getBattery().then((battery: BatteryManager) => {
+        setBatteryLevel(Math.round(battery.level * 100));
+        setIsCharging(battery.charging);
+        setChargingTime(battery.chargingTime);
+        setDischargingTime(battery.dischargingTime);
+
+        const updateBattery = () => {
+          setBatteryLevel(Math.round(battery.level * 100));
+          setIsCharging(battery.charging);
+          setChargingTime(battery.chargingTime);
+          setDischargingTime(battery.dischargingTime);
+        };
+
+        battery.addEventListener("levelchange", updateBattery);
+        battery.addEventListener("chargingchange", updateBattery);
+        battery.addEventListener("chargingtimechange", updateBattery);
+        battery.addEventListener("dischargingtimechange", updateBattery);
+
+        return () => {
+          battery.removeEventListener("levelchange", updateBattery);
+          battery.removeEventListener("chargingchange", updateBattery);
+          battery.removeEventListener("chargingtimechange", updateBattery);
+          battery.removeEventListener("dischargingtimechange", updateBattery);
+        };
+      });
+    }
+
+    const connection =
+      nav.connection || nav.mozConnection || nav.webkitConnection;
+
+    if (connection) {
+      const updateNetwork = () => {
+        setNetworkType(connection.type || "Wi-Fi");
+        setDownlink(connection.downlink ?? null);
+        setEffectiveType(connection.effectiveType ?? "");
+      };
+      updateNetwork();
+      connection.addEventListener("change", updateNetwork);
+      return () => connection.removeEventListener("change", updateNetwork);
+    }
+  }, []);
+
   const navItems = [
     {
       id: "appearance" as const,
@@ -123,7 +225,6 @@ export function SettingsWindow() {
     },
   ];
 
-  // Wallpaper options details
   const wallpaperOptions = [
     { id: "default", label: t("settings.desktop.options.default") },
     { id: "monterey", label: t("settings.desktop.options.monterey") },
@@ -141,7 +242,6 @@ export function SettingsWindow() {
             System Settings
           </p>
 
-          {/* Apple ID Profile Row */}
           <button
             onClick={() => setActiveTab("profile")}
             className={cn(
@@ -158,7 +258,7 @@ export function SettingsWindow() {
             />
             <div className="min-w-0 flex-1">
               <p className="text-[12.5px] font-bold truncate leading-tight">
-                Daniel Alejandre
+                Juan Gonzalez
               </p>
               <p
                 className={cn(
@@ -218,12 +318,12 @@ export function SettingsWindow() {
             <div className="flex items-center gap-4 bg-muted/20 p-4 rounded-2xl border border-border/30">
               <img
                 src="/profile.jpg"
-                alt="Juan Daniel"
+                alt="Juan Gonzalez"
                 className="size-16 rounded-full border border-border object-cover"
               />
               <div className="min-w-0">
                 <h3 className="text-base font-bold text-foreground">
-                  Juan Daniel González Alejandre
+                  Juan Gonzalez
                 </h3>
                 <p className="text-xs text-muted-foreground">
                   danielalejandre1050@gmail.com
@@ -364,7 +464,7 @@ export function SettingsWindow() {
               <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground pl-1">
                 {t("settings.appearance.finderTitle")}
               </h4>
-              
+
               <div className="rounded-2xl border border-border bg-background p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="space-y-0.5">
                   <span className="text-xs font-bold text-foreground block">
@@ -382,7 +482,7 @@ export function SettingsWindow() {
                       "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
                       finderClickMode === "single"
                         ? "bg-background text-foreground shadow-sm font-bold"
-                        : "text-muted-foreground hover:text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     {t("settings.appearance.singleClick")}
@@ -394,7 +494,7 @@ export function SettingsWindow() {
                       "px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
                       finderClickMode === "double"
                         ? "bg-background text-foreground shadow-sm font-bold"
-                        : "text-muted-foreground hover:text-foreground"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     {t("settings.appearance.doubleClick")}
@@ -453,7 +553,6 @@ export function SettingsWindow() {
                 {t("settings.displays.title")}
               </h3>
 
-              {/* Brightness slider */}
               <div className="rounded-2xl border border-border bg-background p-4 space-y-2">
                 <div className="flex items-center justify-between text-xs font-semibold">
                   <span>{t("settings.displays.brightness")}</span>
@@ -473,7 +572,6 @@ export function SettingsWindow() {
                 </div>
               </div>
 
-              {/* Night Shift Toggle */}
               <div className="rounded-2xl border border-border bg-background p-4 flex items-start gap-4">
                 <input
                   type="checkbox"
@@ -495,7 +593,6 @@ export function SettingsWindow() {
                 </div>
               </div>
 
-              {/* Graphics Acceleration Toggle */}
               <div className="rounded-2xl border border-border bg-background p-4 flex items-start gap-4">
                 <input
                   type="checkbox"
@@ -528,7 +625,6 @@ export function SettingsWindow() {
                 {t("settings.sound.title")}
               </h3>
 
-              {/* Volume Sync */}
               <div className="rounded-2xl border border-border bg-background p-4 space-y-3">
                 <div className="flex items-center justify-between text-xs font-semibold">
                   <span>{t("settings.sound.masterVolume")}</span>
@@ -561,7 +657,6 @@ export function SettingsWindow() {
                 </div>
               </div>
 
-              {/* Mute Box */}
               <div className="rounded-2xl border border-border bg-background p-4 flex items-center justify-between">
                 <span className="text-xs font-semibold">
                   {t("settings.sound.mute")}
@@ -591,33 +686,55 @@ export function SettingsWindow() {
                     <p className="text-xs font-semibold">
                       {t("settings.battery.health")}
                     </p>
-                    <p className="text-[10px] text-muted-foreground">
-                      {t("settings.battery.healthDesc")}
+                    <p className="text-[10px] text-muted-foreground flex items-center gap-1.5 mt-0.5">
+                      {isCharging ? (
+                        <>
+                          <BatteryCharging className="size-3" />
+                          {t("settings.battery.charging", "Charging")}
+                        </>
+                      ) : (
+                        t("settings.battery.onBatteryPower")
+                      )}
                     </p>
                   </div>
                   <Badge
                     variant="outline"
-                    className="text-emerald-500 border-emerald-500/35 bg-emerald-500/5"
+                    className={cn(
+                      "border-emerald-500/35 bg-emerald-500/5 text-emerald-500",
+                      batteryLevel !== null &&
+                        batteryLevel <= 20 &&
+                        !isCharging &&
+                        "border-red-500/35 bg-red-500/5 text-red-500",
+                    )}
                   >
-                    98%
+                    {batteryLevel !== null
+                      ? `${batteryLevel}%`
+                      : t("settings.battery.calculating")}
                   </Badge>
                 </div>
+
                 <div className="flex items-center justify-between pt-3 pb-1">
                   <div>
                     <p className="text-xs font-semibold">
-                      {t("settings.battery.cycles")}
+                      {t("settings.battery.timeRemaining")}
                     </p>
                     <p className="text-[10px] text-muted-foreground">
-                      {t("settings.battery.cyclesDesc")}
+                      {isCharging
+                        ? t("settings.battery.timeUntilFull")
+                        : t("settings.battery.usageTime")}
                     </p>
                   </div>
                   <span className="text-xs font-mono text-muted-foreground font-semibold">
-                    184
+                    {isCharging && batteryLevel === 100
+                      ? t("settings.battery.fullyCharged")
+                      : formatBatteryTime(
+                          isCharging ? chargingTime : dischargingTime,
+                          t,
+                        )}
                   </span>
                 </div>
               </div>
 
-              {/* Power Saver */}
               <div className="rounded-2xl border border-border bg-background p-4 flex items-start gap-4">
                 <input
                   type="checkbox"
@@ -655,38 +772,42 @@ export function SettingsWindow() {
                   <span className="text-xs font-semibold text-muted-foreground">
                     {t("settings.wifi.networkName")}
                   </span>
-                  <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-foreground flex items-center gap-1.5 capitalize">
                     <Wifi className="size-3.5 text-green-500" />{" "}
-                    Home_WiFi
+                    {networkType === "wifi" || networkType === "Unknown"
+                      ? "Local Network"
+                      : networkType}
                   </span>
                 </div>
                 <div className="flex justify-between py-2.5">
                   <span className="text-xs font-semibold text-muted-foreground">
                     {t("settings.wifi.ipAddress")}
                   </span>
-                  <span className="text-xs font-mono font-semibold">
-                    192.168.1.105
+                  <span className="text-xs font-mono font-semibold text-muted-foreground">
+                    Private
                   </span>
                 </div>
                 <div className="flex justify-between py-2.5">
                   <span className="text-xs font-semibold text-muted-foreground">
                     {t("settings.wifi.connectionQuality")}
                   </span>
-                  <span className="text-xs font-bold text-green-500">
-                    Excellent
+                  <span className="text-xs font-bold text-green-500 uppercase">
+                    {effectiveType || "Excellent"}
                   </span>
                 </div>
                 <div className="flex justify-between py-2.5">
                   <span className="text-xs font-semibold text-muted-foreground">
                     {t("settings.wifi.speed")}
                   </span>
-                  <span className="text-xs font-semibold">120 Mbps</span>
+                  <span className="text-xs font-semibold">
+                    {downlink ? `${downlink} Mbps` : "Unknown"}
+                  </span>
                 </div>
                 <div className="flex justify-between py-2.5">
                   <span className="text-xs font-semibold text-muted-foreground">
                     {t("settings.wifi.secProtocol")}
                   </span>
-                  <span className="text-xs font-semibold">WPA3-Personal</span>
+                  <span className="text-xs font-semibold">WPA2/WPA3</span>
                 </div>
               </div>
             </div>

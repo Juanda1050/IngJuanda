@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import {
   Mail,
   MapPin,
-  Briefcase,
   FileText,
   Code2,
   Sparkles,
@@ -170,7 +169,13 @@ export function DashboardWindow() {
               <MapPin className="size-3.5" />
               <span>{formatWithAppleEmojis(t("dashboard.location"))}</span>
               <span>•</span>
-              <Briefcase className="size-3.5" />
+              <span
+                className="text-xs select-none mb-0.5"
+                role="img"
+                aria-label="briefcase"
+              >
+                {formatWithAppleEmojis("💼")}
+              </span>
               <span>{formatWithAppleEmojis(t("dashboard.roleFull"))}</span>
             </p>
           </div>

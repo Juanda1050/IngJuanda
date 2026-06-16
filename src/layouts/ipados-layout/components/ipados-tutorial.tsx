@@ -50,7 +50,7 @@ export function IpadosTutorial({
 
   const steps: TourStep[] = useMemo(() => [
     {
-      title: t("tutorial.ipad.step1.title", "Welcome to iPadOS UI 📱"),
+      title: t("tutorial.ipad.step1.title", "Welcome to iPad UI 📱"),
       description: t(
         "tutorial.ipad.step1.desc",
         "This is a tablet-optimized view of the portfolio. Let's do a quick tour!",

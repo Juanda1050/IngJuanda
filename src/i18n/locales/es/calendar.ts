@@ -36,7 +36,7 @@ export const calendarEs = {
       date: "2022-07-07",
       title: "Ingreso a Axsis Tecnología",
       type: "work",
-      location: "México",
+      location: "Monterrey, México",
       company: "Axsis Tecnología S.A. de C.V.",
       description: "Inicio de labores como Ingeniero de Software Fullstack.",
       bullets: [
@@ -51,7 +51,7 @@ export const calendarEs = {
       date: "2024-03-04",
       title: "Ingreso a Axosnet",
       type: "work",
-      location: "México",
+      location: "Monterrey, México",
       company: "Axosnet",
       description: "Contratado como Ingeniero de Software Fullstack.",
       bullets: [
@@ -65,7 +65,7 @@ export const calendarEs = {
       date: "2026-06-06",
       title: "Lanzamiento de Portafolio",
       type: "project",
-      location: "Colima, México",
+      location: "Monterrey, México",
       company: "Juanda",
       description:
         "Publicación de esta experiencia interactiva simulando un escritorio de macOS.",

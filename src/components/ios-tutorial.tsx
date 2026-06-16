@@ -119,16 +119,6 @@ export function IosTutorial({
     return () => clearTimeout(timer);
   }, [setMobileTutorialActive]);
 
-  // Spotlight tracking and timing effects below
-
-  // Continuously track the target element bounding box via rAF loop so the
-  // SVG mask and hit-area stay perfectly aligned during Framer Motion animations.
-  //
-  // WHY no z-index elevation:
-  //   Elements with backdrop-filter, transform, or opacity < 1 in ancestor
-  //   elements create isolated stacking contexts — their children cannot
-  //   escape via z-index regardless of the value used. The clip-path on
-  //   the overlay itself (+ a hit-area div on top) is the only reliable fix.
   useEffect(() => {
     if (!isMobileTutorialActive) return;
 
@@ -183,7 +173,6 @@ export function IosTutorial({
     }
   }, [step]);
 
-  // Keyboard navigation
   useEffect(() => {
     if (!isMobileTutorialActive) return;
 
@@ -204,10 +193,7 @@ export function IosTutorial({
   }, [isMobileTutorialActive, handleDismiss, handleNext, handleBack]);
 
   const prevStepRef = useRef<number>(step);
-  // Tracks whether the current null-activeApp originated from the user's
-  // own swipe/tap (real close) vs. from the step-sync effect below.
   const stepSyncedRef = useRef<boolean>(false);
-  // Sync activeApp state based on the current tutorial step to ensure context is correct
   useEffect(() => {
     if (!isMobileTutorialActive || !setActiveApp || isRestart) return;
 
@@ -217,8 +203,6 @@ export function IosTutorial({
     if (step === prevStep) return;
 
     if (step === 2 || step === 3 || step === 4 || step === 5 || step === 6) {
-      // All other steps after step 2: close any open app programmatically.
-      // Guard prevents the auto-advance from firing on this programmatic null.
       stepSyncedRef.current = true;
       setActiveApp(null);
     }
@@ -229,17 +213,14 @@ export function IosTutorial({
   const currentStepObj = steps[step]!;
   const padding = 6;
 
-  // Mask dimensions
   const maskX = targetRect ? targetRect.left - padding : window.innerWidth / 2;
   const maskY = targetRect ? targetRect.top - padding : window.innerHeight / 2;
   const maskW = targetRect ? targetRect.width + padding * 2 : 0;
   const maskH = targetRect ? targetRect.height + padding * 2 : 0;
   const maskRx = 16;
 
-  // Card placement on mobile — position card away from the highlighted element
   const getCardStyle = (): React.CSSProperties => {
     if (!currentStepObj.targetId || !targetRect) {
-      // Center steps (welcome / finish): place near vertical center
       return {
         position: "fixed",
         left: "16px",
@@ -253,7 +234,6 @@ export function IosTutorial({
     const elementCenterY = targetRect.top + targetRect.height / 2;
 
     if (elementCenterY < screenMidY) {
-      // Element is in the upper half → card goes to bottom
       return {
         position: "fixed",
         left: "16px",
@@ -262,7 +242,6 @@ export function IosTutorial({
         zIndex: 100000,
       };
     } else {
-      // Element is in the lower half → card goes to top (below status bar)
       return {
         position: "fixed",
         left: "16px",
@@ -278,16 +257,13 @@ export function IosTutorial({
 
   return (
     <div className="fixed inset-0 z-[99999] select-none pointer-events-none" style={{ fontFamily: "system-ui, -apple-system, 'Apple Color Emoji', sans-serif" }}>
-      {/* ── 4-panel spotlight backdrop ── */}
       {!hasTarget ? (
-        /* Full-screen dark for center steps (welcome / finish) */
         <div
           className="absolute inset-0 pointer-events-auto cursor-default"
           style={{ background: DARK }}
         />
       ) : (
         <>
-          {/* Top panel — above the target */}
           <div
             className="pointer-events-auto cursor-default"
             style={{
@@ -299,7 +275,6 @@ export function IosTutorial({
               background: DARK,
             }}
           />
-          {/* Bottom panel — below the target */}
           <div
             className="pointer-events-auto cursor-default"
             style={{
@@ -311,7 +286,6 @@ export function IosTutorial({
               background: DARK,
             }}
           />
-          {/* Left panel — left of the target */}
           <div
             className="pointer-events-auto cursor-default"
             style={{
@@ -323,7 +297,6 @@ export function IosTutorial({
               background: DARK,
             }}
           />
-          {/* Right panel — right of the target */}
           <div
             className="pointer-events-auto cursor-default"
             style={{
@@ -360,7 +333,6 @@ export function IosTutorial({
         />
       )}
 
-      {/* Floating Card */}
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
@@ -371,7 +343,6 @@ export function IosTutorial({
           transition={{ duration: 0.22, ease: "easeOut" }}
           className="rounded-2xl border border-white/20 dark:border-white/10 bg-[#1c1c1e]/90 backdrop-blur-2xl p-5 shadow-2xl text-white pointer-events-auto max-w-md mx-auto"
         >
-          {/* Card Header */}
           <div className="flex items-center justify-between mb-3.5">
             <div className="flex items-center gap-2">
               <span className="flex w-6 h-6 items-center justify-center rounded-lg bg-blue-500/20 text-blue-400">
@@ -398,7 +369,6 @@ export function IosTutorial({
             </button>
           </div>
 
-          {/* Card Body */}
           <div className="space-y-1.5 mb-5">
             <h3 className="text-base font-bold tracking-tight text-white">
               {formatWithAppleEmojis(currentStepObj.title)}
@@ -408,9 +378,7 @@ export function IosTutorial({
             </p>
           </div>
 
-          {/* Card Footer */}
           <div className="flex items-center justify-between">
-            {/* Progress Dots */}
             <div className="flex items-center gap-1.5">
               {steps.map((_, idx) => (
                 <button
@@ -428,7 +396,6 @@ export function IosTutorial({
               ))}
             </div>
 
-            {/* Navigation Buttons */}
             <div className="flex items-center gap-2 flex-wrap justify-end">
               {step < steps.length - 1 ? (
                 <button

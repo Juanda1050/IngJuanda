@@ -13,7 +13,17 @@ const UNICODE_TO_NAME: Record<string, string> = {
   "🌐": "globe-with-meridians",
   "🔧": "wrench",
   "🖥️": "desktop-computer",
-  "🇲🇽": "flag-mexico"
+  "🇲🇽": "flag-mexico",
+  "🔋": "battery",
+  "🏠": "house",
+  "📥": "inbox-tray",
+  "🎉": "party-popper",
+  "👋": "waving-hand-light-skin-tone",
+  "📇": "card-index",
+  "🔍": "magnifying-glass-tilted-left",
+  "⌨️": "keyboard",
+  "🔎": "magnifying-glass-tilted-right",
+  "📅": "calendar",
 };
 
 interface AppleEmojiProps {
@@ -25,11 +35,9 @@ export const AppleEmoji: React.FC<AppleEmojiProps> = ({
   emoji,
   className = "",
 }) => {
-  const cleanEmoji = emoji.includes("\u200D")
-    ? emoji
-    : emoji.replace(/\uFE0F/g, "");
+  console.log("Rendering AppleEmoji:", { emoji });
 
-  const emojiName = UNICODE_TO_NAME[cleanEmoji];
+  const emojiName = UNICODE_TO_NAME[emoji];
 
   if (emojiName) {
     return (

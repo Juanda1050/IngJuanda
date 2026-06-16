@@ -225,7 +225,7 @@ export function IosSettings({ onClose, layout = "ios" }: { onClose?: () => void;
                 <span className="text-[17px]">Developer</span>
               </div>
               <span className="text-gray-500 text-[17px]">
-                Juan Daniel Gonzalez
+                Juan Daniel Gonzalez Alejandre
               </span>
             </div>
             <div className="flex items-center justify-between px-4 py-3">
