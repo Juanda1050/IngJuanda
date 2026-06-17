@@ -69,27 +69,72 @@
     @apply overflow-x-hidden;
   }
 
-  html, body, .cursor-default, [class*="cursor-default"] {
-    cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20d%3D%22M0%2C0%20L0%2C16%20L4%2C12%20L7%2C18%20L9%2C17%20L6%2C11%20L11%2C11%20Z%22%20fill%3D%22black%22%20stroke%3D%22white%22%20stroke-width%3D%221.5%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E") 0 0, auto;
+  html,
+  body,
+  .cursor-default,
+  [class*="cursor-default"] {
+    cursor:
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20d%3D%22M0%2C0%20L0%2C16%20L4%2C12%20L7%2C18%20L9%2C17%20L6%2C11%20L11%2C11%20Z%22%20fill%3D%22black%22%20stroke%3D%22white%22%20stroke-width%3D%221.5%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E")
+        0 0,
+      auto;
   }
 
   body {
     @apply text-foreground antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro Icons", "Apple Color Emoji", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family:
+      -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+      "SF Pro Icons", "Apple Color Emoji", "Segoe UI", Roboto, Helvetica, Arial,
+      sans-serif;
     background:
-      radial-gradient(ellipse at 15% 30%, rgba(100, 180, 255, 0.55) 0%, transparent 55%),
-      radial-gradient(ellipse at 80% 15%, rgba(255, 165, 90, 0.45) 0%, transparent 45%),
-      radial-gradient(ellipse at 50% 95%, rgba(20, 80, 140, 0.65) 0%, transparent 50%),
-      linear-gradient(185deg, #90D4F7 0%, #52B8E0 30%, #2E86B5 60%, #1B5C8A 100%);
+      radial-gradient(
+        ellipse at 15% 30%,
+        rgba(100, 180, 255, 0.55) 0%,
+        transparent 55%
+      ),
+      radial-gradient(
+        ellipse at 80% 15%,
+        rgba(255, 165, 90, 0.45) 0%,
+        transparent 45%
+      ),
+      radial-gradient(
+        ellipse at 50% 95%,
+        rgba(20, 80, 140, 0.65) 0%,
+        transparent 50%
+      ),
+      linear-gradient(
+        185deg,
+        #90d4f7 0%,
+        #52b8e0 30%,
+        #2e86b5 60%,
+        #1b5c8a 100%
+      );
     min-height: 100vh;
   }
 
   .dark body {
     background:
-      radial-gradient(ellipse at 20% 20%, rgba(30, 60, 120, 0.8) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 10%, rgba(80, 20, 100, 0.5) 0%, transparent 40%),
-      radial-gradient(ellipse at 50% 100%, rgba(10, 30, 70, 0.9) 0%, transparent 50%),
-      linear-gradient(185deg, #0D1B35 0%, #152340 35%, #0E1A30 65%, #070E1E 100%);
+      radial-gradient(
+        ellipse at 20% 20%,
+        rgba(30, 60, 120, 0.8) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at 80% 10%,
+        rgba(80, 20, 100, 0.5) 0%,
+        transparent 40%
+      ),
+      radial-gradient(
+        ellipse at 50% 100%,
+        rgba(10, 30, 70, 0.9) 0%,
+        transparent 50%
+      ),
+      linear-gradient(
+        185deg,
+        #0d1b35 0%,
+        #152340 35%,
+        #0e1a30 65%,
+        #070e1e 100%
+      );
   }
 
   #root {
@@ -97,121 +142,157 @@
   }
 }
 
-/* Performance Optimization Rules for CPU-only rendering (no graphics acceleration) */
-.no-gfx-accel {
-  --transition-all: none !important;
-  --transition: none !important;
-}
+@layer utilities {
+  /* Performance Optimization Rules for CPU-only rendering (no graphics acceleration) */
+  .no-gfx-accel {
+    --transition-all: none;
+    --transition: none;
+  }
 
-.no-gfx-accel *,
-.no-gfx-accel *::before,
-.no-gfx-accel *::after {
-  animation-duration: 0s !important;
-  animation-delay: 0s !important;
-  transition-duration: 0s !important;
-  transition-delay: 0s !important;
-}
+  .no-gfx-accel *,
+  .no-gfx-accel *::before,
+  .no-gfx-accel *::after {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
 
-/* Disable backdrop blur filtering */
-.no-gfx-accel .backdrop-blur,
-.no-gfx-accel .backdrop-blur-sm,
-.no-gfx-accel .backdrop-blur-md,
-.no-gfx-accel .backdrop-blur-lg,
-.no-gfx-accel .backdrop-blur-xl,
-.no-gfx-accel .backdrop-blur-2xl,
-.no-gfx-accel .backdrop-blur-3xl {
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
+  /* Disable backdrop blur filtering */
+  .no-gfx-accel .backdrop-blur,
+  .no-gfx-accel .backdrop-blur-sm,
+  .no-gfx-accel .backdrop-blur-md,
+  .no-gfx-accel .backdrop-blur-lg,
+  .no-gfx-accel .backdrop-blur-xl,
+  .no-gfx-accel .backdrop-blur-2xl,
+  .no-gfx-accel .backdrop-blur-3xl {
+    @apply ![backdrop-filter:none] ![-webkit-backdrop-filter:none];
+  }
 
-/* Adjust panel opacities for readable contrast without blur */
-.no-gfx-accel .bg-white\/20,
-.no-gfx-accel .bg-white\/22 {
-  background-color: rgba(255, 255, 255, 0.92) !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-}
+  /* Adjust panel opacities for readable contrast without blur */
+  .no-gfx-accel .bg-white\/20,
+  .no-gfx-accel .bg-white\/22 {
+    @apply !bg-white/[0.92] !border-black/[0.15];
+  }
 
-.no-gfx-accel.dark .bg-white\/20,
-.no-gfx-accel.dark .bg-white\/22,
-.no-gfx-accel .dark .bg-white\/20,
-.no-gfx-accel .dark .bg-white\/22 {
-  background-color: rgba(30, 30, 30, 0.95) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
+  /* Light-mode dock: white panel needs dark icons/text */
+  .no-gfx-accel:not(.dark) .bg-white\/22,
+  html:not(.dark) .no-gfx-accel .bg-white\/22 {
+    @apply !text-[rgba(20,20,25,0.85)];
+  }
 
-.no-gfx-accel .bg-black\/25,
-.no-gfx-accel .bg-black\/28,
-.no-gfx-accel .bg-black\/40,
-.no-gfx-accel .bg-black\/50 {
-  background-color: rgba(20, 20, 20, 0.92) !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
-}
+  /* Light-mode dock active dot: white dot invisible on white bg — use dark dot */
+  .no-gfx-accel:not(.dark) .bg-white\/90,
+  html:not(.dark) .no-gfx-accel .bg-white\/90 {
+    @apply !bg-[rgba(20,20,25,0.55)];
+  }
 
-.no-gfx-accel .bg-vscode-sidebar\/90,
-.no-gfx-accel .bg-vscode-sidebar\/95 {
-  background-color: hsl(var(--vscode-sidebar)) !important;
-}
+  .no-gfx-accel.dark .bg-white\/20,
+  .no-gfx-accel.dark .bg-white\/22,
+  .no-gfx-accel .dark .bg-white\/20,
+  .no-gfx-accel .dark .bg-white\/22 {
+    @apply !bg-[rgba(30,30,30,0.95)] !border-white/[0.1];
+  }
 
-.no-gfx-accel .bg-vscode-surface\/40 {
-  background-color: hsl(var(--vscode-surface)) !important;
-}
+  .no-gfx-accel .bg-black\/25,
+  .no-gfx-accel .bg-black\/28,
+  .no-gfx-accel .bg-black\/40,
+  .no-gfx-accel .bg-black\/50 {
+    @apply !bg-[rgba(20,20,20,0.92)] !border-white/[0.12];
+  }
 
-.no-gfx-accel .bg-vscode-status\/90,
-.no-gfx-accel .bg-vscode-status\/95 {
-  background-color: hsl(var(--vscode-status)) !important;
-}
+  .no-gfx-accel .bg-vscode-sidebar\/90,
+  .no-gfx-accel .bg-vscode-sidebar\/95 {
+    @apply !bg-vscode-sidebar;
+  }
 
-.no-gfx-accel .bg-vscode-tabs\/70,
-.no-gfx-accel .bg-vscode-tabs\/85 {
-  background-color: hsl(var(--vscode-tabs)) !important;
-}
+  .no-gfx-accel .bg-vscode-surface\/40 {
+    @apply !bg-vscode-surface;
+  }
 
-.no-gfx-accel .bg-vscode-editor\/45 {
-  background-color: hsl(var(--vscode-editor)) !important;
-}
+  .no-gfx-accel .bg-vscode-status\/90,
+  .no-gfx-accel .bg-vscode-status\/95 {
+    @apply !bg-vscode-status;
+  }
 
-.no-gfx-accel .bg-background\/50 {
-  background-color: hsl(var(--background)) !important;
-}
+  .no-gfx-accel .bg-vscode-tabs\/70,
+  .no-gfx-accel .bg-vscode-tabs\/85 {
+    @apply !bg-vscode-tabs;
+  }
 
-.no-gfx-accel .bg-\[\#f0f0f0\]\/95 {
-  background-color: rgb(245, 245, 247) !important;
-}
+  .no-gfx-accel .bg-vscode-editor\/45 {
+    @apply !bg-vscode-editor;
+  }
 
-.no-gfx-accel .bg-\[\#fbfbfb\]\/85 {
-  background-color: rgb(251, 251, 251) !important;
-}
+  .no-gfx-accel .bg-background\/50 {
+    @apply !bg-background;
+  }
 
-.no-gfx-accel .bg-\[\#f2f2f7\]\/80 {
-  background-color: rgb(242, 242, 247) !important;
-}
+  .no-gfx-accel .bg-\[\#f0f0f0\]\/95 {
+    @apply !bg-[rgb(245,245,247)];
+  }
 
-/* Ensure dark mode background class overrides match Tailwind's dark: prefix format exactly */
-.no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/95,
-.no-gfx-accel.dark .dark\:bg-\[\#1f1f1f\]\/95,
-.no-gfx-accel.dark .dark\:bg-\[\#1e1e1e\]\/98,
-.no-gfx-accel.dark .dark\:bg-\[\#1a1a1c\]\/50,
-.no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/80,
-.no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/50,
-.no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/95,
-.no-gfx-accel .dark .dark\:bg-\[\#1f1f1f\]\/95,
-.no-gfx-accel .dark .dark\:bg-\[\#1e1e1e\]\/98,
-.no-gfx-accel .dark .dark\:bg-\[\#1a1a1c\]\/50,
-.no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/80,
-.no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/50 {
-  background-color: rgb(28, 28, 30) !important;
-}
+  .no-gfx-accel .bg-\[\#fbfbfb\]\/85 {
+    @apply !bg-[rgb(251,251,251)];
+  }
 
-/* Specific styling for all top-bar absolute dropdowns and Control Center popup boxes */
-.no-gfx-accel header.fixed .absolute {
-  background-color: rgb(246, 246, 248) !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-}
+  .no-gfx-accel .bg-\[\#f2f2f7\]\/80 {
+    @apply !bg-[rgb(242,242,247)];
+  }
 
-.no-gfx-accel.dark header.fixed .absolute,
-.no-gfx-accel .dark header.fixed .absolute {
-  background-color: rgb(32, 32, 35) !important;
-  border-color: rgba(255, 255, 255, 0.12) !important;
+  /* Dark-mode Tailwind-generated class overrides — must stay as raw selectors */
+  .no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/95,
+  .no-gfx-accel.dark .dark\:bg-\[\#1f1f1f\]\/95,
+  .no-gfx-accel.dark .dark\:bg-\[\#1e1e1e\]\/98,
+  .no-gfx-accel.dark .dark\:bg-\[\#1a1a1c\]\/50,
+  .no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/80,
+  .no-gfx-accel.dark .dark\:bg-\[\#1c1c1e\]\/50,
+  .no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/95,
+  .no-gfx-accel .dark .dark\:bg-\[\#1f1f1f\]\/95,
+  .no-gfx-accel .dark .dark\:bg-\[\#1e1e1e\]\/98,
+  .no-gfx-accel .dark .dark\:bg-\[\#1a1a1c\]\/50,
+  .no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/80,
+  .no-gfx-accel .dark .dark\:bg-\[\#1c1c1e\]\/50 {
+    @apply !bg-[rgb(28,28,30)];
+  }
+
+  /* Top-bar dropdowns and Control Center popup boxes */
+  .no-gfx-accel header.fixed .absolute {
+    @apply !bg-[rgb(246,246,248)] !border-black/[0.15];
+  }
+
+  .no-gfx-accel.dark header.fixed .absolute,
+  .no-gfx-accel .dark header.fixed .absolute {
+    @apply !bg-[rgb(32,32,35)] !border-white/[0.12];
+  }
+
+  /* Toolbar: opaque light panel in light mode */
+  .no-gfx-accel header.fixed {
+    @apply !bg-[rgba(230,230,235,0.97)] !border-black/[0.12];
+  }
+
+  /* All direct text nodes in the toolbar */
+  .no-gfx-accel header.fixed,
+  .no-gfx-accel header.fixed *:not(.absolute):not(.absolute *) {
+    @apply !text-[rgba(20,20,25,0.9)];
+  }
+
+  /* Keep dropdown item colours intact */
+  .no-gfx-accel header.fixed .absolute,
+  .no-gfx-accel header.fixed .absolute * {
+    color: unset !important;
+  }
+
+  /* Dark mode: header stays dark, keep white text */
+  .no-gfx-accel.dark header.fixed,
+  .no-gfx-accel .dark header.fixed {
+    @apply !bg-[rgba(22,22,26,0.97)] !border-white/[0.08];
+  }
+
+  .no-gfx-accel.dark header.fixed *:not(.absolute):not(.absolute *),
+  .no-gfx-accel .dark header.fixed *:not(.absolute):not(.absolute *) {
+    @apply !text-[rgba(240,240,245,0.9)];
+  }
 }
 
 /* Custom Scrollbars - macOS Clone style */
@@ -252,6 +333,3 @@
 .dark * {
   scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
-
-
-

@@ -20,11 +20,8 @@ function BootScreen({ onComplete }: { onComplete: () => void }) {
           onComplete();
           return 100;
         }
-        // Increment progress by a random amount to feel like a real boot loader
         const inc = Math.floor(Math.random() * 10) + 3;
         const next = Math.min(prev + inc, 100);
-
-        // Random next step interval
         const nextTime = Math.floor(Math.random() * 200) + 80;
         timer = window.setTimeout(updateProgress, nextTime);
         return next;
@@ -38,15 +35,14 @@ function BootScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <div className="fixed inset-0 bg-black z-[99999] flex flex-col items-center justify-center text-white select-none">
       <div className="flex flex-col items-center gap-14">
-        <SiApple 
-          className="size-20 text-white fill-current animate-pulse" 
-          style={{ animationDuration: "3s" }} 
+        <SiApple
+          className="size-20 text-white fill-current"
+          style={{ animation: "pulse 3s ease-in-out infinite" }}
         />
         <div className="w-52 h-[6px] bg-zinc-800 rounded-full overflow-hidden relative border border-white/5">
-          <motion.div
-            className="h-full bg-white rounded-full"
+          <div
+            className="h-full bg-white rounded-full transition-[width] duration-150 ease-in-out"
             style={{ width: `${progress}%` }}
-            transition={{ ease: "easeInOut" }}
           />
         </div>
       </div>
@@ -89,7 +85,6 @@ export function MacSystemOverlays() {
 
   const handleLoginSubmit = () => {
     setIsLoggingIn(true);
-    // Artificially delay login to show the loader, enhancing the UX
     setTimeout(() => {
       setCurrentUser("juan");
       if (typeof window !== "undefined") {
@@ -119,22 +114,10 @@ export function MacSystemOverlays() {
   // --------------------------------------------------
   if (systemState === "sleep") {
     return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.6 }}
-          className="fixed inset-0 bg-black z-[99999] flex items-center justify-center cursor-none"
-        >
-          {/* Pulsing LED Sleep indicator light */}
-          <motion.div
-            animate={{ opacity: [0.1, 0.6, 0.1] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="fixed bottom-6 right-6 size-2 rounded-full bg-white/70 blur-[1px]"
-          />
-        </motion.div>
-      </AnimatePresence>
+      <div className="fixed inset-0 bg-black z-[99999] flex items-center justify-center cursor-none animate-fade-in">
+        {/* Pulsing LED Sleep indicator — pure CSS, no JS animation loop */}
+        <div className="fixed bottom-6 right-6 size-2 rounded-full bg-white/70 blur-[1px] animate-sleep-led" />
+      </div>
     );
   }
 
@@ -154,25 +137,15 @@ export function MacSystemOverlays() {
     }
 
     return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
-          onClick={() => setBooting(true)}
-          className="fixed inset-0 bg-black z-[99999] flex flex-col items-center justify-center text-zinc-600 cursor-pointer select-none"
-        >
-          <motion.div
-            animate={{ opacity: [0.3, 0.7, 0.3], scale: [0.98, 1.02, 0.98] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-4"
-          >
-            <Power className="size-10" />
-            <p className="text-xs font-mono tracking-wider">{labels.powerOn}</p>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
+      <div
+        onClick={() => setBooting(true)}
+        className="fixed inset-0 bg-black z-[99999] flex flex-col items-center justify-center text-zinc-600 cursor-pointer select-none animate-fade-in"
+      >
+        <div className="flex flex-col items-center gap-4 animate-shutdown-pulse">
+          <Power className="size-10" />
+          <p className="text-xs font-mono tracking-wider">{labels.powerOn}</p>
+        </div>
+      </div>
     );
   }
 
@@ -193,9 +166,10 @@ export function MacSystemOverlays() {
   // RENDER LOGIN / LOCK SCREEN (LOCKED & LOGGED_OUT)
   // --------------------------------------------------
   if (systemState === "locked" || systemState === "logged_out") {
-    const buttonText = systemState === "locked"
-      ? (isEs ? "Desbloquear" : "Unlock")
-      : (isEs ? "Iniciar sesión" : "Log In");
+    const buttonText =
+      systemState === "locked"
+        ? isEs ? "Desbloquear" : "Unlock"
+        : isEs ? "Iniciar sesión" : "Log In";
 
     return (
       <AnimatePresence>
@@ -261,7 +235,7 @@ export function MacSystemOverlays() {
 
           {/* Bottom System Power Controls */}
           <div className="flex items-center gap-10 pb-4">
-            {/* Sleep (Reposo) */}
+            {/* Sleep */}
             <button
               onClick={() => setSystemState("sleep")}
               className="flex flex-col items-center gap-2 group text-white/60 hover:text-white transition-colors cursor-pointer"
@@ -274,7 +248,7 @@ export function MacSystemOverlays() {
               </span>
             </button>
 
-            {/* Restart (Reiniciar) */}
+            {/* Restart */}
             <button
               onClick={() => setSystemState("restart")}
               className="flex flex-col items-center gap-2 group text-white/60 hover:text-white transition-colors cursor-pointer"
@@ -287,7 +261,7 @@ export function MacSystemOverlays() {
               </span>
             </button>
 
-            {/* Shut Down (Apagar) */}
+            {/* Shut Down */}
             <button
               onClick={() => setSystemState("shutdown")}
               className="flex flex-col items-center gap-2 group text-white/60 hover:text-white transition-colors cursor-pointer"

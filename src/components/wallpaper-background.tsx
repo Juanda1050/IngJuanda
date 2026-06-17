@@ -21,7 +21,6 @@ export function WallpaperBackground({
   const width = isIos ? 900 : isIpad ? 1366 : 1440
   const height = isIos ? 1440 : isIpad ? 1024 : 900
 
-  // CPU rendering optimizations: bypass filters when graphics acceleration is disabled
   const waveShadow = graphicsAcceleration ? 'url(#wave-shadow)' : undefined
   const glowBlur = graphicsAcceleration ? 'url(#glow-blur)' : undefined
 
@@ -38,7 +37,6 @@ export function WallpaperBackground({
         className="w-full h-full scale-105 pointer-events-none select-none"
       >
         <defs>
-          {/* Reusable Subtle Noise/Grain Filter */}
           <filter id="wallpaper-noise" x="0" y="0" width={width} height={height} filterUnits="userSpaceOnUse">
             <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" result="noise" />
             <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.055 0" />

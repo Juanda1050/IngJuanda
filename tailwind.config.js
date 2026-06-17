@@ -26,6 +26,25 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      keyframes: {
+        'fade-in': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        'sleep-led': {
+          '0%, 100%': { opacity: '0.1' },
+          '50%': { opacity: '0.6' },
+        },
+        'shutdown-pulse': {
+          '0%, 100%': { opacity: '0.3', transform: 'scale(0.98)' },
+          '50%': { opacity: '0.7', transform: 'scale(1.02)' },
+        },
+      },
+      animation: {
+        'fade-in': 'fade-in 0.6s ease forwards',
+        'sleep-led': 'sleep-led 5s ease-in-out infinite',
+        'shutdown-pulse': 'shutdown-pulse 4s ease-in-out infinite',
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
