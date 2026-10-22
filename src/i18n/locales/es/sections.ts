@@ -12,7 +12,7 @@ export const sectionsEs = {
       {
         role: "Software Engineer",
         company: "Axosnet",
-        period: "Mar 2024 - Actualidad",
+        period: "Mar 2024 - Sep 2026",
         bullets: [
           "Lideré el rediseño integral de Axosmoney, participando en la definición funcional, diseño UX/UI en Figma y coordinación de su desarrollo.",
           "Diseñé y mantengo Axosnet Components, una librería corporativa de componentes reutilizables que permite estandarizar interfaces y acelerar el desarrollo entre equipos.",
